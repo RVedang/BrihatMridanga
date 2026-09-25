@@ -75,7 +75,9 @@ export function HomeStats({
             : "—"}
         </small>
       </div>
-      <div className="stat-card leading-temple-card">
+      <div
+        className={`stat-card leading-temple-card${connected && !leadingTemple ? " awaiting-reports" : ""}`}
+      >
         <Award className="stat-icon" size={22} aria-hidden="true" />
         <span className="stat-label">This Month&apos;s Leading Temple</span>
         <strong

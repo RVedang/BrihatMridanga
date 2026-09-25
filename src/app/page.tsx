@@ -161,30 +161,32 @@ export default async function Home() {
           </div>
         </div>
       </section>
-      <div className={`container ${styles.content}`}>
-        <section className="score-section" id="collective-offering">
-          <SectionTitle
-            title="Our collective offering"
-            href="/dashboard"
-            link="View dashboard"
-          />
-          <HomeStats
-            globalBooks={globalBooks}
-            templeCount={templeCount}
-            countryCount={countryCount}
-            leadingTemple={
-              topMonthTemple
-                ? {
-                    name: topMonthTemple.temple_name,
-                    books: Number(topMonthTemple.books),
-                  }
-                : null
-            }
-            connected={data.connected}
-          />
+      <div className={styles.content}>
+        <section className={styles.offering} id="collective-offering">
+          <div className="container">
+            <SectionTitle
+              title="Our collective offering"
+              href="/dashboard"
+              link="View dashboard"
+            />
+            <HomeStats
+              globalBooks={globalBooks}
+              templeCount={templeCount}
+              countryCount={countryCount}
+              leadingTemple={
+                topMonthTemple
+                  ? {
+                      name: topMonthTemple.temple_name,
+                      books: Number(topMonthTemple.books),
+                    }
+                  : null
+              }
+              connected={data.connected}
+            />
+          </div>
         </section>
-        <div className={`home-board ${testimonialsStyles.board}`}>
-          <section className="home-testimonials">
+        <section className={styles.community}>
+          <div className="container home-testimonials">
             <SectionTitle title="Recent testimonials" />
             {testimonials.length ? (
               <div className={testimonialsStyles.grid}>
@@ -203,13 +205,17 @@ export default async function Home() {
                 published stories will be shown in this section.
               </Empty>
             )}
-          </section>
+          </div>
+        </section>
+        <div className={styles.service}>
           <aside
-            className={agenda.section}
+            className={`container ${agenda.section}`}
             aria-label="Service throughout the year"
           >
             <p className="eyebrow">Service throughout the year</p>
-            <div className={agenda.chapter}>
+            <div
+              className={`${agenda.chapter} ${!upcomingCampaigns.length ? agenda.empty : ""}`}
+            >
               <h2 className="home-rail-heading">
                 <span className="home-rail-heading-icon" aria-hidden>
                   <Flag size={16} strokeWidth={1.8} />
@@ -238,7 +244,9 @@ export default async function Home() {
                 Explore campaigns <ArrowUpRight size={15} />
               </Link>
             </div>
-            <div className={agenda.chapter}>
+            <div
+              className={`${agenda.chapter} ${!upcomingEvents.length ? agenda.empty : ""}`}
+            >
               <h2 className="home-rail-heading">
                 <span className="home-rail-heading-icon" aria-hidden>
                   <CalendarDays size={16} strokeWidth={1.8} />
@@ -269,9 +277,13 @@ export default async function Home() {
             </div>
           </aside>
         </div>
-        <HomeStories
-          items={data.content.filter((c) => c.kind === "community_story")}
-        />
+        <div className={styles.stories}>
+          <div className="container">
+            <HomeStories
+              items={data.content.filter((c) => c.kind === "community_story")}
+            />
+          </div>
+        </div>
       </div>
     </>
   );

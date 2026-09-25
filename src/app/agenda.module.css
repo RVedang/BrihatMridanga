@@ -1,9 +1,9 @@
 .section {
-  padding: 12px 0;
+  padding-block: 0;
   min-width: 0;
 }
 .section > :global(.eyebrow) {
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 .chapter {
   display: grid;
@@ -11,22 +11,23 @@
   column-gap: clamp(24px, 5vw, 72px);
   align-items: start;
   border-top: 1px solid var(--line);
-  padding: 32px 0 40px;
+  padding: 24px 0;
 }
 .chapter :global(.home-rail-heading) {
   grid-column: 1;
   margin: 0;
-  font-size: clamp(26px, 2.7vw, 36px);
+  font-size: clamp(24px, 2.4vw, 30px);
   line-height: 1.25;
   letter-spacing: -0.025em;
   display: flex;
-  flex-direction: column;
-  align-items: start;
-  gap: 20px;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
 }
 .chapter :global(.home-rail-heading-icon) {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
   color: var(--orange);
   background: var(--wash);
   border: 0;
@@ -187,5 +188,28 @@
   .item,
   .arrow {
     transition: none;
+  }
+}
+
+/* Empty chapters remain discoverable without reserving a card-sized area. */
+.empty {
+  align-items: center;
+  row-gap: 12px;
+}
+.empty > p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.empty > :global(.text-link) {
+  margin-top: 0;
+}
+.chapter:last-child {
+  padding-bottom: 0;
+}
+@media (max-width: 800px) {
+  .empty :global(.home-rail-heading) {
+    margin-bottom: 0;
   }
 }
