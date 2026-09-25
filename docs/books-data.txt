@@ -1,0 +1,176 @@
+195	Beyond Birth and Death	English	30	{"score": 0.25, "category": "small"}
+173	Dharma: The Way of Transcendence	English	50	{"score": 0.25, "category": "small"}
+260	The Science of Self - Realization	Gujarati	130	{"score": 1, "category": "big"}
+258	Modern Times, Vedic Perspective	English	30	{"score": 0.25, "category": "small"}
+259	The Science of Self - Realization	Bengali	130	{"score": 1, "category": "big"}
+261	The Science of Self - Realization	Oriya	150	{"score": 1, "category": "big"}
+262	The Science of Self - Realization	Tamil	100	{"score": 1, "category": "big"}
+263	The Science of Self - Realization	Telugu	130	{"score": 1, "category": "big"}
+264	Sri Namamrta 	English	200	{"score": 2, "category": "m-big"}
+265	Sri Brahma - Samhita	English	40	{"score": 0.25, "category": "small"}
+266	Teachings of Lord Caitanya	English	120	{"score": 1, "category": "big"}
+267	Teachings of Lord Kapila	English	100	{"score": 1, "category": "big"}
+269	Chanting Hare Krishna	Hindi	80	{"score": 0.5, "category": "medium"}
+270	Teachings of Lord Caitanya	Hindi	150	{"score": 1, "category": "big"}
+285	Srimad Bhagavatam Set	Oriya	7600	{"score": 36, "category": "m-big"}
+288	Sri Brahma - Samhita	Hindi	40	{"score": 0.25, "category": "small"}
+292	Bhagavad Gita As It Is	Punjabi	250	{"score": 2, "category": "m-big"}
+296	The Quest for Enlightenment	English	100	{"score": 0.5, "category": "medium"}
+297	Lord Caitanya His Life and Teachings	English	40	{"score": 0.25, "category": "small"}
+298	KBI Krsna The Supreme Personality of Godhead (Vol.1 & Vol.2)	English	1100	{"score": 2, "category": "m-big"}
+299	KBI Sri Isopanishad (Hard Bound)	English	150	{"score": 0.25, "category": "small"}
+300	KBI Science Of Self Realization (Soft Bound)	English	200	{"score": 1, "category": "big"}
+301	Hand Book of Krishna Conciousness	English	30	{"score": 0.25, "category": "small"}
+232	Bhagavad Gita As It Is	Telugu	220	{"score": 2, "category": "m-big"}
+268	Bhagavad Gita As It Is (Pocket Edition)	Hindi	180	{"score": 2, "category": "m-big"}
+240	Krsna, The Supreme Personality of Godhead	Bengali	250	{"score": 2, "category": "m-big"}
+241	Krsna, The Supreme Personality of Godhead	Gujarati	220	{"score": 2, "category": "m-big"}
+238	Krsna, The Supreme Personality of Godhead	Kannada	290	{"score": 2, "category": "m-big"}
+289	Krsna, The Supreme Personality of Godhead	Oriya	250	{"score": 2, "category": "m-big"}
+239	Krsna, The Supreme Personality of Godhead	Tamil	250	{"score": 2, "category": "m-big"}
+231	Krsna, The Supreme Personality of Godhead	Telugu	230	{"score": 2, "category": "m-big"}
+130	Chaitanya Charitamrita (9 volumes)	English	3200	{"score": 18, "category": "m-big"}
+290	Srimad Bhagavatam (18 volumes)	English	8800	{"score": 36, "category": "m-big"}
+126	Elevation to Krsna Consciousness	Marathi	40	{"score": 0.25, "category": "small"}
+242	Srimad Bhagavatam Set	Gujarati	7800	{"score": 36, "category": "m-big"}
+243	Srimad Bhagavatam Set	Telugu	6600	{"score": 36, "category": "m-big"}
+244	Srimad Bhagavatam Set	Kannada	7800	{"score": 36, "category": "m-big"}
+245	Srimad Bhagavatam Set	Bengali	7000	{"score": 36, "category": "m-big"}
+246	Srimad Bhagavatam Set	Tamil	7500	{"score": 36, "category": "m-big"}
+247	Chaitanya Charitamrita (9 volumes)	Gujarati	2500	{"score": 18, "category": "m-big"}
+248	Chaitanya Charitamrita (9 volumes)	Telugu	2600	{"score": 18, "category": "m-big"}
+249	Chaitanya Charitamrita (9 volumes)	Kannada	4900	{"score": 18, "category": "m-big"}
+250	Chaitanya Charitamrita (9 volumes)	Bengali	2600	{"score": 18, "category": "m-big"}
+251	Chaitanya Charitamrita (9 volumes)	Tamil	3200	{"score": 18, "category": "m-big"}
+252	Srimad Bhagavatam (1st Canto)	Gujarati	460	{"score": 2, "category": "m-big"}
+253	Srimad Bhagavatam (1st Canto)	Telugu	450	{"score": 2, "category": "m-big"}
+254	Srimad Bhagavatam (1st Canto)	Kannada	560	{"score": 2, "category": "m-big"}
+255	Srimad Bhagavatam (1st Canto)	Bengali	490	{"score": 2, "category": "m-big"}
+256	Srimad Bhagavatam (1st Canto)	Tamil	540	{"score": 2, "category": "m-big"}
+271	Teachings of Lord Caitanya	Marathi	100	{"score": 1, "category": "big"}
+272	Teachings of Lord Kapila	Hindi	100	{"score": 1, "category": "big"}
+273	Teachings of Lord Kapila	Marathi	60	{"score": 1, "category": "big"}
+274	Krishna Counsciousness, The Top Most Yoga System	Hindi	40	{"score": 0.25, "category": "small"}
+275	KBI Beyond Birth And Death	English	50	{"score": 0.25, "category": "small"}
+276	KBI Easy Journey To Other Planets	English	50	{"score": 0.25, "category": "small"}
+277	KBI Krishna Consciousness The Top Most Yoga System	English	50	{"score": 0.25, "category": "small"}
+278	KBI Life Come From Life	English	80	{"score": 0.25, "category": "small"}
+279	KBI Path Of Perfection	English	80	{"score": 0.5, "category": "medium"}
+280	KBI Perfect Question Perfect Answer	English	60	{"score": 0.25, "category": "small"}
+281	KBI Nectar Of Devotion	English	250	{"score": 1, "category": "big"}
+282	KBI Perfection Of Yoga	English	50	{"score": 0.25, "category": "small"}
+283	KBI Sri Isopanishad (Soft Bound)	English	100	{"score": 0.25, "category": "small"}
+286	KBI Teachings of Lord Caitanya	English	200	{"score": 1, "category": "big"}
+233	Bhagavad Gita As It Is	Gujarati	210	{"score": 2, "category": "m-big"}
+291	Bhagavad Gita As It Is (Pocket Edition)	Marathi	150	{"score": 2, "category": "m-big"}
+293	Bhagavad Gita As It Is	Malayalam	310	{"score": 2, "category": "m-big"}
+302	Bhagavad Gita As It Is	Nepali	200	{"score": 2, "category": "m-big"}
+133	Civilization & Transcendence	English	30	{"score": 0.25, "category": "small"}
+161	Coming Back	English	40	{"score": 0.25, "category": "small"}
+124	Elevation to Krsna Consciousness	English	30	{"score": 0.25, "category": "small"}
+139	Krishna Counsciousness, The Top Most Yoga System	English	30	{"score": 0.25, "category": "small"}
+164	Krsna Conciousness: The Matchless Gift	English	30	{"score": 0.25, "category": "small"}
+148	Life Comes From Life	English	50	{"score": 0.25, "category": "small"}
+142	Light of the Bhagavata	English	60	{"score": 0.25, "category": "small"}
+127	Perfect Question & Perfect Answer	English	40	{"score": 0.25, "category": "small"}
+121	Sri Isopanishad	English	40	{"score": 0.25, "category": "small"}
+160	Srila Prabhupada Lilamrita	English	1200	{"score": 10.5, "category": "big"}
+165	Krsna Conciousness: The Matchless Gift	Hindi	40	{"score": 0.25, "category": "small"}
+145	The Laws of Nature	English	40	{"score": 0.25, "category": "small"}
+154	The Nectar of Instruction	English	40	{"score": 0.25, "category": "small"}
+118	The Path of Perfection	English	60	{"score": 0.25, "category": "small"}
+158	The Science of Self - Realization	Hindi	130	{"score": 1, "category": "big"}
+137	Bhagavad Gita As It Is	Hindi	200	{"score": 2, "category": "m-big"}
+152	Srimad Bhagavatam (18 volumes)	Hindi	7200	{"score": 36, "category": "m-big"}
+134	Civilization & Transcendence	Hindi	30	{"score": 0.25, "category": "small"}
+162	Coming Back	Hindi	40	{"score": 0.25, "category": "small"}
+125	Elevation to Krsna Consciousness	Hindi	30	{"score": 0.25, "category": "small"}
+149	Life Comes From Life	Hindi	60	{"score": 0.25, "category": "small"}
+157	The Science of Self - Realization	English	100	{"score": 1, "category": "big"}
+132	Chaitanya Charitamrita (9 volumes)	Marathi	2800	{"score": 18, "category": "m-big"}
+128	Perfect Question & Perfect Answer	Hindi	40	{"score": 0.25, "category": "small"}
+122	Sri Isopanishad	Hindi	40	{"score": 0.25, "category": "small"}
+153	Srimad Bhagavatam Set	Marathi	7500	{"score": 36, "category": "m-big"}
+146	The Laws of Nature	Hindi	30	{"score": 0.25, "category": "small"}
+155	The Nectar of Instruction	Hindi	30	{"score": 0.25, "category": "small"}
+119	The Path of Perfection	Hindi	70	{"score": 0.25, "category": "small"}
+138	Bhagavad Gita As It Is	Marathi	180	{"score": 2, "category": "m-big"}
+131	Chaitanya Charitamrita (9 volumes)	Hindi	3800	{"score": 18, "category": "m-big"}
+159	The Science of Self - Realization	Marathi	100	{"score": 1, "category": "big"}
+163	Coming Back	Marathi	30	{"score": 0.25, "category": "small"}
+166	Krsna Conciousness: The Matchless Gift	Marathi	40	{"score": 0.25, "category": "small"}
+141	Krishna Counsciousness, The Top Most Yoga System	Marathi	20	{"score": 0.25, "category": "small"}
+151	Srimad Bhagavatam (10 volumes)	English	7000	{"score": 36, "category": "m-big"}
+150	Life Comes From Life	Marathi	50	{"score": 0.25, "category": "small"}
+147	The Laws of Nature	Marathi	30	{"score": 0.25, "category": "small"}
+129	Perfect Question & Perfect Answer	Marathi	40	{"score": 0.25, "category": "small"}
+123	Sri Isopanishad	Marathi	40	{"score": 0.25, "category": "small"}
+156	The Nectar of Instruction	Marathi	20	{"score": 0.25, "category": "small"}
+135	Civilization & Transcendence	Marathi	40	{"score": 0.25, "category": "small"}
+136	Bhagavad Gita As It Is	English	250	{"score": 2, "category": "m-big"}
+185	Beyond Illusion & Doubt	English	70	{"score": 0.5, "category": "medium"}
+213	Chant and Be Happy	English	40	{"score": 0.25, "category": "small"}
+201	Easy Journey to Other Planets	English	30	{"score": 0.25, "category": "small"}
+170	Hare Krishna Challenge	English	40	{"score": 0.25, "category": "small"}
+167	Introduction to Bhagavad Gita (Gita Saar)	English	30	{"score": 0.1, "category": "small"}
+210	Krsna, The Reservoir of Pleasure	English	20	{"score": 0.1, "category": "small"}
+208	Krsna, The Supreme Personality of Godhead	Hindi	230	{"score": 2, "category": "m-big"}
+176	Message of Godhead	English	30	{"score": 0.25, "category": "small"}
+179	On The Way to Krsna	English	30	{"score": 0.25, "category": "small"}
+193	Prabhupada (Condensed)	Hindi	140	{"score": 2, "category": "big"}
+204	Raja-vidya: The King of Knowledge	English	40	{"score": 0.25, "category": "small"}
+196	Beyond Birth and Death	Hindi	30	{"score": 0.25, "category": "small"}
+182	Teachings Of Queen Kunti	English	100	{"score": 0.5, "category": "medium"}
+198	The Journey of Self Discovery	English	100	{"score": 0.5, "category": "medium"}
+216	The Nectar of Devotion	English	250	{"score": 2, "category": "m-big"}
+207	Krsna, The Supreme Personality of Godhead	English	250	{"score": 2, "category": "m-big"}
+174	Dharma: The Way of Transcendence	Hindi	50	{"score": 0.25, "category": "small"}
+209	Krsna, The Supreme Personality of Godhead	Marathi	230	{"score": 2, "category": "m-big"}
+188	Srila Prabhupada Lilamrita	Hindi	1200	{"score": 10, "category": "m-big"}
+214	Chant and Be Happy	Hindi	40	{"score": 0.25, "category": "small"}
+202	Easy Journey to Other Planets	Hindi	30	{"score": 0.25, "category": "small"}
+192	Prabhupada (Condensed)	English	120	{"score": 2, "category": "big"}
+168	Introduction to Bhagavad Gita (Gita Saar)	Hindi	30	{"score": 0.1, "category": "small"}
+211	Krsna, The Reservoir of Pleasure	Hindi	20	{"score": 0.1, "category": "small"}
+191	Srimad Bhagavatam (1st Canto)	Marathi	460	{"score": 2, "category": "m-big"}
+177	Message of Godhead	Hindi	30	{"score": 0.25, "category": "small"}
+180	On The Way to Krsna	Hindi	30	{"score": 0.25, "category": "small"}
+194	Prabhupada (Condensed)	Marathi	200	{"score": 2, "category": "big"}
+205	Raja-vidya: The King of Knowledge	Hindi	40	{"score": 0.25, "category": "small"}
+183	Teachings Of Queen Kunti	Hindi	100	{"score": 0.5, "category": "medium"}
+199	The Journey of Self Discovery	Hindi	100	{"score": 0.5, "category": "medium"}
+189	Srimad Bhagavatam (1st Canto)	English	630	{"score": 2, "category": "m-big"}
+203	Easy Journey to Other Planets	Marathi	40	{"score": 0.25, "category": "small"}
+175	Dharma: The Way of Transcendence	Marathi	50	{"score": 0.25, "category": "small"}
+215	Chant and Be Happy	Marathi	50	{"score": 0.25, "category": "small"}
+197	Beyond Birth and Death	Marathi	20	{"score": 0.25, "category": "small"}
+190	Srimad Bhagavatam (1st Canto)	Hindi	530	{"score": 2, "category": "m-big"}
+169	Introduction to Bhagavad Gita (Gita Saar)	Marathi	30	{"score": 0.1, "category": "small"}
+212	Krsna, The Reservoir of Pleasure	Marathi	20	{"score": 0.1, "category": "small"}
+178	Message of Godhead	Marathi	30	{"score": 0.25, "category": "small"}
+181	On The Way to Krsna	Marathi	30	{"score": 0.25, "category": "small"}
+184	Teachings Of Queen Kunti	Marathi	60	{"score": 0.5, "category": "medium"}
+200	The Journey of Self Discovery	Marathi	100	{"score": 0.5, "category": "medium"}
+186	Beyond Illusion & Doubt	Hindi	80	{"score": 0.5, "category": "medium"}
+219	The Selected Verses from Vedic Scriptures	English	200	{"score": 2, "category": "m-big"}
+222	A Second Chance	English	70	{"score": 0.5, "category": "medium"}
+225	The Perfection Of Yoga	English	30	{"score": 0.25, "category": "small"}
+228	Transcendental Teachings of Prahlada Maharaja	English	20	{"score": 0.1, "category": "small"}
+217	The Nectar of Devotion	Hindi	250	{"score": 2, "category": "m-big"}
+223	A Second Chance	Hindi	70	{"score": 0.5, "category": "medium"}
+226	The Perfection Of Yoga	Hindi	30	{"score": 0.25, "category": "small"}
+229	Transcendental Teachings of Prahlada Maharaja	Hindi	20	{"score": 0.1, "category": "small"}
+206	Raja-vidya: The King of Knowledge	Marathi	40	{"score": 0.25, "category": "small"}
+224	A Second Chance	Marathi	70	{"score": 0.5, "category": "medium"}
+227	The Perfection Of Yoga	Marathi	30	{"score": 0.25, "category": "small"}
+230	Transcendental Teachings of Prahlada Maharaja	Marathi	20	{"score": 0.1, "category": "small"}
+218	The Nectar of Devotion	Marathi	130	{"score": 2, "category": "m-big"}
+257	Chanting Hare Krishna	English	100	{"score": 0.5, "category": "medium"}
+284	KBI Search For Liberation	English	50	{"score": 0.25, "category": "small"}
+287	KBI Srimad Bhagavatam Set (30 Vol)	English	8600	{"score": 36, "category": "m-big"}
+234	Bhagavad Gita As It Is	Kannada	280	{"score": 2, "category": "m-big"}
+237	Bhagavad Gita As It Is	Oriya	240	{"score": 2, "category": "m-big"}
+236	Bhagavad Gita As It Is	Tamil	240	{"score": 2, "category": "m-big"}
+235	Bhagavad Gita As It Is	Bengali	200	{"score": 2, "category": "m-big"}
+294	Bhagavad Gita As It Is (Pocket Edition)	Telugu	160	{"score": 2, "category": "m-big"}
+295	Bhagavad Gita As It Is (Pocket Edition)	English	190	{"score": 2, "category": "m-big"}

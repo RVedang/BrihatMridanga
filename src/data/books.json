@@ -1,0 +1,1762 @@
+[
+  {
+    "id": "195",
+    "name": "Beyond Birth and Death",
+    "language": "English",
+    "price": 30,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "173",
+    "name": "Dharma: The Way of Transcendence",
+    "language": "English",
+    "price": 50,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "260",
+    "name": "The Science of Self - Realization",
+    "language": "Gujarati",
+    "price": 130,
+    "currency": "INR",
+    "score": 1,
+    "category": "big",
+    "volumes": 1
+  },
+  {
+    "id": "258",
+    "name": "Modern Times, Vedic Perspective",
+    "language": "English",
+    "price": 30,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "259",
+    "name": "The Science of Self - Realization",
+    "language": "Bengali",
+    "price": 130,
+    "currency": "INR",
+    "score": 1,
+    "category": "big",
+    "volumes": 1
+  },
+  {
+    "id": "261",
+    "name": "The Science of Self - Realization",
+    "language": "Oriya",
+    "price": 150,
+    "currency": "INR",
+    "score": 1,
+    "category": "big",
+    "volumes": 1
+  },
+  {
+    "id": "262",
+    "name": "The Science of Self - Realization",
+    "language": "Tamil",
+    "price": 100,
+    "currency": "INR",
+    "score": 1,
+    "category": "big",
+    "volumes": 1
+  },
+  {
+    "id": "263",
+    "name": "The Science of Self - Realization",
+    "language": "Telugu",
+    "price": 130,
+    "currency": "INR",
+    "score": 1,
+    "category": "big",
+    "volumes": 1
+  },
+  {
+    "id": "264",
+    "name": "Sri Namamrta",
+    "language": "English",
+    "price": 200,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "265",
+    "name": "Sri Brahma - Samhita",
+    "language": "English",
+    "price": 40,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "266",
+    "name": "Teachings of Lord Caitanya",
+    "language": "English",
+    "price": 120,
+    "currency": "INR",
+    "score": 1,
+    "category": "big",
+    "volumes": 1
+  },
+  {
+    "id": "267",
+    "name": "Teachings of Lord Kapila",
+    "language": "English",
+    "price": 100,
+    "currency": "INR",
+    "score": 1,
+    "category": "big",
+    "volumes": 1
+  },
+  {
+    "id": "269",
+    "name": "Chanting Hare Krishna",
+    "language": "Hindi",
+    "price": 80,
+    "currency": "INR",
+    "score": 0.5,
+    "category": "medium",
+    "volumes": 1
+  },
+  {
+    "id": "270",
+    "name": "Teachings of Lord Caitanya",
+    "language": "Hindi",
+    "price": 150,
+    "currency": "INR",
+    "score": 1,
+    "category": "big",
+    "volumes": 1
+  },
+  {
+    "id": "285",
+    "name": "Srimad Bhagavatam Set",
+    "language": "Oriya",
+    "price": 7600,
+    "currency": "INR",
+    "score": 36,
+    "category": "m-big",
+    "volumes": 18
+  },
+  {
+    "id": "288",
+    "name": "Sri Brahma - Samhita",
+    "language": "Hindi",
+    "price": 40,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "292",
+    "name": "Bhagavad Gita As It Is",
+    "language": "Punjabi",
+    "price": 250,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "296",
+    "name": "The Quest for Enlightenment",
+    "language": "English",
+    "price": 100,
+    "currency": "INR",
+    "score": 0.5,
+    "category": "medium",
+    "volumes": 1
+  },
+  {
+    "id": "297",
+    "name": "Lord Caitanya His Life and Teachings",
+    "language": "English",
+    "price": 40,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "298",
+    "name": "KBI Krsna The Supreme Personality of Godhead (Vol.1 & Vol.2)",
+    "language": "English",
+    "price": 1100,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 2
+  },
+  {
+    "id": "299",
+    "name": "KBI Sri Isopanishad (Hard Bound)",
+    "language": "English",
+    "price": 150,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "300",
+    "name": "KBI Science Of Self Realization (Soft Bound)",
+    "language": "English",
+    "price": 200,
+    "currency": "INR",
+    "score": 1,
+    "category": "big",
+    "volumes": 1
+  },
+  {
+    "id": "301",
+    "name": "Hand Book of Krishna Conciousness",
+    "language": "English",
+    "price": 30,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "232",
+    "name": "Bhagavad Gita As It Is",
+    "language": "Telugu",
+    "price": 220,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "268",
+    "name": "Bhagavad Gita As It Is (Pocket Edition)",
+    "language": "Hindi",
+    "price": 180,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "240",
+    "name": "Krsna, The Supreme Personality of Godhead",
+    "language": "Bengali",
+    "price": 250,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "241",
+    "name": "Krsna, The Supreme Personality of Godhead",
+    "language": "Gujarati",
+    "price": 220,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "238",
+    "name": "Krsna, The Supreme Personality of Godhead",
+    "language": "Kannada",
+    "price": 290,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "289",
+    "name": "Krsna, The Supreme Personality of Godhead",
+    "language": "Oriya",
+    "price": 250,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "239",
+    "name": "Krsna, The Supreme Personality of Godhead",
+    "language": "Tamil",
+    "price": 250,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "231",
+    "name": "Krsna, The Supreme Personality of Godhead",
+    "language": "Telugu",
+    "price": 230,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "130",
+    "name": "Chaitanya Charitamrita (9 volumes)",
+    "language": "English",
+    "price": 3200,
+    "currency": "INR",
+    "score": 18,
+    "category": "m-big",
+    "volumes": 9
+  },
+  {
+    "id": "290",
+    "name": "Srimad Bhagavatam (18 volumes)",
+    "language": "English",
+    "price": 8800,
+    "currency": "INR",
+    "score": 36,
+    "category": "m-big",
+    "volumes": 18
+  },
+  {
+    "id": "126",
+    "name": "Elevation to Krsna Consciousness",
+    "language": "Marathi",
+    "price": 40,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "242",
+    "name": "Srimad Bhagavatam Set",
+    "language": "Gujarati",
+    "price": 7800,
+    "currency": "INR",
+    "score": 36,
+    "category": "m-big",
+    "volumes": 18
+  },
+  {
+    "id": "243",
+    "name": "Srimad Bhagavatam Set",
+    "language": "Telugu",
+    "price": 6600,
+    "currency": "INR",
+    "score": 36,
+    "category": "m-big",
+    "volumes": 18
+  },
+  {
+    "id": "244",
+    "name": "Srimad Bhagavatam Set",
+    "language": "Kannada",
+    "price": 7800,
+    "currency": "INR",
+    "score": 36,
+    "category": "m-big",
+    "volumes": 18
+  },
+  {
+    "id": "245",
+    "name": "Srimad Bhagavatam Set",
+    "language": "Bengali",
+    "price": 7000,
+    "currency": "INR",
+    "score": 36,
+    "category": "m-big",
+    "volumes": 18
+  },
+  {
+    "id": "246",
+    "name": "Srimad Bhagavatam Set",
+    "language": "Tamil",
+    "price": 7500,
+    "currency": "INR",
+    "score": 36,
+    "category": "m-big",
+    "volumes": 18
+  },
+  {
+    "id": "247",
+    "name": "Chaitanya Charitamrita (9 volumes)",
+    "language": "Gujarati",
+    "price": 2500,
+    "currency": "INR",
+    "score": 18,
+    "category": "m-big",
+    "volumes": 9
+  },
+  {
+    "id": "248",
+    "name": "Chaitanya Charitamrita (9 volumes)",
+    "language": "Telugu",
+    "price": 2600,
+    "currency": "INR",
+    "score": 18,
+    "category": "m-big",
+    "volumes": 9
+  },
+  {
+    "id": "249",
+    "name": "Chaitanya Charitamrita (9 volumes)",
+    "language": "Kannada",
+    "price": 4900,
+    "currency": "INR",
+    "score": 18,
+    "category": "m-big",
+    "volumes": 9
+  },
+  {
+    "id": "250",
+    "name": "Chaitanya Charitamrita (9 volumes)",
+    "language": "Bengali",
+    "price": 2600,
+    "currency": "INR",
+    "score": 18,
+    "category": "m-big",
+    "volumes": 9
+  },
+  {
+    "id": "251",
+    "name": "Chaitanya Charitamrita (9 volumes)",
+    "language": "Tamil",
+    "price": 3200,
+    "currency": "INR",
+    "score": 18,
+    "category": "m-big",
+    "volumes": 9
+  },
+  {
+    "id": "252",
+    "name": "Srimad Bhagavatam (1st Canto)",
+    "language": "Gujarati",
+    "price": 460,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "253",
+    "name": "Srimad Bhagavatam (1st Canto)",
+    "language": "Telugu",
+    "price": 450,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "254",
+    "name": "Srimad Bhagavatam (1st Canto)",
+    "language": "Kannada",
+    "price": 560,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "255",
+    "name": "Srimad Bhagavatam (1st Canto)",
+    "language": "Bengali",
+    "price": 490,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "256",
+    "name": "Srimad Bhagavatam (1st Canto)",
+    "language": "Tamil",
+    "price": 540,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "271",
+    "name": "Teachings of Lord Caitanya",
+    "language": "Marathi",
+    "price": 100,
+    "currency": "INR",
+    "score": 1,
+    "category": "big",
+    "volumes": 1
+  },
+  {
+    "id": "272",
+    "name": "Teachings of Lord Kapila",
+    "language": "Hindi",
+    "price": 100,
+    "currency": "INR",
+    "score": 1,
+    "category": "big",
+    "volumes": 1
+  },
+  {
+    "id": "273",
+    "name": "Teachings of Lord Kapila",
+    "language": "Marathi",
+    "price": 60,
+    "currency": "INR",
+    "score": 1,
+    "category": "big",
+    "volumes": 1
+  },
+  {
+    "id": "274",
+    "name": "Krishna Counsciousness, The Top Most Yoga System",
+    "language": "Hindi",
+    "price": 40,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "275",
+    "name": "KBI Beyond Birth And Death",
+    "language": "English",
+    "price": 50,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "276",
+    "name": "KBI Easy Journey To Other Planets",
+    "language": "English",
+    "price": 50,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "277",
+    "name": "KBI Krishna Consciousness The Top Most Yoga System",
+    "language": "English",
+    "price": 50,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "278",
+    "name": "KBI Life Come From Life",
+    "language": "English",
+    "price": 80,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "279",
+    "name": "KBI Path Of Perfection",
+    "language": "English",
+    "price": 80,
+    "currency": "INR",
+    "score": 0.5,
+    "category": "medium",
+    "volumes": 1
+  },
+  {
+    "id": "280",
+    "name": "KBI Perfect Question Perfect Answer",
+    "language": "English",
+    "price": 60,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "281",
+    "name": "KBI Nectar Of Devotion",
+    "language": "English",
+    "price": 250,
+    "currency": "INR",
+    "score": 1,
+    "category": "big",
+    "volumes": 1
+  },
+  {
+    "id": "282",
+    "name": "KBI Perfection Of Yoga",
+    "language": "English",
+    "price": 50,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "283",
+    "name": "KBI Sri Isopanishad (Soft Bound)",
+    "language": "English",
+    "price": 100,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "286",
+    "name": "KBI Teachings of Lord Caitanya",
+    "language": "English",
+    "price": 200,
+    "currency": "INR",
+    "score": 1,
+    "category": "big",
+    "volumes": 1
+  },
+  {
+    "id": "233",
+    "name": "Bhagavad Gita As It Is",
+    "language": "Gujarati",
+    "price": 210,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "291",
+    "name": "Bhagavad Gita As It Is (Pocket Edition)",
+    "language": "Marathi",
+    "price": 150,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "293",
+    "name": "Bhagavad Gita As It Is",
+    "language": "Malayalam",
+    "price": 310,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "302",
+    "name": "Bhagavad Gita As It Is",
+    "language": "Nepali",
+    "price": 200,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "133",
+    "name": "Civilization & Transcendence",
+    "language": "English",
+    "price": 30,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "161",
+    "name": "Coming Back",
+    "language": "English",
+    "price": 40,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "124",
+    "name": "Elevation to Krsna Consciousness",
+    "language": "English",
+    "price": 30,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "139",
+    "name": "Krishna Counsciousness, The Top Most Yoga System",
+    "language": "English",
+    "price": 30,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "164",
+    "name": "Krsna Conciousness: The Matchless Gift",
+    "language": "English",
+    "price": 30,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "148",
+    "name": "Life Comes From Life",
+    "language": "English",
+    "price": 50,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "142",
+    "name": "Light of the Bhagavata",
+    "language": "English",
+    "price": 60,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "127",
+    "name": "Perfect Question & Perfect Answer",
+    "language": "English",
+    "price": 40,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "121",
+    "name": "Sri Isopanishad",
+    "language": "English",
+    "price": 40,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "160",
+    "name": "Srila Prabhupada Lilamrita",
+    "language": "English",
+    "price": 1200,
+    "currency": "INR",
+    "score": 10.5,
+    "category": "big",
+    "volumes": 1
+  },
+  {
+    "id": "165",
+    "name": "Krsna Conciousness: The Matchless Gift",
+    "language": "Hindi",
+    "price": 40,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "145",
+    "name": "The Laws of Nature",
+    "language": "English",
+    "price": 40,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "154",
+    "name": "The Nectar of Instruction",
+    "language": "English",
+    "price": 40,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "118",
+    "name": "The Path of Perfection",
+    "language": "English",
+    "price": 60,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "158",
+    "name": "The Science of Self - Realization",
+    "language": "Hindi",
+    "price": 130,
+    "currency": "INR",
+    "score": 1,
+    "category": "big",
+    "volumes": 1
+  },
+  {
+    "id": "137",
+    "name": "Bhagavad Gita As It Is",
+    "language": "Hindi",
+    "price": 200,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "152",
+    "name": "Srimad Bhagavatam (18 volumes)",
+    "language": "Hindi",
+    "price": 7200,
+    "currency": "INR",
+    "score": 36,
+    "category": "m-big",
+    "volumes": 18
+  },
+  {
+    "id": "134",
+    "name": "Civilization & Transcendence",
+    "language": "Hindi",
+    "price": 30,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "162",
+    "name": "Coming Back",
+    "language": "Hindi",
+    "price": 40,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "125",
+    "name": "Elevation to Krsna Consciousness",
+    "language": "Hindi",
+    "price": 30,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "149",
+    "name": "Life Comes From Life",
+    "language": "Hindi",
+    "price": 60,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "157",
+    "name": "The Science of Self - Realization",
+    "language": "English",
+    "price": 100,
+    "currency": "INR",
+    "score": 1,
+    "category": "big",
+    "volumes": 1
+  },
+  {
+    "id": "132",
+    "name": "Chaitanya Charitamrita (9 volumes)",
+    "language": "Marathi",
+    "price": 2800,
+    "currency": "INR",
+    "score": 18,
+    "category": "m-big",
+    "volumes": 9
+  },
+  {
+    "id": "128",
+    "name": "Perfect Question & Perfect Answer",
+    "language": "Hindi",
+    "price": 40,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "122",
+    "name": "Sri Isopanishad",
+    "language": "Hindi",
+    "price": 40,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "153",
+    "name": "Srimad Bhagavatam Set",
+    "language": "Marathi",
+    "price": 7500,
+    "currency": "INR",
+    "score": 36,
+    "category": "m-big",
+    "volumes": 18
+  },
+  {
+    "id": "146",
+    "name": "The Laws of Nature",
+    "language": "Hindi",
+    "price": 30,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "155",
+    "name": "The Nectar of Instruction",
+    "language": "Hindi",
+    "price": 30,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "119",
+    "name": "The Path of Perfection",
+    "language": "Hindi",
+    "price": 70,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "138",
+    "name": "Bhagavad Gita As It Is",
+    "language": "Marathi",
+    "price": 180,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "131",
+    "name": "Chaitanya Charitamrita (9 volumes)",
+    "language": "Hindi",
+    "price": 3800,
+    "currency": "INR",
+    "score": 18,
+    "category": "m-big",
+    "volumes": 9
+  },
+  {
+    "id": "159",
+    "name": "The Science of Self - Realization",
+    "language": "Marathi",
+    "price": 100,
+    "currency": "INR",
+    "score": 1,
+    "category": "big",
+    "volumes": 1
+  },
+  {
+    "id": "163",
+    "name": "Coming Back",
+    "language": "Marathi",
+    "price": 30,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "166",
+    "name": "Krsna Conciousness: The Matchless Gift",
+    "language": "Marathi",
+    "price": 40,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "141",
+    "name": "Krishna Counsciousness, The Top Most Yoga System",
+    "language": "Marathi",
+    "price": 20,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "151",
+    "name": "Srimad Bhagavatam (10 volumes)",
+    "language": "English",
+    "price": 7000,
+    "currency": "INR",
+    "score": 36,
+    "category": "m-big",
+    "volumes": 10
+  },
+  {
+    "id": "150",
+    "name": "Life Comes From Life",
+    "language": "Marathi",
+    "price": 50,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "147",
+    "name": "The Laws of Nature",
+    "language": "Marathi",
+    "price": 30,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "129",
+    "name": "Perfect Question & Perfect Answer",
+    "language": "Marathi",
+    "price": 40,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "123",
+    "name": "Sri Isopanishad",
+    "language": "Marathi",
+    "price": 40,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "156",
+    "name": "The Nectar of Instruction",
+    "language": "Marathi",
+    "price": 20,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "135",
+    "name": "Civilization & Transcendence",
+    "language": "Marathi",
+    "price": 40,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "136",
+    "name": "Bhagavad Gita As It Is",
+    "language": "English",
+    "price": 250,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "185",
+    "name": "Beyond Illusion & Doubt",
+    "language": "English",
+    "price": 70,
+    "currency": "INR",
+    "score": 0.5,
+    "category": "medium",
+    "volumes": 1
+  },
+  {
+    "id": "213",
+    "name": "Chant and Be Happy",
+    "language": "English",
+    "price": 40,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "201",
+    "name": "Easy Journey to Other Planets",
+    "language": "English",
+    "price": 30,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "170",
+    "name": "Hare Krishna Challenge",
+    "language": "English",
+    "price": 40,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "167",
+    "name": "Introduction to Bhagavad Gita (Gita Saar)",
+    "language": "English",
+    "price": 30,
+    "currency": "INR",
+    "score": 0.1,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "210",
+    "name": "Krsna, The Reservoir of Pleasure",
+    "language": "English",
+    "price": 20,
+    "currency": "INR",
+    "score": 0.1,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "208",
+    "name": "Krsna, The Supreme Personality of Godhead",
+    "language": "Hindi",
+    "price": 230,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "176",
+    "name": "Message of Godhead",
+    "language": "English",
+    "price": 30,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "179",
+    "name": "On The Way to Krsna",
+    "language": "English",
+    "price": 30,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "193",
+    "name": "Prabhupada (Condensed)",
+    "language": "Hindi",
+    "price": 140,
+    "currency": "INR",
+    "score": 2,
+    "category": "big",
+    "volumes": 1
+  },
+  {
+    "id": "204",
+    "name": "Raja-vidya: The King of Knowledge",
+    "language": "English",
+    "price": 40,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "196",
+    "name": "Beyond Birth and Death",
+    "language": "Hindi",
+    "price": 30,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "182",
+    "name": "Teachings Of Queen Kunti",
+    "language": "English",
+    "price": 100,
+    "currency": "INR",
+    "score": 0.5,
+    "category": "medium",
+    "volumes": 1
+  },
+  {
+    "id": "198",
+    "name": "The Journey of Self Discovery",
+    "language": "English",
+    "price": 100,
+    "currency": "INR",
+    "score": 0.5,
+    "category": "medium",
+    "volumes": 1
+  },
+  {
+    "id": "216",
+    "name": "The Nectar of Devotion",
+    "language": "English",
+    "price": 250,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "207",
+    "name": "Krsna, The Supreme Personality of Godhead",
+    "language": "English",
+    "price": 250,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "174",
+    "name": "Dharma: The Way of Transcendence",
+    "language": "Hindi",
+    "price": 50,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "209",
+    "name": "Krsna, The Supreme Personality of Godhead",
+    "language": "Marathi",
+    "price": 230,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "188",
+    "name": "Srila Prabhupada Lilamrita",
+    "language": "Hindi",
+    "price": 1200,
+    "currency": "INR",
+    "score": 10,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "214",
+    "name": "Chant and Be Happy",
+    "language": "Hindi",
+    "price": 40,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "202",
+    "name": "Easy Journey to Other Planets",
+    "language": "Hindi",
+    "price": 30,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "192",
+    "name": "Prabhupada (Condensed)",
+    "language": "English",
+    "price": 120,
+    "currency": "INR",
+    "score": 2,
+    "category": "big",
+    "volumes": 1
+  },
+  {
+    "id": "168",
+    "name": "Introduction to Bhagavad Gita (Gita Saar)",
+    "language": "Hindi",
+    "price": 30,
+    "currency": "INR",
+    "score": 0.1,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "211",
+    "name": "Krsna, The Reservoir of Pleasure",
+    "language": "Hindi",
+    "price": 20,
+    "currency": "INR",
+    "score": 0.1,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "191",
+    "name": "Srimad Bhagavatam (1st Canto)",
+    "language": "Marathi",
+    "price": 460,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "177",
+    "name": "Message of Godhead",
+    "language": "Hindi",
+    "price": 30,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "180",
+    "name": "On The Way to Krsna",
+    "language": "Hindi",
+    "price": 30,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "194",
+    "name": "Prabhupada (Condensed)",
+    "language": "Marathi",
+    "price": 200,
+    "currency": "INR",
+    "score": 2,
+    "category": "big",
+    "volumes": 1
+  },
+  {
+    "id": "205",
+    "name": "Raja-vidya: The King of Knowledge",
+    "language": "Hindi",
+    "price": 40,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "183",
+    "name": "Teachings Of Queen Kunti",
+    "language": "Hindi",
+    "price": 100,
+    "currency": "INR",
+    "score": 0.5,
+    "category": "medium",
+    "volumes": 1
+  },
+  {
+    "id": "199",
+    "name": "The Journey of Self Discovery",
+    "language": "Hindi",
+    "price": 100,
+    "currency": "INR",
+    "score": 0.5,
+    "category": "medium",
+    "volumes": 1
+  },
+  {
+    "id": "189",
+    "name": "Srimad Bhagavatam (1st Canto)",
+    "language": "English",
+    "price": 630,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "203",
+    "name": "Easy Journey to Other Planets",
+    "language": "Marathi",
+    "price": 40,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "175",
+    "name": "Dharma: The Way of Transcendence",
+    "language": "Marathi",
+    "price": 50,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "215",
+    "name": "Chant and Be Happy",
+    "language": "Marathi",
+    "price": 50,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "197",
+    "name": "Beyond Birth and Death",
+    "language": "Marathi",
+    "price": 20,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "190",
+    "name": "Srimad Bhagavatam (1st Canto)",
+    "language": "Hindi",
+    "price": 530,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "169",
+    "name": "Introduction to Bhagavad Gita (Gita Saar)",
+    "language": "Marathi",
+    "price": 30,
+    "currency": "INR",
+    "score": 0.1,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "212",
+    "name": "Krsna, The Reservoir of Pleasure",
+    "language": "Marathi",
+    "price": 20,
+    "currency": "INR",
+    "score": 0.1,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "178",
+    "name": "Message of Godhead",
+    "language": "Marathi",
+    "price": 30,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "181",
+    "name": "On The Way to Krsna",
+    "language": "Marathi",
+    "price": 30,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "184",
+    "name": "Teachings Of Queen Kunti",
+    "language": "Marathi",
+    "price": 60,
+    "currency": "INR",
+    "score": 0.5,
+    "category": "medium",
+    "volumes": 1
+  },
+  {
+    "id": "200",
+    "name": "The Journey of Self Discovery",
+    "language": "Marathi",
+    "price": 100,
+    "currency": "INR",
+    "score": 0.5,
+    "category": "medium",
+    "volumes": 1
+  },
+  {
+    "id": "186",
+    "name": "Beyond Illusion & Doubt",
+    "language": "Hindi",
+    "price": 80,
+    "currency": "INR",
+    "score": 0.5,
+    "category": "medium",
+    "volumes": 1
+  },
+  {
+    "id": "219",
+    "name": "The Selected Verses from Vedic Scriptures",
+    "language": "English",
+    "price": 200,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "222",
+    "name": "A Second Chance",
+    "language": "English",
+    "price": 70,
+    "currency": "INR",
+    "score": 0.5,
+    "category": "medium",
+    "volumes": 1
+  },
+  {
+    "id": "225",
+    "name": "The Perfection Of Yoga",
+    "language": "English",
+    "price": 30,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "228",
+    "name": "Transcendental Teachings of Prahlada Maharaja",
+    "language": "English",
+    "price": 20,
+    "currency": "INR",
+    "score": 0.1,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "217",
+    "name": "The Nectar of Devotion",
+    "language": "Hindi",
+    "price": 250,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "223",
+    "name": "A Second Chance",
+    "language": "Hindi",
+    "price": 70,
+    "currency": "INR",
+    "score": 0.5,
+    "category": "medium",
+    "volumes": 1
+  },
+  {
+    "id": "226",
+    "name": "The Perfection Of Yoga",
+    "language": "Hindi",
+    "price": 30,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "229",
+    "name": "Transcendental Teachings of Prahlada Maharaja",
+    "language": "Hindi",
+    "price": 20,
+    "currency": "INR",
+    "score": 0.1,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "206",
+    "name": "Raja-vidya: The King of Knowledge",
+    "language": "Marathi",
+    "price": 40,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "224",
+    "name": "A Second Chance",
+    "language": "Marathi",
+    "price": 70,
+    "currency": "INR",
+    "score": 0.5,
+    "category": "medium",
+    "volumes": 1
+  },
+  {
+    "id": "227",
+    "name": "The Perfection Of Yoga",
+    "language": "Marathi",
+    "price": 30,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "230",
+    "name": "Transcendental Teachings of Prahlada Maharaja",
+    "language": "Marathi",
+    "price": 20,
+    "currency": "INR",
+    "score": 0.1,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "218",
+    "name": "The Nectar of Devotion",
+    "language": "Marathi",
+    "price": 130,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "257",
+    "name": "Chanting Hare Krishna",
+    "language": "English",
+    "price": 100,
+    "currency": "INR",
+    "score": 0.5,
+    "category": "medium",
+    "volumes": 1
+  },
+  {
+    "id": "284",
+    "name": "KBI Search For Liberation",
+    "language": "English",
+    "price": 50,
+    "currency": "INR",
+    "score": 0.25,
+    "category": "small",
+    "volumes": 1
+  },
+  {
+    "id": "287",
+    "name": "KBI Srimad Bhagavatam Set (30 Vol)",
+    "language": "English",
+    "price": 8600,
+    "currency": "INR",
+    "score": 36,
+    "category": "m-big",
+    "volumes": 30
+  },
+  {
+    "id": "234",
+    "name": "Bhagavad Gita As It Is",
+    "language": "Kannada",
+    "price": 280,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "237",
+    "name": "Bhagavad Gita As It Is",
+    "language": "Oriya",
+    "price": 240,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "236",
+    "name": "Bhagavad Gita As It Is",
+    "language": "Tamil",
+    "price": 240,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "235",
+    "name": "Bhagavad Gita As It Is",
+    "language": "Bengali",
+    "price": 200,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "294",
+    "name": "Bhagavad Gita As It Is (Pocket Edition)",
+    "language": "Telugu",
+    "price": 160,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  },
+  {
+    "id": "295",
+    "name": "Bhagavad Gita As It Is (Pocket Edition)",
+    "language": "English",
+    "price": 190,
+    "currency": "INR",
+    "score": 2,
+    "category": "m-big",
+    "volumes": 1
+  }
+]
