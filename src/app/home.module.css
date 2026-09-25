@@ -443,6 +443,9 @@
 .stories {
   background: var(--wash);
 }
+.community > :global(.container) {
+  margin-inline: auto;
+}
 .stories :global(.container) > section {
   margin: 0;
 }
