@@ -25,10 +25,10 @@ export function PresentationMotion() {
           // Never reset opacity: server-rendered content must remain visible.
           const from = photo
             ? {
-                transform: "scale(1.015)",
+                transform: "scale(1.035)",
               }
             : {
-                transform: "translateY(8px)",
+                transform: "translateY(24px)",
               };
           const animation = target.animate(
             [
@@ -38,15 +38,15 @@ export function PresentationMotion() {
               },
             ],
             {
-              duration: 450,
-              easing: "cubic-bezier(.22,1,.36,1)",
+              duration: 650,
+              easing: "cubic-bezier(.16,.65,.3,1)",
             },
           );
           animations.add(animation);
           animation.onfinish = () => animations.delete(animation);
         }
       },
-      { threshold: 0, rootMargin: "0px 0px 80px 0px" },
+      { threshold: 0, rootMargin: "0px" },
     );
     const scan = () =>
       root.querySelectorAll(revealTargets).forEach((element) => {
@@ -54,9 +54,7 @@ export function PresentationMotion() {
         seen.add(element);
         // Animate the containing card once, rather than its children again.
         if (element.parentElement?.closest(revealTargets)) return;
-        // Already-visible server content should not disappear on hydration.
-        const bounds = element.getBoundingClientRect();
-        if (bounds.top < window.innerHeight && bounds.bottom > 0) return;
+        // Visible content also gets an entrance, without ever being hidden.
         observer.observe(element);
       });
     scan();
@@ -148,7 +146,7 @@ export function AnimatedNumber({ value }: { value: number }) {
         };
         frame = requestAnimationFrame(tick);
       },
-      { threshold: 0, rootMargin: "0px 0px 80px 0px" },
+      { threshold: 0, rootMargin: "0px" },
     );
     observer.observe(element);
     preference.addEventListener("change", finish);

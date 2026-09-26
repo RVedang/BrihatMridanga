@@ -45,6 +45,13 @@
   align-items: start;
   gap: 16px;
 }
+.person {
+  margin: -8px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ink);
+}
 .copy :global(.eyebrow) {
   margin: 0;
   font-size: 9px;

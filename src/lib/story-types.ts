@@ -75,12 +75,19 @@ export function storySearchText(
     language: string;
     temple_id: string | null;
     location?: string | null;
+    person_name?: string | null;
     starts_at?: string | null;
     ends_at?: string | null;
   },
   temple?: { name: string; country: string; city?: string } | null,
 ) {
-  const parts = [item.title, item.body, item.language, item.location || ""];
+  const parts = [
+    item.title,
+    item.body,
+    item.language,
+    item.location || "",
+    item.person_name || "",
+  ];
   if (item.temple_id && temple) {
     parts.push(temple.name, temple.country, temple.city || "");
   }

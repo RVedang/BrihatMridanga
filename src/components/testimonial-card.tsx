@@ -21,6 +21,7 @@ export function TestimonialCard({
   centre?: RecordItem | null;
 }) {
   const place = placeLabel(temple, centre);
+  const person = item.person_name?.trim() || "";
   const inner = (
     <>
       <Quote className="testimonial-mark" size={22} strokeWidth={1.6} aria-hidden />
@@ -30,6 +31,7 @@ export function TestimonialCard({
       <div className="testimonial-who">
         <strong>{item.title}</strong>
         {place ? <span>{place}</span> : null}
+        {person ? <span>{person}</span> : null}
       </div>
     </>
   );

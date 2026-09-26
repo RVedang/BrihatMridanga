@@ -27,6 +27,7 @@ export function StoryArticle({
     item.language,
     item.temple_id ? temple?.name : "",
     item.temple_id ? temple?.country : "",
+    item.person_name?.trim() || "",
     published ? dateLabel(published) : "",
   ].filter(Boolean);
 
@@ -89,9 +90,14 @@ export function StoryArticle({
                 <StoryPhoto src={story.image_url} alt="" />
                 <div>
                   <span>
-                    {story.kind === "community_story"
-                      ? communityStoryTypeLabel(story.story_type)
-                      : story.language}
+                    {[
+                      story.kind === "community_story"
+                        ? communityStoryTypeLabel(story.story_type)
+                        : story.language,
+                      story.person_name?.trim() || "",
+                    ]
+                      .filter(Boolean)
+                      .join(" · ")}
                   </span>
                   <h2>{story.title}</h2>
                 </div>

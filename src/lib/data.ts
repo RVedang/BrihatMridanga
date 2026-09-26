@@ -64,6 +64,7 @@ export type Content = {
     | "photo"
     | "community_story";
   story_type?: string;
+  person_name?: string;
   title: string;
   body: string;
   language: string;

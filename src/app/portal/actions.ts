@@ -203,9 +203,17 @@ export async function saveRecord(
         message: "Choose the temple this belongs to.",
       };
     const storyType = text("story_type");
+    const personName = text("person_name");
     if (kind === "community_story") {
       if (!isCommunityStoryType(storyType))
         return { ok: false, message: "Choose a story type." };
+      if (!personName)
+        return {
+          ok: false,
+          message: "Enter the name of the person this story belongs to.",
+        };
+      if (personName.length > 160)
+        return { ok: false, message: "That name is too long." };
     }
     let imageUrl = text("image_url");
     if (kind === "story" || kind === "community_story") {
@@ -235,6 +243,7 @@ export async function saveRecord(
       centre_id: null,
       kind,
       story_type: kind === "community_story" ? storyType : "",
+      person_name: kind === "community_story" ? personName : "",
       title: text("title"),
       body: text("body"),
       language: text("language"),

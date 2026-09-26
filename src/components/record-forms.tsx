@@ -801,6 +801,18 @@ function Editor({
               </label>
             )}
             {kind === "community_story" && (
+              <label className="full">
+                Person this story belongs to
+                <input
+                  name="person_name"
+                  required
+                  maxLength={160}
+                  defaultValue={value("person_name")}
+                  placeholder="Name"
+                />
+              </label>
+            )}
+            {kind === "community_story" && (
               <p className="muted full">
                 These stories appear on the Stories page, grouped by type, and
                 on the homepage when published.

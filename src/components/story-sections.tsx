@@ -16,6 +16,7 @@ function StoryCard({ item, temple }: { item: Content; temple?: Temple }) {
   const place = item.temple_id
     ? [temple?.name, temple?.country].filter(Boolean).join(" · ")
     : "";
+  const person = item.person_name?.trim() || "";
   return (
     <Link href={`/stories/${item.id}`} className="card">
       <StoryPhoto src={item.image_url} alt={item.title} />
@@ -23,6 +24,7 @@ function StoryCard({ item, temple }: { item: Content; temple?: Temple }) {
         {[item.language, place].filter(Boolean).join(" · ")}
       </span>
       <h3>{item.title}</h3>
+      {person ? <p className="card-person">{person}</p> : null}
       <p>{item.body.slice(0, 160)}</p>
       <span className="card-go">
         Read more <ArrowUpRight size={15} strokeWidth={1.6} />
@@ -146,6 +148,9 @@ export function HomeStories({ items }: { items: Content[] }) {
                   <p className="eyebrow">
                     {communityStoryTypeLabel(story.story_type)}
                   </p>
+                  {story.person_name?.trim() ? (
+                    <p className={styles.person}>{story.person_name.trim()}</p>
+                  ) : null}
                   {!src && (
                     <BookOpen
                       className={styles.symbol}
