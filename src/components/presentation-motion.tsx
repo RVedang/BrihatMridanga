@@ -15,62 +15,48 @@ export function PresentationMotion() {
     const animations = new Set<Animation>();
     const observer = new IntersectionObserver(
       (entries) => {
-        let stagger = 0;
         for (const entry of entries) {
           if (!entry.isIntersecting) continue;
           observer.unobserve(entry.target);
           if (preference.matches) continue;
           const target = entry.target;
-          const siblings = target.parentElement
-            ? Array.from(target.parentElement.children)
-            : [];
-          const index = siblings.indexOf(target);
-          const heading = target.matches(".section-title, .home-rail-heading");
           const photo = target.matches(".story-photo");
-          const distance = window.innerWidth < 700 ? 20 : 38;
+          // Observer callbacks can arrive after a frame has already painted.
+          // Never reset opacity: server-rendered content must remain visible.
           const from = photo
             ? {
-                opacity: 0,
-                transform: "scale(1.045)",
-                clipPath: "inset(0 0 12% 0 round 18px)",
+                transform: "scale(1.015)",
               }
             : {
-                opacity: 0,
-                transform: heading
-                  ? "translateY(20px)"
-                  : `translate(${index % 2 ? distance : -distance}px, 20px)`,
+                transform: "translateY(8px)",
               };
-          const delay = heading
-            ? 0
-            : 160 +
-              Math.min(Math.max(0, index) * 140, 420) +
-              Math.min(stagger++ * 30, 90);
           const animation = target.animate(
             [
               from,
               {
-                opacity: 1,
                 transform: "translate(0, 0) scale(1)",
-                ...(photo ? { clipPath: "inset(0 0 0 0 round 18px)" } : {}),
               },
             ],
             {
-              duration: 850,
-              delay,
+              duration: 450,
               easing: "cubic-bezier(.22,1,.36,1)",
-              fill: "backwards",
             },
           );
           animations.add(animation);
           animation.onfinish = () => animations.delete(animation);
         }
       },
-      { threshold: 0.12 },
+      { threshold: 0, rootMargin: "0px 0px 80px 0px" },
     );
     const scan = () =>
       root.querySelectorAll(revealTargets).forEach((element) => {
         if (seen.has(element)) return;
         seen.add(element);
+        // Animate the containing card once, rather than its children again.
+        if (element.parentElement?.closest(revealTargets)) return;
+        // Already-visible server content should not disappear on hydration.
+        const bounds = element.getBoundingClientRect();
+        if (bounds.top < window.innerHeight && bounds.bottom > 0) return;
         observer.observe(element);
       });
     scan();
@@ -126,10 +112,8 @@ export function AnimatedNumber({ value }: { value: number }) {
     )
       return;
     let frame = 0;
-    let timer: ReturnType<typeof setTimeout> | undefined;
     let iconAnimation: Animation | undefined;
     const finish = () => {
-      clearTimeout(timer);
       cancelAnimationFrame(frame);
       iconAnimation?.cancel();
       element.textContent = formatter.format(value);
@@ -140,39 +124,31 @@ export function AnimatedNumber({ value }: { value: number }) {
         observer.disconnect();
         if (preference.matches) return;
         const card = element.closest(".stat-card");
-        const index = card?.parentElement
-          ? Array.from(card.parentElement.children).indexOf(card)
-          : 0;
-        timer = setTimeout(
-          () => {
-            const start = performance.now();
-            const tick = (now: number) => {
-              const progress = Math.min((now - start) / 1000, 1);
-              element.textContent = formatter.format(
-                progress === 1
-                  ? value
-                  : Math.floor(value * (1 - Math.pow(1 - progress, 3))),
+        const start = performance.now();
+        const tick = (now: number) => {
+          const progress = Math.min((now - start) / 700, 1);
+          element.textContent = formatter.format(
+            progress === 1
+              ? value
+              : Math.floor(value * (1 - Math.pow(1 - progress, 3))),
+          );
+          if (progress < 1) frame = requestAnimationFrame(tick);
+          else {
+            const icon = card?.querySelector(".stat-icon");
+            if (icon && !preference.matches)
+              iconAnimation = icon.animate(
+                [
+                  { transform: "scale(1)" },
+                  { transform: "scale(1.18)", offset: 0.45 },
+                  { transform: "scale(1)" },
+                ],
+                { duration: 500, easing: "ease-out" },
               );
-              if (progress < 1) frame = requestAnimationFrame(tick);
-              else {
-                const icon = card?.querySelector(".stat-icon");
-                if (icon && !preference.matches)
-                  iconAnimation = icon.animate(
-                    [
-                      { transform: "scale(1)" },
-                      { transform: "scale(1.18)", offset: 0.45 },
-                      { transform: "scale(1)" },
-                    ],
-                    { duration: 500, easing: "ease-out" },
-                  );
-              }
-            };
-            frame = requestAnimationFrame(tick);
-          },
-          600 + Math.min(index * 140, 420),
-        );
+          }
+        };
+        frame = requestAnimationFrame(tick);
       },
-      { threshold: 0.5 },
+      { threshold: 0, rootMargin: "0px 0px 80px 0px" },
     );
     observer.observe(element);
     preference.addEventListener("change", finish);
