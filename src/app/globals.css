@@ -1502,10 +1502,10 @@ table small {
   gap: 0;
   overflow-x: auto;
   margin: 12px 0 42px;
-  padding: 6px 0;
+  padding: 6px;
   border: 1px solid var(--line);
   border-radius: 16px;
-  background: var(--wash);
+  background: white;
   scrollbar-width: none;
 }
 .portal-nav::-webkit-scrollbar {
@@ -1519,7 +1519,7 @@ table small {
   justify-content: center;
   padding: 13px 16px;
   min-height: 44px;
-  border-radius: 10px;
+  border-radius: 12px;
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.01em;
@@ -1538,15 +1538,15 @@ table small {
 }
 .portal-nav a:hover {
   color: var(--ink);
-  background: white;
+  background: var(--wash);
 }
 .portal-nav a.is-active {
   color: var(--brand-accent);
-  background: color-mix(in srgb, var(--brand-accent) 9%, white);
+  background: color-mix(in srgb, var(--brand-accent) 16%, white);
 }
 .portal-nav a.is-active:hover {
   color: var(--brand-accent);
-  background: color-mix(in srgb, var(--brand-accent) 14%, white);
+  background: color-mix(in srgb, var(--brand-accent) 22%, white);
 }
 .portal-nav a:focus-visible {
   outline: 2px solid var(--brand-accent);
@@ -4895,6 +4895,19 @@ a.testimonial-card:hover {
   }
   .about-card-banner {
     margin: 0 -18px 18px;
+  }
+}
+@media (max-width: 700px) {
+  .about-vision-stage {
+    height: auto;
+    aspect-ratio: 3 / 2;
+    min-height: 0;
+  }
+  .about-vision-image {
+    object-position: 50% 40%;
+  }
+  .about-vision-letters {
+    margin-top: -48px;
   }
 }
 @media print {
