@@ -500,14 +500,26 @@ tbody tr:hover {
 @media (max-width: 700px) {
   .site-header {
     width: calc(100% - 24px);
-    border-radius: 18px;
-    padding: 10px 12px;
-    column-gap: 6px;
+    border-radius: 16px;
+    padding: 8px 10px;
+    column-gap: 8px;
   }
   .brand-logo {
-    height: auto;
-    width: 168px;
-    max-width: 46vw;
+    height: 48px;
+    width: auto;
+    max-width: 52vw;
+  }
+  .menu-toggle {
+    width: 36px;
+    min-width: 36px;
+    height: 36px;
+    min-height: 36px;
+    padding: 0;
+    border-radius: 10px;
+  }
+  .menu-toggle svg {
+    width: 18px;
+    height: 18px;
   }
   .nav-auth {
     gap: 4px;
@@ -515,7 +527,10 @@ tbody tr:hover {
   a.nav-login,
   form.nav-login .button,
   .nav-auth .button {
-    padding: 8px 10px;
+    min-height: 36px;
+    height: 36px;
+    padding: 0 10px;
+    border-radius: 10px;
     font-size: 11px;
   }
   .container {
