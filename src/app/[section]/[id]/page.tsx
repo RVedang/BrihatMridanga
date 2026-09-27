@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { dashboard, publicData, scores, templeTeams } from "@/lib/data";
 import {
@@ -13,6 +14,44 @@ import { TempleProfile } from "@/components/temple-profile";
 import { CampaignOverview } from "@/components/campaign-overview";
 import { StoryArticle } from "@/components/story-article";
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ section: string; id: string }>;
+}): Promise<Metadata> {
+  const { section, id } = await params;
+  const data = await publicData();
+  if (section === "temples") {
+    const temple = data.temples.find((item) => item.id === id);
+    const label = temple?.city.trim() || temple?.name.trim();
+    return label ? { title: label } : {};
+  }
+  if (section === "campaigns") {
+    const annual = /^annual-(\d{4})$/.exec(id);
+    const year = annual ? Number(annual[1]) : NaN;
+    const campaign = data.campaigns.find((item) =>
+      annual ? item.fallback_year === year : item.id === id,
+    );
+    const label =
+      campaign?.name.trim() ||
+      (annual && year >= 1900 && year <= 9998
+        ? `Whole-Year Marathon ${year}`
+        : "");
+    return label ? { title: label } : {};
+  }
+  const item = data.content.find((entry) => {
+    if (entry.id !== id) return false;
+    if (section === "stories")
+      return entry.kind === "story" || entry.kind === "community_story";
+    if (section === "resources") return entry.kind === "resource";
+    if (section === "events") return entry.kind === "event";
+    return false;
+  });
+  const label = item?.title.trim();
+  return label ? { title: label } : {};
+}
+
 export default async function Detail({
   params,
   searchParams,

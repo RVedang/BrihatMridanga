@@ -99,7 +99,7 @@ export function DateFilter({
             key={`centre-${countryName || "all"}-${templeId || "all"}`}
             name="centre"
             searchable
-            placeholder="All Centers"
+            placeholder="All centers"
             defaultValue={
               centre && shownCentres.some((item) => item.id === centre)
                 ? centre

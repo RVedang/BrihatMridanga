@@ -139,30 +139,26 @@ export default async function Home() {
                 Submit Distribution <ArrowUpRight size={17} />
               </Link>
             </div>
-            <div className={styles.worldMap} aria-hidden="true">
-              <svg
-                className={styles.mapMotion}
-                viewBox="0 0 900 342"
-                fill="none"
-              >
-                <path d="M160 140 Q350 10 490 165 T750 160" pathLength="1" />
-                <circle cx="160" cy="140" r="5" />
-                <circle cx="490" cy="165" r="5" />
-                <circle cx="750" cy="160" r="5" />
-              </svg>
-              <Image
-                src="/home/world-community.svg"
-                alt=""
-                width={900}
-                height={342}
-                sizes="(max-width: 800px) 100vw, 60vw"
-              />
-            </div>
           </div>
         </div>
       </section>
       <div className={styles.content}>
         <section className={styles.offering} id="collective-offering">
+          <div className={styles.worldMap} aria-hidden="true">
+            <svg className={styles.mapMotion} viewBox="0 0 900 342" fill="none">
+              <path d="M160 140 Q350 10 490 165 T750 160" pathLength="1" />
+              <circle cx="160" cy="140" r="5" />
+              <circle cx="490" cy="165" r="5" />
+              <circle cx="750" cy="160" r="5" />
+            </svg>
+            <Image
+              src="/home/world-community.svg"
+              alt=""
+              width={900}
+              height={342}
+              sizes="100vw"
+            />
+          </div>
           <div className="container">
             <SectionTitle
               title="Our collective offering"
@@ -243,9 +239,7 @@ export default async function Home() {
                 Explore campaigns <ArrowUpRight size={15} />
               </Link>
             </div>
-            <div
-              className={`${agenda.chapter} ${!upcomingEvents.length ? agenda.empty : ""}`}
-            >
+            <div className={agenda.chapter}>
               <h2 className="home-rail-heading">
                 <span className="home-rail-heading-icon" aria-hidden>
                   <CalendarDays size={16} strokeWidth={1.8} />
@@ -265,10 +259,17 @@ export default async function Home() {
                   ))}
                 </div>
               ) : (
-                <p>
-                  Upcoming temple events and training will appear in the
-                  calendar.
-                </p>
+                <div className={agenda.items}>
+                  <div className={agenda.placeholder} data-reveal>
+                    <span className={agenda.date} aria-hidden="true">
+                      <CalendarDays size={26} />
+                    </span>
+                    <p>
+                      Upcoming temple events and training will appear in the
+                      calendar.
+                    </p>
+                  </div>
+                </div>
               )}
               <Link className="text-link" href="/events">
                 Open calendar <ArrowUpRight size={15} />

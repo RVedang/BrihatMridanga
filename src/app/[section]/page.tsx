@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ArrowUpRight } from "lucide-react";
 import { dashboard, dailyScores, publicData, scores } from "@/lib/data";
@@ -49,6 +50,18 @@ const titles: Record<string, [string, string, string]> = {
     "A shared home for Srila Prabhupada’s book distribution movement.",
   ],
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ section: string }>;
+}): Promise<Metadata> {
+  const { section } = await params;
+  const config = titles[section];
+  if (!config) return {};
+  return { title: section === "about" ? "About" : config[1] };
+}
+
 export default async function Section({
   params,
   searchParams,

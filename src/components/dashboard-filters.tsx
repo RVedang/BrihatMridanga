@@ -187,7 +187,7 @@ export function DashboardFilterForm({
               value={centre}
               onChange={(e) => setCentre(e.target.value)}
             >
-              <option value="">All Centers</option>
+              <option value="">All centers</option>
               {centresShown.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.name}

@@ -83,6 +83,33 @@ main {
   padding-top: 8px;
   border-top: 1px solid var(--line);
 }
+@media (min-width: 1001px) {
+  .site-header {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: "brand nav login";
+    align-items: center;
+    padding-block: 10px;
+  }
+  .navigation {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+    justify-content: center;
+    flex-wrap: nowrap;
+    min-width: 0;
+  }
+  html {
+    scroll-padding-top: 96px;
+  }
+}
+@media (min-width: 1001px) and (max-width: 1240px) {
+  .brand-logo {
+    height: 56px;
+  }
+  .navigation .nav-link {
+    padding-inline: 8px;
+  }
+}
 .nav-link {
   padding: 9px 16px;
   border-radius: 0;

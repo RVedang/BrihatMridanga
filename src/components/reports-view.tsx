@@ -102,7 +102,7 @@ export function ReportFilters({
           key={`centre-${countryName || "all"}-${templeId || "all"}`}
           name="centre"
           searchable
-          placeholder="All Centers"
+          placeholder="All centers"
           value={
             centresShown.some((c) => c.id === centreId) ? centreId : ""
           }

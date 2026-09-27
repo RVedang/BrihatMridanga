@@ -59,6 +59,11 @@
   border-left: 1px solid var(--line);
   padding: 8px 0 8px 24px;
 }
+@media (min-width: 1001px) {
+  .grid > :nth-child(n + 4):global(.testimonial-card) {
+    display: none;
+  }
+}
 .board :global(.home-rail) {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -94,7 +99,17 @@
     padding: 26px;
   }
   .grid > :first-child :global(.testimonial-quote) {
-    font-size: 26px;
+    font-size: 17px;
+    line-height: 1.75;
+  }
+  .grid > :first-child :global(.testimonial-mark) {
+    width: 22px;
+    height: 22px;
+    margin-bottom: 0;
+    flex: none;
+  }
+  .grid > :first-child :global(.testimonial-who) {
+    margin-top: 0;
   }
   .grid > :nth-child(6):last-child {
     display: flex;

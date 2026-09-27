@@ -5,6 +5,8 @@ import { isConfigured } from "@/lib/supabase";
 import { currentSession } from "@/lib/auth";
 import { LoginForm, type SignInIntent } from "@/components/login-form";
 
+export const metadata = { title: "Sign in" };
+
 export default async function Login({
   searchParams,
 }: {
