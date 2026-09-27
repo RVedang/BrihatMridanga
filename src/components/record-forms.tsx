@@ -1,5 +1,5 @@
 "use client";
-import { useActionState, useState } from "react";
+import { useActionState, useCallback, useEffect, useState } from "react";
 import { Plus, X } from "lucide-react";
 import { saveRecord, type ActionResult } from "@/app/portal/actions";
 import type {
@@ -28,24 +28,65 @@ function monthTitle(year: number, month: number) {
   return `${monthName(month)} ${year}`;
 }
 
-function FilePick({
-  name,
-  accept,
-}: {
-  name: string;
-  accept: string;
-}) {
+function StoryPhotograph({ existing }: { existing: string }) {
+  const [removed, setRemoved] = useState(false);
   const [file, setFile] = useState("");
+  const [previewUrl, setPreviewUrl] = useState("");
+  const [pickKey, setPickKey] = useState(0);
+  const saved = Boolean(existing) && !removed;
+  const showing = previewUrl || (saved ? existing : "");
+  const clearPick = () => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setPreviewUrl("");
+    setFile("");
+    setPickKey((key) => key + 1);
+  };
   return (
-    <div className="file-pick">
-      <input
-        name={name}
-        type="file"
-        accept={accept}
-        onChange={(e) => setFile(e.target.files?.[0]?.name || "")}
-      />
-      <span className="file-pick-button">Choose photograph</span>
-      <span className="file-pick-name">{file || "No file chosen"}</span>
+    <div className="full photo-field">
+      <span className="photo-field-label">Photograph</span>
+      {showing ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img className="story-photo-preview" src={showing} alt="" />
+      ) : null}
+      <div className="photo-field-actions">
+        <div className="file-pick">
+          <input
+            key={pickKey}
+            name="photograph"
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/gif"
+            onChange={(e) => {
+              const next = e.target.files?.[0];
+              if (previewUrl) URL.revokeObjectURL(previewUrl);
+              setFile(next?.name || "");
+              setPreviewUrl(next ? URL.createObjectURL(next) : "");
+            }}
+          />
+          <span className="file-pick-button">
+            {saved ? "Edit photograph" : "Choose photograph"}
+          </span>
+          <span className="file-pick-name">
+            {file || (saved ? "Current photograph" : "No file chosen")}
+          </span>
+        </div>
+        {saved || file ? (
+          <button
+            type="button"
+            className="button secondary photo-remove"
+            onClick={() => {
+              clearPick();
+              setRemoved(true);
+            }}
+          >
+            Remove current photo
+          </button>
+        ) : null}
+      </div>
+      <input type="hidden" name="image_url" value={removed ? "" : existing} />
+      <span className="muted">
+        JPEG, PNG, WebP or GIF, up to 6 MB. Use this for photos and short-video
+        stills.
+      </span>
     </div>
   );
 }
@@ -186,6 +227,7 @@ export function RecordForms(props: Props) {
   );
   const [edit, setEdit] = useState<string>("");
   const [formKey, setFormKey] = useState(0);
+  const [notice, setNotice] = useState("");
   const [templeId, setTempleId] = useState(
     !props.admin
       ? props.temples[0]?.id || ""
@@ -198,9 +240,16 @@ export function RecordForms(props: Props) {
       ? props.temples.find((t) => t.id === id)?.name || "Temple"
       : "Movement-wide";
   const startNew = () => {
+    setNotice("");
     setEdit("");
     setFormKey((k) => k + 1);
   };
+  const contentAdded = useCallback(() => {
+    setNotice("Saved successfully.");
+    if (props.admin) setTempleId("");
+    setEdit("");
+    setFormKey((k) => k + 1);
+  }, [props.admin]);
   const chooseTemple = (id: string) => {
     setTempleId(id);
     startNew();
@@ -369,6 +418,8 @@ export function RecordForms(props: Props) {
           admin={props.admin}
           templeId={templeId}
           onTempleId={chooseTemple}
+          savedNotice={notice}
+          onCreated={type === "content" ? contentAdded : undefined}
         />
       </section>
       <aside className="record-rail">
@@ -398,6 +449,7 @@ export function RecordForms(props: Props) {
                       r.id === edit ? "record-item is-active" : "record-item"
                     }
                     onClick={() => {
+                      setNotice("");
                       setEdit(r.id);
                       if (type === "content" && "temple_id" in r)
                         setTempleId(String(r.temple_id || ""));
@@ -429,6 +481,8 @@ function Editor({
   admin,
   templeId,
   onTempleId,
+  savedNotice = "",
+  onCreated,
 }: {
   type: string;
   selected?: Record<string, string | boolean>;
@@ -439,11 +493,16 @@ function Editor({
   admin: boolean;
   templeId: string;
   onTempleId: (id: string) => void;
+  savedNotice?: string;
+  onCreated?: () => void;
 }) {
   const [state, action, pending] = useActionState(saveRecord, {
     ok: false,
     message: "",
   } as ActionResult);
+  useEffect(() => {
+    if (state.ok && !selected) onCreated?.();
+  }, [state.ok, selected, onCreated]);
   const [kind, setKind] = useState(() => {
     if (!selected?.kind) return "";
     const current = String(selected.kind);
@@ -783,6 +842,7 @@ function Editor({
                 <Select
                   name="story_type"
                   required
+                  placeholder="Choose a type"
                   defaultValue={
                     String(selected?.kind) === "photo"
                       ? "media"
@@ -791,7 +851,6 @@ function Editor({
                         : value("story_type")
                   }
                 >
-                  <option value="">Choose a type</option>
                   {Object.entries(communityStoryTypes).map(([key, label]) => (
                     <option key={key} value={key}>
                       {label}
@@ -849,41 +908,12 @@ function Editor({
               />
             </label>
             {kind === "community_story" && (
-              <label className="full">
-                Photograph
-                {value("image_url") ||
-                (String(selected?.kind) === "photo" && value("link_url")) ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    className="story-photo-preview"
-                    src={
-                      value("image_url") ||
-                      (String(selected?.kind) === "photo"
-                        ? value("link_url")
-                        : "")
-                    }
-                    alt=""
-                  />
-                ) : null}
-                <FilePick
-                  name="photograph"
-                  accept="image/jpeg,image/png,image/webp,image/gif"
-                />
-                <input
-                  name="image_url"
-                  type="url"
-                  pattern="https://.*"
-                  defaultValue={
-                    value("image_url") ||
-                    (String(selected?.kind) === "photo" ? value("link_url") : "")
-                  }
-                  placeholder="https://…"
-                />
-                <span className="muted">
-                  JPEG, PNG, WebP or GIF, up to 6 MB, or paste an HTTPS image
-                  address. Use this for photos and short-video stills.
-                </span>
-              </label>
+              <StoryPhotograph
+                existing={
+                  value("image_url") ||
+                  (String(selected?.kind) === "photo" ? value("link_url") : "")
+                }
+              />
             )}
             <label className="full">
               {kind === "community_story"
@@ -929,34 +959,48 @@ function Editor({
                 </label>
               </>
             )}
-            <label className="full">
-              <input
-                name="published"
-                type="checkbox"
-                defaultChecked={Boolean(selected?.published)}
-              />
-              {kind === "community_story"
-                ? "Publish on the homepage and Stories page (leave unchecked to save a draft)"
-                : "Publish publicly (leave unchecked to save a private draft)"}
-            </label>
           </>
         )}
       </div>
-      {state.message && (
+      {(state.message || (!selected && savedNotice)) && (
         <p role="status" className="notice">
-          {state.message}
+          {state.message || savedNotice}
         </p>
       )}
-      <button
-        className="button"
-        disabled={
-          pending ||
-          (!admin && type === "temples") ||
-          (!admin && !temples.length)
-        }
-      >
-        {pending ? "Saving…" : selected ? "Save changes" : "Save"}
-      </button>
+      {type === "content" ? (
+        <div className="form-actions">
+          <button
+            className="button"
+            type="submit"
+            name="published"
+            value="on"
+            disabled={pending || (!admin && !temples.length)}
+          >
+            {pending ? "Saving…" : "Publish"}
+          </button>
+          <button
+            className="button secondary"
+            type="submit"
+            name="published"
+            value="off"
+            disabled={pending || (!admin && !temples.length)}
+          >
+            {pending ? "Saving…" : "Save as draft"}
+          </button>
+        </div>
+      ) : (
+        <button
+          className="button"
+          type="submit"
+          disabled={
+            pending ||
+            (!admin && type === "temples") ||
+            (!admin && !temples.length)
+          }
+        >
+          {pending ? "Saving…" : selected ? "Save changes" : "Save"}
+        </button>
+      )}
     </form>
   );
 }

@@ -22,14 +22,17 @@ export async function SiteHeader() {
   return (
     <header className="site-header">
       <Link className="brand" href="/" aria-label="Brihat Mridanga home">
-        <Image
-          className="brand-logo"
-          src="/brand/logo-mark.png"
-          alt="Srila Prabhupada’s ISKCON Brihat Mridanga"
-          width={787}
-          height={284}
-          priority
-        />
+        <span className="brand-logo">
+          <Image
+            className="brand-logo-artwork"
+            src="/brand/logo-2026-09-27.png"
+            alt="Srila Prabhupada’s ISKCON Brihat Mridanga"
+            width={1774}
+            height={887}
+            sizes="280px"
+            preload
+          />
+        </span>
       </Link>
       <AuthNav signedIn={signedIn} showPortal={showPortal} />
       <Navigation />

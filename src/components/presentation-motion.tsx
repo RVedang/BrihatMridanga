@@ -1,9 +1,28 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { animate, type AnimationPlaybackControls } from "framer-motion";
+
+/** Tweak scroll-reveal timing here; hero motion lives in CSS variables. */
+const MOTION = {
+  ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+  duration: 0.7,
+  photoDuration: 0.85,
+  stagger: 0.1,
+  staggerCap: 0.45,
+  distance: 28,
+  scale: 0.97,
+};
 
 const revealTargets =
-  "[data-reveal], .page-intro, .section-title, .card, .place-card, .testimonial-card, .stat-card, .stats > div, .chart-card, .home-rail-heading, .home-sankirtan-feature > .story-photo, .home-sankirtan-feature > div, .home-sankirtan-item, .about-card, .about-meaning, .about-vision, .about-mission, .about-lead, .empty, .login";
+  "[data-reveal], .page-intro, .section-title, .card, .place-card, .testimonial-card, .stat-card, .stats > div, .chart-card, .home-rail-heading, .home-sankirtan-feature > .story-photo, .home-sankirtan-feature > div, .home-sankirtan-item, .about-card, .about-meaning-stage, .about-meaning-panel, .about-vision-stage, .about-vision-quote, .about-mission-copy > h2, .about-mission-lead, .about-mission-pill, .about-mission-figure, .about-lead h2, .about-lead-points li, .about-lead-frame, .about-region, .about-actions, .empty, .login";
+
+function skipReveal(target: Element) {
+  return Boolean(
+    target.closest("section[aria-label='Our inspiration']") ||
+      target.closest(".page-intro"),
+  );
+}
 
 /** Enhance server-rendered content without moving data or pages into the client. */
 export function PresentationMotion() {
@@ -12,53 +31,76 @@ export function PresentationMotion() {
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
     if (!root || !("IntersectionObserver" in window)) return;
     const seen = new WeakSet<Element>();
-    const animations = new Set<Animation>();
+    const animations = new Map<Element, AnimationPlaybackControls>();
+    const finish = (target: Element, animation: AnimationPlaybackControls) => {
+      animation.cancel();
+      const node = target as HTMLElement;
+      node.style.removeProperty("opacity");
+      node.style.removeProperty("transform");
+      node.style.removeProperty("will-change");
+      animations.delete(target);
+    };
     const observer = new IntersectionObserver(
       (entries) => {
-        for (const entry of entries) {
-          if (!entry.isIntersecting) continue;
+        let stagger = 0;
+        const incoming = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort(
+            (a, b) =>
+              a.boundingClientRect.top - b.boundingClientRect.top ||
+              a.boundingClientRect.left - b.boundingClientRect.left,
+          );
+        for (const entry of incoming) {
           observer.unobserve(entry.target);
           if (preference.matches) continue;
-          const target = entry.target;
-          const photo = target.matches(".story-photo");
-          // Observer callbacks can arrive after a frame has already painted.
-          // Never reset opacity: server-rendered content must remain visible.
-          const from = photo
-            ? {
-                transform: "scale(1.035)",
-              }
-            : {
-                transform: "translateY(24px)",
-              };
-          const animation = target.animate(
-            [
-              from,
-              {
-                transform: "translate(0, 0) scale(1)",
-              },
-            ],
+          const target = entry.target as HTMLElement;
+          const photo = target.matches(
+            '[data-reveal="image"], .story-photo, .about-meaning-stage, .about-vision-stage, .about-mission-figure, .about-lead-frame',
+          );
+          target.style.willChange = "opacity, transform";
+          const delay = Math.min(stagger++ * MOTION.stagger, MOTION.staggerCap);
+          const animation = animate(
+            target,
             {
-              duration: 650,
-              easing: "cubic-bezier(.16,.65,.3,1)",
+              opacity: [0, 1],
+              transform: photo
+                ? [`scale(${MOTION.scale})`, "scale(1)"]
+                : [`translateY(${MOTION.distance}px)`, "translateY(0px)"],
+            },
+            {
+              duration: photo ? MOTION.photoDuration : MOTION.duration,
+              delay,
+              ease: MOTION.ease,
             },
           );
-          animations.add(animation);
-          animation.onfinish = () => animations.delete(animation);
+          animations.set(target, animation);
+          void animation.then(() => finish(target, animation));
         }
       },
-      { threshold: 0, rootMargin: "0px" },
+      { threshold: 0.12, rootMargin: "0px 0px -10% 0px" },
     );
     const scan = () =>
       root.querySelectorAll(revealTargets).forEach((element) => {
         if (seen.has(element)) return;
         seen.add(element);
-        // Animate the containing card once, rather than its children again.
+        if (skipReveal(element)) return;
         if (element.parentElement?.closest(revealTargets)) return;
-        // Visible content also gets an entrance, without ever being hidden.
+        const node = element as HTMLElement;
+        if (
+          !preference.matches &&
+          node.getBoundingClientRect().top > window.innerHeight
+        ) {
+          const photo = node.matches(
+            '[data-reveal="image"], .story-photo, .about-meaning-stage, .about-vision-stage, .about-mission-figure, .about-lead-frame',
+          );
+          node.style.opacity = "0";
+          node.style.transform = photo
+            ? `scale(${MOTION.scale})`
+            : `translateY(${MOTION.distance}px)`;
+        }
         observer.observe(element);
       });
     scan();
-    // Includes streamed server content and subsequent client-side navigation.
     const mutations = new MutationObserver((records) => {
       if (
         records.some((record) =>
@@ -70,14 +112,14 @@ export function PresentationMotion() {
     mutations.observe(root, { childList: true, subtree: true });
     const stop = () => {
       if (preference.matches) {
-        animations.forEach((animation) => animation.cancel());
+        animations.forEach((animation, target) => finish(target, animation));
         animations.clear();
       }
     };
     preference.addEventListener("change", stop);
     root.addEventListener("focusin", stopOnFocus);
     function stopOnFocus() {
-      animations.forEach((animation) => animation.cancel());
+      animations.forEach((animation, target) => finish(target, animation));
       animations.clear();
     }
     window.addEventListener("beforeprint", stopOnFocus);
@@ -109,11 +151,9 @@ export function AnimatedNumber({ value }: { value: number }) {
       value <= 0
     )
       return;
-    let frame = 0;
-    let iconAnimation: Animation | undefined;
+    let counter: AnimationPlaybackControls | undefined;
     const finish = () => {
-      cancelAnimationFrame(frame);
-      iconAnimation?.cancel();
+      counter?.stop();
       element.textContent = formatter.format(value);
     };
     const observer = new IntersectionObserver(
@@ -121,32 +161,18 @@ export function AnimatedNumber({ value }: { value: number }) {
         if (!entry.isIntersecting) return;
         observer.disconnect();
         if (preference.matches) return;
-        const card = element.closest(".stat-card");
-        const start = performance.now();
-        const tick = (now: number) => {
-          const progress = Math.min((now - start) / 700, 1);
-          element.textContent = formatter.format(
-            progress === 1
-              ? value
-              : Math.floor(value * (1 - Math.pow(1 - progress, 3))),
-          );
-          if (progress < 1) frame = requestAnimationFrame(tick);
-          else {
-            const icon = card?.querySelector(".stat-icon");
-            if (icon && !preference.matches)
-              iconAnimation = icon.animate(
-                [
-                  { transform: "scale(1)" },
-                  { transform: "scale(1.18)", offset: 0.45 },
-                  { transform: "scale(1)" },
-                ],
-                { duration: 500, easing: "ease-out" },
-              );
-          }
-        };
-        frame = requestAnimationFrame(tick);
+        counter = animate(0, value, {
+          duration: 1.05,
+          ease: MOTION.ease,
+          onUpdate: (latest) => {
+            element.textContent = formatter.format(Math.floor(latest));
+          },
+          onComplete: () => {
+            element.textContent = formatter.format(value);
+          },
+        });
       },
-      { threshold: 0, rootMargin: "0px" },
+      { threshold: 0.2, rootMargin: "0px 0px -8% 0px" },
     );
     observer.observe(element);
     preference.addEventListener("change", finish);

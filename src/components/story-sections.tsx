@@ -5,6 +5,7 @@ import { StoryRail } from "@/components/story-rail";
 import { Empty, SectionTitle } from "@/components/ui";
 import { StoryPhoto } from "@/components/story-photo";
 import styles from "./home-stories.module.css";
+import { storyByline } from "@/lib/story-byline";
 import {
   communityStoryTypeLabel,
   communityStoryTypes,
@@ -13,18 +14,13 @@ import {
 } from "@/lib/story-types";
 
 function StoryCard({ item, temple }: { item: Content; temple?: Temple }) {
-  const place = item.temple_id
-    ? [temple?.name, temple?.country].filter(Boolean).join(" · ")
-    : "";
-  const person = item.person_name?.trim() || "";
+  const byline = storyByline(item.person_name, temple?.city);
   return (
     <Link href={`/stories/${item.id}`} className="card">
       <StoryPhoto src={item.image_url} alt={item.title} />
-      <span className="card-meta">
-        {[item.language, place].filter(Boolean).join(" · ")}
-      </span>
+      <span className="card-meta">{item.language}</span>
       <h3>{item.title}</h3>
-      {person ? <p className="card-person">{person}</p> : null}
+      {byline ? <p className="card-person">{byline}</p> : null}
       <p>{item.body.slice(0, 160)}</p>
       <span className="card-go">
         Read more <ArrowUpRight size={15} strokeWidth={1.6} />
@@ -97,9 +93,7 @@ export function StorySections({
     ? groups.filter(([, , group]) => group.length)
     : groups;
   if (hideEmpty && !visible.length)
-    return (
-      <Empty title={emptyTitle}>{emptyBody}</Empty>
-    );
+    return <Empty title={emptyTitle}>{emptyBody}</Empty>;
   return (
     <div className="stories-board">
       {visible.map(([key, label, group]) => (
@@ -116,7 +110,13 @@ export function StorySections({
   );
 }
 
-export function HomeStories({ items }: { items: Content[] }) {
+export function HomeStories({
+  items,
+  temples,
+}: {
+  items: Content[];
+  temples: Temple[];
+}) {
   const chosen = pickRandomStories(
     items.filter((item) => item.kind === "community_story"),
     4,
@@ -132,6 +132,10 @@ export function HomeStories({ items }: { items: Content[] }) {
         <div className={styles.grid}>
           {chosen.map((story, index) => {
             const src = storyImageSrc(story);
+            const byline = storyByline(
+              story.person_name,
+              temples.find((temple) => temple.id === story.temple_id)?.city,
+            );
             return (
               <Link
                 key={story.id}
@@ -148,9 +152,7 @@ export function HomeStories({ items }: { items: Content[] }) {
                   <p className="eyebrow">
                     {communityStoryTypeLabel(story.story_type)}
                   </p>
-                  {story.person_name?.trim() ? (
-                    <p className={styles.person}>{story.person_name.trim()}</p>
-                  ) : null}
+                  {byline ? <p className={styles.person}>{byline}</p> : null}
                   {!src && (
                     <BookOpen
                       className={styles.symbol}

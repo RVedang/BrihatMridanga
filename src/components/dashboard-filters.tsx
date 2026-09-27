@@ -131,6 +131,7 @@ export function DashboardFilterForm({
           <label>
             Start date
             <DateField
+              key={`start-${filters.start || defaults.start}`}
               name="start"
               required
               defaultValue={filters.start || defaults.start}
@@ -139,6 +140,7 @@ export function DashboardFilterForm({
           <label>
             End date
             <DateField
+              key={`end-${filters.end || defaults.end}`}
               name="end"
               required
               defaultValue={filters.end || defaults.end}

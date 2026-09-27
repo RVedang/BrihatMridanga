@@ -11,7 +11,7 @@ const HEAD = 7.5;
 const LINE = 12;
 
 const INK = "0.286 0.290 0.333";
-const ORANGE = "0.922 0.357 0.098";
+const BRAND_ACCENT = "0.682353 0.117647 0.207843"; // Logo red: #AE1E35
 const PAPER = "0.988 0.984 0.973";
 const WASH = "0.961 0.949 0.925";
 const LINE_C = "0.910 0.898 0.875";
@@ -392,13 +392,13 @@ export function cellsToPdf(cells: unknown[][]) {
     if (block.kind === "masthead") {
       ensure(70);
       y -= 8;
-      tracked("F2", 8, MARGIN, y, "A RECORD OF SERVICE", 1.15, ORANGE);
+      tracked("F2", 8, MARGIN, y, "A RECORD OF SERVICE", 1.15, BRAND_ACCENT);
       y -= 26;
       textAt("F3", 24, MARGIN, y, block.title, USABLE, false, INK, true);
       y -= 16;
       textAt("F1", 10, MARGIN, y, block.range, USABLE, false, MUTED);
       y -= 10;
-      line(MARGIN, y, MARGIN + 52, y, ORANGE, 2);
+      line(MARGIN, y, MARGIN + 52, y, BRAND_ACCENT, 2);
       y -= 18;
       continue;
     }
@@ -412,7 +412,7 @@ export function cellsToPdf(cells: unknown[][]) {
       block.items.forEach((item, i) => {
         const x = MARGIN + i * (cardW + gap);
         rect(x, y, cardW, cardH, WHITE);
-        rect(x, y + cardH - 2.4, cardW, 2.4, ORANGE);
+        rect(x, y + cardH - 2.4, cardW, 2.4, BRAND_ACCENT);
         line(x, y, x + cardW, y, LINE_C, 0.6);
         line(x, y, x, y + cardH, LINE_C, 0.6);
         line(x + cardW, y, x + cardW, y + cardH, LINE_C, 0.6);
@@ -445,7 +445,7 @@ export function cellsToPdf(cells: unknown[][]) {
       y -= 20;
       textAt("F3", 13, MARGIN, y, block.text, USABLE, false, INK, true);
       y -= 8;
-      line(MARGIN, y, MARGIN + 36, y, ORANGE, 1.6);
+      line(MARGIN, y, MARGIN + 36, y, BRAND_ACCENT, 1.6);
       y -= 8;
       continue;
     }
@@ -460,7 +460,7 @@ export function cellsToPdf(cells: unknown[][]) {
     const chrome: string[] = [];
     const add = (s: string) => chrome.push(s);
     add(`${PAPER} rg 0 0 ${PAGE_W} ${PAGE_H} re f`);
-    add(`${ORANGE} rg 0 ${PAGE_H - 3.2} ${PAGE_W} 3.2 re f`);
+    add(`${BRAND_ACCENT} rg 0 ${PAGE_H - 3.2} ${PAGE_W} 3.2 re f`);
     add(`${INK} rg`);
     add("BT /F2 8 Tf");
     add(`1 0 0 1 ${MARGIN.toFixed(2)} ${(PAGE_H - 22).toFixed(2)} Tm`);

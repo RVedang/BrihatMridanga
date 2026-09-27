@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { TempleTeams } from "@/components/temple-teams";
-import type { Content, MonthlyTarget, RecordItem, Temple, TempleTeam } from "@/lib/data";
+import type { Content, MonthlyTarget, Temple, TempleTeam } from "@/lib/data";
 import { Empty } from "@/components/ui";
 import { Progress } from "@/components/charts";
 import { TestimonialCard } from "@/components/testimonial-card";
@@ -35,7 +35,6 @@ function when(iso: string | null) {
 export function TempleProfile({
   temple,
   content,
-  centres = [],
   year,
   monthlyTargets = [],
   byMonth = [],
@@ -43,7 +42,6 @@ export function TempleProfile({
 }: {
   temple: Temple;
   content: Content[];
-  centres?: RecordItem[];
   year: number;
   monthlyTargets?: MonthlyTarget[];
   byMonth?: { month: string; books: number }[];
@@ -54,7 +52,6 @@ export function TempleProfile({
     .filter(isMediaStory)
     .map((item) => ({ item, src: storyImageSrc(item) }))
     .filter((entry) => entry.src);
-  const templeCentres = centres.filter((c) => c.temple_id === temple.id);
   const testimonials = items.filter(isTestimonialStory);
   const initiatives = items.filter((c) => c.kind === "initiative");
   const events = upcoming(items);
@@ -136,7 +133,6 @@ export function TempleProfile({
                 key={t.id}
                 item={t}
                 temple={temple}
-                centre={templeCentres.find((c) => c.id === t.centre_id)}
               />
             ))}
           </div>

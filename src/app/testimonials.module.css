@@ -30,7 +30,7 @@
 .grid > :first-child {
   grid-row: span 2;
   background: var(--wash);
-  border-color: #eb5b1926;
+  border-color: #ae1e3526;
   justify-content: center;
 }
 .grid > :first-child :global(.testimonial-mark) {
@@ -41,7 +41,7 @@
 .grid > :first-child :global(.testimonial-quote) {
   font-size: clamp(25px, 2.4vw, 34px);
   line-height: 1.55;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.01em;
 }
 .grid > :first-child :global(.testimonial-who) {
   margin-top: 20px;

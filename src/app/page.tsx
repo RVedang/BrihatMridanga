@@ -195,7 +195,6 @@ export default async function Home() {
                     key={t.id}
                     item={t}
                     temple={data.temples.find((x) => x.id === t.temple_id)}
-                    centre={data.centres.find((c) => c.id === t.centre_id)}
                   />
                 ))}
               </div>
@@ -281,6 +280,7 @@ export default async function Home() {
           <div className="container">
             <HomeStories
               items={data.content.filter((c) => c.kind === "community_story")}
+              temples={data.temples}
             />
           </div>
         </div>

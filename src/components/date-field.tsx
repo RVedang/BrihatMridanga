@@ -239,6 +239,7 @@ export function DateRangeFields({
       </span>
       <div className="date-range-fields">
         <DateField
+          key={`start-${start}`}
           name="start"
           required
           defaultValue={start}
@@ -250,6 +251,7 @@ export function DateRangeFields({
           –
         </span>
         <DateField
+          key={`end-${end}`}
           name="end"
           required
           defaultValue={end}

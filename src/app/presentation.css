@@ -4,6 +4,31 @@
   --surface-shadow: 0 8px 28px #494a5506, 0 24px 60px #494a5504;
   --surface-hover-shadow: 0 18px 42px #494a5512;
   --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-hero-duration: 0.85s;
+  --motion-stagger: 0.1s;
+  --motion-distance: 28px;
+  --motion-hover-lift: -4px;
+  --motion-hover-duration: 0.26s;
+}
+@keyframes motion-rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--motion-distance));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes motion-photo-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 html {
   scroll-padding-top: 170px;
@@ -17,11 +42,11 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 ::selection {
-  background: #eb5b1926;
+  background: #ae1e3526;
   color: var(--ink);
 }
 :focus-visible {
-  outline: 2px solid var(--orange);
+  outline: 2px solid var(--brand-accent);
   outline-offset: 4px;
 }
 h1,
@@ -49,7 +74,7 @@ main {
   box-shadow: 0 8px 32px #494a550a;
 }
 .brand-logo {
-  height: 44px;
+  height: 68px;
 }
 .navigation {
   margin-top: 10px;
@@ -60,7 +85,7 @@ main {
 }
 .nav-link {
   padding: 9px 16px;
-  border-radius: 10px;
+  border-radius: 0;
   text-transform: none;
   font-size: 13px;
   letter-spacing: 0.01em;
@@ -74,12 +99,15 @@ main {
   display: none;
 }
 .nav-link.active {
-  background: var(--wash);
-  color: var(--ink);
-  box-shadow: inset 0 -2px var(--orange);
+  background: transparent;
+  color: var(--brand-accent);
+  font-weight: 700;
+  box-shadow: none;
 }
 .nav-link:hover {
   background: var(--wash);
+  color: var(--ink);
+  border-radius: 8px;
 }
 .button,
 a.nav-login,
@@ -88,14 +116,40 @@ form.nav-login .button,
   border-radius: 12px;
   min-height: 44px;
   transition:
-    transform 0.25s var(--motion-ease),
+    transform var(--motion-hover-duration) var(--motion-ease),
     background 0.2s,
-    box-shadow 0.2s;
+    box-shadow var(--motion-hover-duration) var(--motion-ease);
+}
+.nav-auth form .button {
+  background: color-mix(in srgb, var(--ink) 9%, white);
+  border-color: transparent;
+  color: var(--ink);
+}
+a.nav-login {
+  background: var(--brand-accent);
+  border-color: var(--brand-accent);
+  color: white;
+}
+.nav-auth form .button:hover {
+  background: color-mix(in srgb, var(--ink) 14%, white);
+  border-color: transparent;
+  color: var(--ink);
+}
+a.nav-login:hover {
+  background: #94192d;
+  border-color: #94192d;
+  color: white;
+}
+.nav-auth form .button.is-plain,
+.nav-auth form .button.is-plain:hover {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
 }
 .button svg,
 .card-go svg,
 .text-link svg {
-  transition: transform 0.25s var(--motion-ease);
+  transition: transform var(--motion-hover-duration) var(--motion-ease);
 }
 .button:hover svg,
 .card:hover .card-go svg {
@@ -116,6 +170,20 @@ form.nav-login .button,
 }
 .page-intro .eyebrow {
   margin-bottom: 18px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .page-intro .eyebrow {
+    animation: motion-rise var(--motion-hero-duration) var(--motion-ease) both;
+  }
+  .page-intro h1 {
+    animation: motion-rise var(--motion-hero-duration) var(--motion-ease) both;
+    animation-delay: var(--motion-stagger);
+  }
+  .page-intro-meta,
+  .page-intro .lede {
+    animation: motion-rise var(--motion-hero-duration) var(--motion-ease) both;
+    animation-delay: calc(var(--motion-stagger) * 2);
+  }
 }
 .page-intro .lede {
   max-width: 780px;
@@ -154,14 +222,14 @@ form.nav-login .button,
 }
 .home-stats .stat-card:first-child {
   background: var(--wash);
-  border-color: #eb5b192b;
+  border-color: #ae1e352b;
 }
 .stat-icon {
-  color: var(--orange);
+  color: var(--brand-accent);
   margin-bottom: 24px;
 }
 .home-stats .stat-value {
-  font-family: var(--font-sans), sans-serif;
+  font-family: var(--font-sans), var(--font-devanagari), sans-serif;
   font-size: clamp(30px, 3.6vw, 48px);
   letter-spacing: -0.04em;
   font-weight: 500;
@@ -169,7 +237,7 @@ form.nav-login .button,
 }
 .home-stats .stat-temple-name {
   font-size: 26px;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.01em;
 }
 .stat-sub {
   line-height: 1.6;
@@ -207,7 +275,7 @@ form.nav-login .button,
   box-shadow: var(--surface-shadow);
 }
 .testimonial-mark {
-  color: var(--orange);
+  color: var(--brand-accent);
 }
 .testimonial-quote {
   font-size: 16px;
@@ -258,7 +326,7 @@ form.nav-login .button,
 }
 .card h3,
 .place-card h3 {
-  letter-spacing: -0.025em;
+  letter-spacing: 0.015em;
   line-height: 1.3;
 }
 .card .story-photo {
@@ -284,7 +352,7 @@ form.nav-login .button,
   border: 1px dashed var(--line);
 }
 .empty svg {
-  color: var(--orange);
+  color: var(--brand-accent);
 }
 .stats {
   gap: 16px;
@@ -364,15 +432,18 @@ tbody tr:hover {
   a.card:hover,
   a.place-card:hover,
   a.testimonial-card:hover,
-  .home-sankirtan-item:hover {
-    transform: translateY(-5px);
+  .home-sankirtan-item:hover,
+  a.listing-card:hover {
+    transform: translateY(var(--motion-hover-lift));
     box-shadow: var(--surface-hover-shadow);
   }
   .card:hover .story-photo img {
     transform: scale(1.035);
   }
-  .button:hover {
-    transform: translateY(-2px);
+  .button:hover,
+  a.nav-login:hover,
+  .nav-auth .button:hover {
+    transform: translateY(-3px);
   }
 }
 @media (max-width: 1100px) {
@@ -435,8 +506,8 @@ tbody tr:hover {
   }
   .brand-logo {
     height: auto;
-    width: 132px;
-    max-width: 32vw;
+    width: 168px;
+    max-width: 46vw;
   }
   .nav-auth {
     gap: 4px;
@@ -529,7 +600,7 @@ tbody tr:hover {
 .calendar a.cal-mark-regional {
   background: var(--wash);
   color: var(--ink);
-  border-left-color: var(--orange);
+  border-left-color: var(--brand-accent);
 }
 .calendar .has-regional {
   background: var(--paper);
@@ -559,29 +630,11 @@ tbody tr:hover {
   box-shadow: var(--surface-shadow);
 }
 
-/* Editorial image chapters use light reading surfaces, never dark overlays. */
+/* Editorial image chapters: titles sit on the photograph. */
 .about-meaning-stage,
 .about-vision-stage {
   background: var(--wash);
   box-shadow: var(--surface-shadow);
-}
-.about-meaning-veil,
-.about-vision-veil {
-  background: none;
-}
-.about-meaning-copy,
-.about-vision-stage h2 {
-  padding: 22px;
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  color: var(--ink);
-}
-.about-meaning-copy h2,
-.about-vision-stage h2 {
-  color: var(--ink);
-  text-shadow: none;
-  font-size: clamp(28px, 3.4vw, 44px);
 }
 .about-vision-quote {
   box-shadow: var(--surface-shadow);
@@ -604,10 +657,6 @@ tbody tr:hover {
   .filter-dates .date-range-sep {
     text-align: center;
   }
-  .about-meaning-copy,
-  .about-vision-stage h2 {
-    padding: 18px;
-  }
 }
 
 /* Homepage motion and direct-manipulation controls. */
@@ -615,7 +664,7 @@ tbody tr:hover {
   position: fixed;
   inset: 0 0 auto;
   height: 3px;
-  background: var(--orange);
+  background: var(--brand-accent);
   transform: scaleX(var(--reading-progress, 0));
   transform-origin: left;
   pointer-events: none;
@@ -628,38 +677,55 @@ tbody tr:hover {
   position: absolute;
   left: 0;
   top: 0;
-  border-radius: 10px;
-  background: var(--wash);
-  box-shadow: inset 0 -2px var(--orange);
+  border: 0;
   pointer-events: none;
   transition:
-    transform 0.4s var(--motion-ease),
-    width 0.4s var(--motion-ease),
-    height 0.4s var(--motion-ease);
+    transform 0.46s var(--motion-ease),
+    width 0.46s var(--motion-ease),
+    height 0.46s var(--motion-ease);
+}
+.nav-active-indicator::before,
+.nav-active-indicator::after {
+  content: none;
 }
 .navigation .nav-link {
   z-index: 1;
+  position: relative;
 }
-.navigation .nav-link.active {
+.navigation .nav-link:focus-visible {
+  outline: none;
+  box-shadow: inset 0 -2px var(--brand-accent);
+}
+.navigation .nav-link:hover {
+  background: var(--wash);
+  color: var(--ink);
+  border-radius: 8px;
+}
+.navigation .nav-link.active,
+.navigation .nav-link.active:hover {
   background: transparent;
+  border-radius: 0;
   box-shadow: none;
-}
-.navigation .nav-link.active {
   color: var(--ink);
   font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.navigation .nav-link.active:focus-visible {
+  outline: none;
+  box-shadow: none;
 }
 .navigation .nav-link.active::after {
   content: "";
   display: block;
   position: absolute;
-  right: 18px;
-  bottom: auto;
   left: 16px;
-  top: 3px;
+  right: 16px;
+  bottom: 4px;
   width: auto;
   height: 2px;
-  border-radius: 999px;
-  background: var(--orange);
+  border-radius: 2px;
+  background: var(--ink);
+  transform: none;
 }
 .home-testimonials {
   min-width: 0;
@@ -755,7 +821,20 @@ tbody tr:hover {
     position: absolute;
   }
   .nav-active-indicator {
+    display: none;
     transition: none;
+  }
+  .navigation .nav-link.active,
+  .navigation .nav-link.active:hover {
+    background: transparent;
+    color: var(--ink);
+    border-radius: 0;
+    transform: none;
+  }
+  .navigation .nav-link.active::after {
+    left: 16px;
+    right: 16px;
+    bottom: 6px;
   }
 }
 @media (max-width: 700px) {
@@ -770,6 +849,12 @@ tbody tr:hover {
 @media (prefers-reduced-motion: reduce) {
   .nav-active-indicator {
     transition: none;
+  }
+  .page-intro .eyebrow,
+  .page-intro h1,
+  .page-intro-meta,
+  .page-intro .lede {
+    animation: none;
   }
 }
 @media print {

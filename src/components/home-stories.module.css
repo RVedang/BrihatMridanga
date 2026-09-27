@@ -16,8 +16,8 @@
   overflow: hidden;
   text-decoration: none !important;
   transition:
-    transform 0.35s var(--motion-ease),
-    box-shadow 0.35s;
+    transform var(--motion-hover-duration) var(--motion-ease),
+    box-shadow var(--motion-hover-duration) var(--motion-ease);
 }
 .photo {
   overflow: hidden;
@@ -46,11 +46,15 @@
   gap: 16px;
 }
 .person {
-  margin: -8px 0 0;
-  font-size: 14px;
+  margin: -6px 0 -8px;
+  font-size: 18px;
   font-weight: 600;
-  line-height: 1.4;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
   color: var(--ink);
+}
+.lead .person {
+  font-size: 20px;
 }
 .copy :global(.eyebrow) {
   margin: 0;
@@ -61,7 +65,7 @@
   margin: 0;
   font-size: clamp(24px, 2.2vw, 30px);
   line-height: 1.25;
-  letter-spacing: -0.025em;
+  letter-spacing: 0.015em;
   overflow-wrap: anywhere;
 }
 .excerpt {
@@ -86,7 +90,7 @@
   transition: transform 0.3s var(--motion-ease);
 }
 .symbol {
-  color: var(--orange);
+  color: var(--brand-accent);
   margin: 10px 0;
 }
 .textOnly {
@@ -131,7 +135,7 @@
 }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .story:hover {
-    transform: translateY(-5px);
+    transform: translateY(var(--motion-hover-lift));
     box-shadow: 0 18px 40px #494a5510;
   }
   .story:hover img {
@@ -142,7 +146,7 @@
   }
 }
 .story:focus-visible {
-  outline: 2px solid var(--orange);
+  outline: 2px solid var(--brand-accent);
   outline-offset: 5px;
 }
 @media (max-width: 900px) {

@@ -57,7 +57,7 @@ export function DownloadChart({
           ctx.fillText(truncate(ctx, p.label, labelW - 20), pad, y + 26);
           ctx.fillStyle = "#e8e5df";
           ctx.fillRect(pad + labelW, y + 8, trackW, 24);
-          ctx.fillStyle = i === 0 ? "#eb5b19" : "#494a55";
+          ctx.fillStyle = i === 0 ? "#ae1e35" : "#494a55";
           ctx.fillRect(pad + labelW, y + 8, (p.value / max) * trackW, 24);
           ctx.fillStyle = "#494a55";
           ctx.font = "600 20px 'Outfit', sans-serif";
@@ -85,7 +85,7 @@ export function DownloadChart({
         points.forEach((p, i) => {
           const h = (p.value / max) * plotH,
             x = pad + slot * i + (slot - barW) / 2;
-          ctx.fillStyle = "#eb5b19";
+          ctx.fillStyle = "#ae1e35";
           ctx.fillRect(x, bottom - h, barW, h);
           ctx.fillStyle = "#494a55";
           ctx.font = "600 18px 'Outfit', sans-serif";

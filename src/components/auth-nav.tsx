@@ -30,7 +30,10 @@ export function AuthNav({
           </Link>
         )}
         <form action={signOut}>
-          <button type="submit" className="button small">
+          <button
+            type="submit"
+            className={portalOpen ? "button small is-plain" : "button small"}
+          >
             <LogOut size={14} /> <span>Sign out</span>
           </button>
         </form>

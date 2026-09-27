@@ -1,37 +1,37 @@
 import type { Metadata } from "next";
-import {
-  Cormorant_Garamond,
-  Noto_Sans_Devanagari,
-  Outfit,
-  Source_Serif_4,
-} from "next/font/google";
+import localFont from "next/font/local";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { PresentationMotion } from "@/components/presentation-motion";
 import "./globals.css";
 import "./presentation.css";
 
-const quote = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["600"],
+const display = localFont({
+  src: [
+    { path: "./fonts/source-serif-4.woff2", weight: "200 900", style: "normal" },
+    { path: "./fonts/source-serif-4-italic.woff2", weight: "200 900", style: "italic" },
+  ],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const sans = localFont({
+  src: "./fonts/outfit.woff2",
+  weight: "100 900",
+  variable: "--font-sans",
+  display: "swap",
+});
+
+const quote = localFont({
+  src: "./fonts/cormorant-garamond.woff2",
+  weight: "300 700",
   variable: "--font-quote",
   display: "swap",
 });
 
-const display = Source_Serif_4({
-  subsets: ["latin", "latin-ext"],
-  style: ["normal", "italic"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-display",
-  display: "swap",
-});
-const sans = Outfit({
-  subsets: ["latin", "latin-ext"],
-  variable: "--font-sans",
-  display: "swap",
-});
-const devanagari = Noto_Sans_Devanagari({
-  subsets: ["devanagari"],
+const devanagari = localFont({
+  src: "./fonts/noto-sans-devanagari.woff2",
+  weight: "100 900",
   variable: "--font-devanagari",
   display: "swap",
 });
@@ -52,7 +52,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${display.variable} ${sans.variable} ${devanagari.variable} ${quote.variable}`}
+      className={`${display.variable} ${sans.variable} ${quote.variable} ${devanagari.variable}`}
     >
       <body>
         <a className="skip" href="#main">

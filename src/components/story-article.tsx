@@ -3,18 +3,18 @@ import { ArrowUpRight } from "lucide-react";
 import type { Content, Temple } from "@/lib/data";
 import { dateLabel } from "@/lib/dates";
 import { StoryPhoto } from "@/components/story-photo";
-import {
-  communityStoryTypeLabel,
-  videoEmbedUrl,
-} from "@/lib/story-types";
+import { storyByline } from "@/lib/story-byline";
+import { communityStoryTypeLabel, videoEmbedUrl } from "@/lib/story-types";
 
 export function StoryArticle({
   item,
   temple,
+  temples,
   more,
 }: {
   item: Content;
   temple?: Temple;
+  temples: Temple[];
   more: Content[];
 }) {
   const paragraphs = item.body
@@ -23,13 +23,10 @@ export function StoryArticle({
     .filter(Boolean);
   const published = item.created_at?.slice(0, 10);
   const embed = item.link_url ? videoEmbedUrl(item.link_url) : null;
-  const meta = [
-    item.language,
-    item.temple_id ? temple?.name : "",
-    item.temple_id ? temple?.country : "",
-    item.person_name?.trim() || "",
-    published ? dateLabel(published) : "",
-  ].filter(Boolean);
+  const byline = storyByline(item.person_name, temple?.city);
+  const meta = [item.language, published ? dateLabel(published) : ""].filter(
+    Boolean,
+  );
 
   return (
     <div className="container story-page">
@@ -49,12 +46,18 @@ export function StoryArticle({
               </p>
             ) : null}
             <h1>{item.title}</h1>
-            {meta.length > 0 && <p className="story-meta">{meta.join(" · ")}</p>}
-            {(paragraphs.length ? paragraphs : item.body ? [item.body] : []).map(
-              (part, i) => (
-                <p key={i}>{part}</p>
-              ),
+            {byline ? <p className="story-byline">{byline}</p> : null}
+            {meta.length > 0 && (
+              <p className="story-meta">{meta.join(" · ")}</p>
             )}
+            {(paragraphs.length
+              ? paragraphs
+              : item.body
+                ? [item.body]
+                : []
+            ).map((part, i) => (
+              <p key={i}>{part}</p>
+            ))}
             {embed ? (
               <div className="story-video">
                 <iframe
@@ -94,7 +97,11 @@ export function StoryArticle({
                       story.kind === "community_story"
                         ? communityStoryTypeLabel(story.story_type)
                         : story.language,
-                      story.person_name?.trim() || "",
+                      storyByline(
+                        story.person_name,
+                        temples.find((temple) => temple.id === story.temple_id)
+                          ?.city,
+                      ),
                     ]
                       .filter(Boolean)
                       .join(" · ")}

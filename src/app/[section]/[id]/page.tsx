@@ -305,7 +305,6 @@ export default async function Detail({
               <TempleProfile
                 temple={temple}
                 content={data.content}
-                centres={data.centres}
                 year={targetYear}
                 monthlyTargets={data.monthlyTargets.filter(
                   (g) =>
@@ -334,6 +333,7 @@ export default async function Detail({
       <StoryArticle
         item={item}
         temple={data.temples.find((t) => t.id === item.temple_id)}
+        temples={data.temples}
         more={data.content
           .filter((c) => c.kind === item.kind && c.id !== item.id)
           .slice(0, 3)}
