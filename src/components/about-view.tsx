@@ -42,6 +42,7 @@ export function AboutView({ temples }: { temples: Temple[] }) {
         </div>
       </article>
       <article className="about-vision">
+        <h2>Srila Prabhupada’s vision for book distribution</h2>
         <figure className="about-vision-stage">
           <Image
             className="about-vision-image"
@@ -51,7 +52,6 @@ export function AboutView({ temples }: { temples: Temple[] }) {
             sizes="(max-width: 1260px) 100vw, 1260px"
           />
           <div className="about-vision-veil" aria-hidden="true" />
-          <h2>Srila Prabhupada’s vision for book distribution</h2>
         </figure>
         <div className="about-vision-letters">
           <blockquote className="about-letter about-vision-quote">

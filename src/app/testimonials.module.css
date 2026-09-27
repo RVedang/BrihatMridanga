@@ -59,8 +59,8 @@
   border-left: 1px solid var(--line);
   padding: 8px 0 8px 24px;
 }
-@media (min-width: 1001px) {
-  .grid > :nth-child(n + 4):global(.testimonial-card) {
+@media (min-width: 601px) {
+  .grid > :nth-child(6):last-child:global(.testimonial-card) {
     display: none;
   }
 }
@@ -119,6 +119,10 @@
     border-top: 1px solid var(--line);
     padding: 20px 0 0;
     width: 100%;
+  }
+  .grid > :first-child,
+  .grid > :nth-child(6):last-child {
+    background: var(--white);
   }
   .board :global(.home-rail) {
     grid-template-columns: minmax(0, 1fr);

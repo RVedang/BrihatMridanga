@@ -5,6 +5,7 @@ import { FileSpreadsheet, FileText, Table } from "lucide-react";
 import type { Campaign, Dashboard, DailyScore, RecordItem, Score, Temple } from "@/lib/data";
 import { dateLabel, monthLabel } from "@/lib/dates";
 import { Empty, number, ScoreTable, Stats } from "@/components/ui";
+import { TableScroll } from "@/components/table-scroll";
 import { CampaignSelect } from "@/components/campaign-select";
 import { Select } from "@/components/select";
 import { DateRangeFields } from "@/components/date-field";
@@ -415,7 +416,7 @@ function CampaignReportTable({
   return (
     <div className="campaign-report-group">
       {rows.length ? (
-        <div className="table-wrap">
+        <TableScroll>
           <table>
             <thead>
               <tr>
@@ -458,7 +459,7 @@ function CampaignReportTable({
               ))}
             </tbody>
           </table>
-        </div>
+        </TableScroll>
       ) : (
         <p className="chart-empty">{empty}</p>
       )}
@@ -489,7 +490,7 @@ function ReportTable({
 }) {
   if (!rows.length) return <p className="chart-empty">{empty}</p>;
   return (
-    <div className="table-wrap">
+    <TableScroll>
       <table>
         <thead>
           <tr>
@@ -512,6 +513,6 @@ function ReportTable({
           ))}
         </tbody>
       </table>
-    </div>
+    </TableScroll>
   );
 }

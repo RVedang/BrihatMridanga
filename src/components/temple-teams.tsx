@@ -11,7 +11,10 @@ import {
 } from "lucide-react";
 import type { TempleTeam } from "@/lib/data";
 import { Select } from "@/components/select";
-import { normalizeTeamSearch, teamDirectoryEntry } from "@/lib/team-directory";
+import {
+  normalizeTeamSearch,
+  teamDirectoryEntries,
+} from "@/lib/team-directory";
 import styles from "./temple-teams.module.css";
 
 const PAGE_SIZE = 8;
@@ -21,25 +24,7 @@ export function TempleTeams({ teams }: { teams: TempleTeam[] }) {
   const [query, setQuery] = useState("");
   const [centre, setCentre] = useState("");
   const [page, setPage] = useState(0);
-  const entries = useMemo(
-    () =>
-      teams
-        .map(teamDirectoryEntry)
-        .filter((entry) => entry.people.length > 0)
-        .sort(
-          (a, b) =>
-            a.team.name.localeCompare(b.team.name, "en", {
-              numeric: true,
-              sensitivity: "base",
-            }) ||
-            (a.team.centre_name || "").localeCompare(
-              b.team.centre_name || "",
-              "en",
-            ) ||
-            a.team.id.localeCompare(b.team.id),
-        ),
-    [teams],
-  );
+  const entries = useMemo(() => teamDirectoryEntries(teams), [teams]);
   const centres = useMemo(
     () =>
       Array.from(

@@ -1,4 +1,5 @@
 import { AnimatedNumber } from "@/components/presentation-motion";
+import { TableScroll } from "@/components/table-scroll";
 import Link from "next/link";
 import { ArrowUpRight, BookOpen, Landmark, Award } from "lucide-react";
 import type { Score } from "@/lib/data";
@@ -225,7 +226,7 @@ export function TempleTotals({
 }
 export function ScoreTable({ rows }: { rows: Score[] }) {
   return rows.length ? (
-    <div className="table-wrap">
+    <TableScroll>
       <table>
         <thead>
           <tr>
@@ -258,7 +259,7 @@ export function ScoreTable({ rows }: { rows: Score[] }) {
           ))}
         </tbody>
       </table>
-    </div>
+    </TableScroll>
   ) : (
     <Empty title="Every contribution begins somewhere">
       No distributions have been reported for this period yet.

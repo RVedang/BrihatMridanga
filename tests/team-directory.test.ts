@@ -4,6 +4,7 @@ import type { TempleTeam } from "../src/lib/data";
 import {
   normalizeTeamSearch,
   teamDirectoryEntry,
+  teamDirectoryEntries,
 } from "../src/lib/team-directory";
 
 function team(overrides: Partial<TempleTeam> = {}): TempleTeam {
@@ -28,7 +29,7 @@ test("imported team-name placeholders are not people or confirmed leads", () => 
       ],
     }),
   );
-  assert.equal(entry.lead, null);
+  assert.equal(entry.lead?.name, "Nilesh");
   assert.equal(entry.people.length, 2);
   assert.deepEqual(entry.people.map((person) => person.id).sort(), [
     "person-1",
@@ -49,16 +50,90 @@ test("placeholder detection tolerates capitalization and whitespace", () => {
   assert.equal(entry.people.length, 0);
 });
 
-test("missing lead does not promote the first member or invent a person", () => {
+test("missing lead uses the first listed member without inventing a person", () => {
   const entry = teamDirectoryEntry(
     team({
       coordinator_name: "",
       members: [{ id: "person-1", name: "Shriraj", coordinator: false }],
     }),
   );
-  assert.equal(entry.lead, null);
+  assert.equal(entry.lead?.name, "Shriraj");
+  assert.equal(entry.people[0].coordinator, true);
   assert.equal(entry.people.length, 1);
   assert.equal(teamDirectoryEntry(team()).people.length, 0);
+});
+
+test("duplicate team rows combine their rosters once and choose the first alphabetical member", () => {
+  const teams = [
+    team({
+      id: "team-2",
+      name: "Dāsānudāsa",
+      coordinator_name: "Dāsānudāsa",
+      members: [
+        { id: "kunal", name: "Kunal", coordinator: false },
+        { id: "abhay", name: "Abhay", coordinator: false },
+        { id: "coordinator-team-2", name: "Dāsānudāsa", coordinator: true },
+      ],
+    }),
+    team({
+      id: "team-1",
+      name: "  DASANUDASA ",
+      coordinator_name: "DASANUDASA",
+      members: [
+        { id: "abhay", name: "Abhay", coordinator: false },
+        { id: "kunal", name: "Kunal", coordinator: false },
+        { id: "coordinator-team-1", name: "DASANUDASA", coordinator: true },
+      ],
+    }),
+  ];
+  const original = structuredClone(teams);
+  const entries = teamDirectoryEntries(teams);
+  assert.equal(entries.length, 1);
+  assert.deepEqual(
+    entries[0].people.map((p) => p.name),
+    ["Abhay", "Kunal"],
+  );
+  assert.equal(entries[0].lead?.name, "Abhay");
+  assert.equal(entries[0].people.filter((p) => p.coordinator).length, 1);
+  assert.deepEqual(teamDirectoryEntries([...teams].reverse()), entries);
+  assert.deepEqual(teams, original);
+});
+
+test("merging retains additional members and a supplied coordinator", () => {
+  const entries = teamDirectoryEntries([
+    team({
+      id: "a",
+      name: "Madanmohan",
+      coordinator_name: "Madanmohan",
+      members: [{ id: "aanand", name: "Aanand", coordinator: false }],
+    }),
+    team({
+      id: "b",
+      name: "MadanMohan",
+      coordinator_name: "Harshal",
+      members: [
+        { id: "aanand", name: "Aanand", coordinator: false },
+        { id: "harshal", name: "Harshal", coordinator: false },
+        { id: "rama", name: "Rama", coordinator: false },
+      ],
+    }),
+  ]);
+  assert.equal(entries.length, 1);
+  assert.equal(entries[0].people.length, 3);
+  assert.equal(entries[0].lead?.name, "Harshal");
+  assert.ok(entries[0].search.includes("rama"));
+});
+
+test("different centres and numbered teams stay separate; empty teams remain hidden", () => {
+  const members = [{ id: "p", name: "Abhay", coordinator: false }];
+  const entries = teamDirectoryEntries([
+    team({ id: "a", members }),
+    team({ id: "b", members, centre_id: "powai" }),
+    team({ id: "c", members, name: "Baldeva 2", coordinator_name: "Baldeva 2" }),
+    team({ id: "d", name: "Empty", coordinator_name: "Empty" }),
+  ]);
+  assert.equal(entries.length, 3);
+  assert.ok(entries.every((entry) => entry.lead?.name === "Abhay"));
 });
 
 test("an actual roster lead can share the team name", () => {
