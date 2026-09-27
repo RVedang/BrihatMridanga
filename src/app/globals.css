@@ -3168,6 +3168,15 @@ details summary {
   .calendar .weekday {
     font-size: 8px;
   }
+  .listing-card-top {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+  .listing-card-kicker {
+    flex: 0 0 auto;
+    overflow-wrap: normal;
+    text-align: left;
+  }
   .site-footer {
     padding: 40px 20px 32px;
   }
