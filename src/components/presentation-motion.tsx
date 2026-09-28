@@ -18,10 +18,17 @@ const revealTargets =
   "[data-reveal], .page-intro, .section-title, .card, .place-card, .testimonial-card, .stat-card, .stats > div, .chart-card, .home-rail-heading, .home-sankirtan-feature > .story-photo, .home-sankirtan-feature > div, .home-sankirtan-item, .about-card, .about-meaning-stage, .about-meaning-panel, .about-vision-stage, .about-vision-quote, .about-mission-copy > h2, .about-mission-lead, .about-mission-pill, .about-mission-figure, .about-lead h2, .about-lead-points li, .about-lead-frame, .about-region, .about-actions, .empty, .login";
 
 function skipReveal(target: Element) {
-  return Boolean(
+  if (
     target.closest("section[aria-label='Our inspiration']") ||
-      target.closest(".page-intro"),
-  );
+    target.closest(".page-intro")
+  )
+    return true;
+  // A sideways row only peeks the next card. That sliver never reaches
+  // the reveal threshold, so the card stays transparent until a swipe.
+  const rail = target.closest(".story-rail, .testimonial-scroll");
+  if (!rail || !target.matches(".card, .testimonial-card")) return false;
+  const first = rail.querySelector(":scope > .card, :scope > .testimonial-card");
+  return target !== first;
 }
 
 /** Enhance server-rendered content without moving data or pages into the client. */
