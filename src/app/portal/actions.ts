@@ -54,6 +54,22 @@ export async function setPeriodLock(
     message: form.get("intent") === "reopen" ? "Month reopened." : "Month closed.",
   };
 }
+const textLimits: Record<string, number> = {
+  name: 160,
+  title: 200,
+  person_name: 160,
+  coordinator_name: 160,
+  country: 120,
+  city: 120,
+  timezone: 80,
+  language: 60,
+  location: 300,
+  body: 20000,
+  description: 5000,
+  instructions: 5000,
+};
+const fieldLabel = (field: string) =>
+  field.charAt(0).toUpperCase() + field.slice(1).replace(/_/g, " ");
 const tables = [
   "temples",
   "centres",
@@ -292,6 +308,14 @@ export async function saveRecord(
       ends_at: text("ends_at") ? `${text("ends_at")}:00Z` : null,
       location: text("location"),
     };
+  }
+  for (const [field, value] of Object.entries(row)) {
+    const limit = textLimits[field] ?? 2000;
+    if (typeof value === "string" && value.length > limit)
+      return {
+        ok: false,
+        message: `${fieldLabel(field)} is too long (maximum ${limit.toLocaleString("en")} characters).`,
+      };
   }
   const query = id
     ? client.from(table).update(row).eq("id", id)

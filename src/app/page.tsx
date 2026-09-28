@@ -17,6 +17,7 @@ import {
   isHomepageStory,
 } from "@/lib/story-types";
 import { dateLabel, todayIn } from "@/lib/dates";
+import { siteUrl } from "@/lib/site";
 import styles from "./home.module.css";
 import agenda from "./agenda.module.css";
 import testimonialsStyles from "./testimonials.module.css";
@@ -70,8 +71,34 @@ export default async function Home() {
           a.ends_on.localeCompare(b.ends_on),
       )
       .slice(0, 2);
+  const base = siteUrl();
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": `${base}/#organization`,
+        name: "Brihat Mridanga",
+        url: base,
+        logo: `${base}/icon.png`,
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${base}/#website`,
+        name: "Brihat Mridanga",
+        url: base,
+        publisher: { "@id": `${base}/#organization` },
+      },
+    ],
+  };
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       <section className={styles.hero} aria-label="Our inspiration">
         <div className={styles.field} aria-hidden="true">
           <div className={styles.ambient}>
