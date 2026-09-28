@@ -61,5 +61,7 @@ test("team without members is rejected before anything is saved", async ({ page 
     form?.querySelectorAll("[required]").forEach((el) => el.removeAttribute("required"));
     form?.requestSubmit();
   });
-  await expect(page.getByRole("alert")).toContainText("Select the team members first");
+  await expect(page.getByRole("main").getByRole("alert")).toContainText(
+    "Select the team members first",
+  );
 });

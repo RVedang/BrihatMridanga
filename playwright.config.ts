@@ -1,4 +1,7 @@
 import { defineConfig } from "@playwright/test";
+import nextEnv from "@next/env";
+
+nextEnv.loadEnvConfig(process.cwd());
 
 const external = Boolean(process.env.TEST_BASE_URL);
 const port = 3120;
