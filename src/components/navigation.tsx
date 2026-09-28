@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReadingProgress } from "@/components/reading-progress";
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 
 const links: [string, string][] = [
   ["/", "Home"],
@@ -19,19 +19,26 @@ const links: [string, string][] = [
 export function Navigation() {
   const path = usePathname(),
     [open, setOpen] = useState(false);
+  const portalOpen = path === "/portal" || path.startsWith("/portal/");
   const nav = useRef<HTMLElement>(null);
   const indicator = useRef<HTMLSpanElement>(null);
-  useEffect(() => {
+  useLayoutEffect(() => {
     const element = nav.current;
     if (!element) return;
     const sync = () => {
+      const mark = indicator.current;
       const active = element.querySelector<HTMLElement>(
         '[aria-current="page"]',
       );
-      if (!active || !indicator.current) return;
-      indicator.current.style.width = `${active.offsetWidth}px`;
-      indicator.current.style.height = `${active.offsetHeight}px`;
-      indicator.current.style.transform = `translate(${active.offsetLeft}px, ${active.offsetTop}px)`;
+      if (!mark) return;
+      if (!active) {
+        mark.style.opacity = "0";
+        return;
+      }
+      mark.style.opacity = "1";
+      mark.style.width = `${active.offsetWidth}px`;
+      mark.style.height = `${active.offsetHeight}px`;
+      mark.style.transform = `translate(${active.offsetLeft}px, ${active.offsetTop}px)`;
     };
     const observer = new ResizeObserver(sync);
     observer.observe(element);
@@ -62,12 +69,17 @@ export function Navigation() {
       >
         <span
           ref={indicator}
-          className="nav-active-indicator"
+          className={
+            portalOpen
+              ? "nav-active-indicator is-idle"
+              : "nav-active-indicator"
+          }
           aria-hidden="true"
         />
         {links.map(([href, label]) => {
           const current =
-            path === href || (href !== "/" && path.startsWith(`${href}/`));
+            !portalOpen &&
+            (path === href || (href !== "/" && path.startsWith(`${href}/`)));
           return (
             <Link
               key={href}

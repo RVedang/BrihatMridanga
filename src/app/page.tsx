@@ -20,6 +20,7 @@ import {
 import { dateLabel } from "@/lib/dates";
 import styles from "./home.module.css";
 import agenda from "./agenda.module.css";
+import testimonialsStyles from "./testimonials.module.css";
 export const dynamic = "force-dynamic";
 export default async function Home() {
   const data = await publicData();
@@ -188,15 +189,30 @@ export default async function Home() {
           <div className="container home-testimonials">
             <SectionTitle title="Recent testimonials" />
             {testimonials.length ? (
-              <TestimonialRail>
-                {testimonials.slice(0, 6).map((t) => (
-                  <TestimonialCard
-                    key={t.id}
-                    item={t}
-                    temple={data.temples.find((x) => x.id === t.temple_id)}
-                  />
-                ))}
-              </TestimonialRail>
+              <>
+                <div className={testimonialsStyles.desktop}>
+                  <div className={testimonialsStyles.grid}>
+                    {testimonials.slice(0, 6).map((t) => (
+                      <TestimonialCard
+                        key={t.id}
+                        item={t}
+                        temple={data.temples.find((x) => x.id === t.temple_id)}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <div className={testimonialsStyles.mobile}>
+                  <TestimonialRail>
+                    {testimonials.slice(0, 6).map((t) => (
+                      <TestimonialCard
+                        key={t.id}
+                        item={t}
+                        temple={data.temples.find((x) => x.id === t.temple_id)}
+                      />
+                    ))}
+                  </TestimonialRail>
+                </div>
+              </>
             ) : (
               <Empty title="Testimonials will appear here">
                 Book distribution testimonials from published stories will be

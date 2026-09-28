@@ -3,6 +3,9 @@
   grid-template-columns: minmax(0, 1fr);
   gap: 56px;
 }
+.mobile {
+  display: none;
+}
 .grid {
   display: grid;
   grid-template-columns: 1.15fr 1fr 1fr;
@@ -112,6 +115,39 @@
   padding: 0;
   border: 0;
 }
+@media (min-width: 1001px) {
+  .grid > :global(.testimonial-card) {
+    padding: clamp(22px, 2.2vw, 32px);
+  }
+  .grid :global(.testimonial-copy) {
+    gap: 18px;
+  }
+  .grid > :global(.has-photo) :global(.testimonial-copy) {
+    padding: clamp(20px, 2vw, 30px);
+  }
+  .grid :global(.testimonial-quote) {
+    line-height: 1.65;
+  }
+  .grid :global(.testimonial-who) {
+    padding-top: 16px;
+  }
+  .grid :global(.testimonial-photo) :global(.story-photo) {
+    aspect-ratio: 16 / 9;
+    max-height: 210px;
+  }
+  .grid > :first-child:global(.has-photo) :global(.testimonial-photo) :global(.story-photo) {
+    aspect-ratio: 16 / 9;
+    max-height: 260px;
+  }
+  .grid > :first-child :global(.testimonial-quote) {
+    line-height: 1.48;
+  }
+  .grid > :nth-child(6):last-child:global(.has-photo) :global(.testimonial-photo) :global(.story-photo) {
+    height: 220px;
+    min-height: 0;
+    max-height: 220px;
+  }
+}
 @media (max-width: 1000px) {
   .grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -119,6 +155,15 @@
   .grid > :first-child {
     grid-row: auto;
     grid-column: 1 / -1;
+  }
+}
+@media (max-width: 700px) {
+  .desktop {
+    display: none;
+  }
+  .mobile {
+    display: block;
+    min-width: 0;
   }
 }
 @media (max-width: 600px) {

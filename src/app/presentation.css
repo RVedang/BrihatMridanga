@@ -811,7 +811,12 @@ tbody tr:hover {
   transition:
     transform 0.46s var(--motion-ease),
     width 0.46s var(--motion-ease),
-    height 0.46s var(--motion-ease);
+    height 0.46s var(--motion-ease),
+    opacity 0.2s ease;
+}
+.nav-active-indicator.is-idle {
+  opacity: 0;
+  transition: none;
 }
 .nav-active-indicator::before,
 .nav-active-indicator::after {
@@ -902,6 +907,8 @@ tbody tr:hover {
   padding: 10px 4px 24px;
   scrollbar-width: none;
   overscroll-behavior-x: contain;
+  /* pan-y lets a vertical swipe scroll the page immediately.
+     A sideways swipe still moves this rail. */
   touch-action: pan-y;
 }
 .testimonial-scroll::-webkit-scrollbar {
@@ -913,6 +920,10 @@ tbody tr:hover {
   min-height: 330px;
   scroll-snap-align: start;
   margin: 0;
+  touch-action: pan-y;
+}
+.testimonial-card img {
+  -webkit-user-drag: none;
 }
 .home-board:has(.testimonial-carousel) {
   grid-template-columns: minmax(0, 1fr);
@@ -989,6 +1000,24 @@ tbody tr:hover {
   .testimonial-scroll > .testimonial-card {
     flex-basis: 88%;
     min-height: 300px;
+  }
+  .temple-profile .testimonial-carousel {
+    overflow: visible;
+  }
+  .temple-profile .testimonial-controls button:first-child {
+    left: calc((100% - 100vw) / 2 + 8px);
+  }
+  .temple-profile .testimonial-controls button:last-child {
+    right: calc((100% - 100vw) / 2 + 8px);
+  }
+  .temple-profile .testimonial-scroll {
+    padding-inline: 40px;
+    scroll-padding-inline: 40px;
+    touch-action: pan-x pan-y;
+  }
+  .temple-profile .testimonial-scroll > .testimonial-card {
+    flex-basis: calc(100% - 12px);
+    touch-action: pan-x pan-y;
   }
 }
 @media (max-width: 700px) {

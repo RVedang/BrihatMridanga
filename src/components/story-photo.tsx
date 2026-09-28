@@ -14,7 +14,7 @@ export function StoryPhoto({
       {src ? (
         // User and sample photographs are arbitrary HTTPS URLs.
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={src} alt={alt} />
+        <img src={src} alt={alt} draggable={false} />
       ) : (
         <span className="story-photo-empty">Photograph</span>
       )}

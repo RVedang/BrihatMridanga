@@ -2,7 +2,6 @@
 
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { bindVerticalPan } from "@/components/vertical-pan";
 
 export function TestimonialRail({
   children,
@@ -27,11 +26,9 @@ export function TestimonialRail({
     observer.observe(element);
     update();
     element.addEventListener("scroll", update, { passive: true });
-    const releaseTouch = bindVerticalPan(element);
     return () => {
       observer.disconnect();
       element.removeEventListener("scroll", update);
-      releaseTouch();
     };
   }, []);
   function move(direction: number) {

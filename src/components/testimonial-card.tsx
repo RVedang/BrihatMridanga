@@ -51,7 +51,7 @@ export function TestimonialCard({
   const className = photo ? "testimonial-card has-photo" : "testimonial-card";
   if (href) {
     return (
-      <Link href={href} className={className}>
+      <Link href={href} className={className} draggable={false}>
         {inner}
       </Link>
     );
