@@ -5,6 +5,7 @@ export function ListingCard({
   href,
   pill,
   tone = "plain",
+  accent,
   kicker,
   title,
   dates,
@@ -14,6 +15,7 @@ export function ListingCard({
   href: string;
   pill: string;
   tone?: "plain" | "regional" | "campaign" | "event" | "year";
+  accent?: string;
   kicker?: string;
   title: string;
   dates?: string;
@@ -23,7 +25,16 @@ export function ListingCard({
   return (
     <Link href={href} className={`card listing-card listing-card-${tone}`}>
       <div className="listing-card-top">
-        <span className={`pill pill-${tone}`}>{pill}</span>
+        <span className="listing-card-identity">
+          {accent ? (
+            <i
+              className="mark-swatch"
+              style={{ background: accent }}
+              aria-hidden="true"
+            />
+          ) : null}
+          <span className={`pill pill-${tone}`}>{pill}</span>
+        </span>
         {kicker ? <span className="listing-card-kicker">{kicker}</span> : null}
       </div>
       <h3>{title}</h3>

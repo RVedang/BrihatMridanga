@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { bindVerticalPan } from "@/components/vertical-pan";
 
 const NATURAL = 280;
 const GAP = 20;
@@ -57,10 +58,12 @@ export function StoryRail({
     if (!el) return;
     sync();
     el.addEventListener("scroll", sync, { passive: true });
+    const releasePan = bindVerticalPan(el);
     const observer = new ResizeObserver(sync);
     observer.observe(el);
     return () => {
       el.removeEventListener("scroll", sync);
+      releasePan();
       observer.disconnect();
     };
   }, [sync, children]);

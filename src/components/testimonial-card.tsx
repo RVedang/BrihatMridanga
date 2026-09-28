@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Quote } from "lucide-react";
 import type { Content, Temple } from "@/lib/data";
+import { StoryPhoto } from "@/components/story-photo";
 import { storyByline } from "@/lib/story-byline";
 
 export function TestimonialCard({
@@ -12,24 +13,32 @@ export function TestimonialCard({
 }) {
   const person = item.person_name?.trim() || "";
   const city = temple?.city?.trim() || "";
+  const photo = item.image_url?.trim() || "";
   const inner = (
     <>
-      <Quote
-        className="testimonial-mark"
-        size={22}
-        strokeWidth={1.6}
-        aria-hidden
-      />
-      <p className="testimonial-quote">
-        {item.body.length > 240 ? `${item.body.slice(0, 240)}…` : item.body}
-      </p>
-      <div className="testimonial-who">
-        <strong>{person ? item.title : storyByline(item.title, city)}</strong>
-        {person ? (
-          <span className="testimonial-person">
-            {storyByline(person, city)}
-          </span>
-        ) : null}
+      {photo ? (
+        <div className="testimonial-photo">
+          <StoryPhoto src={photo} alt="" />
+        </div>
+      ) : null}
+      <div className="testimonial-copy">
+        <Quote
+          className="testimonial-mark"
+          size={22}
+          strokeWidth={1.6}
+          aria-hidden
+        />
+        <p className="testimonial-quote">
+          {item.body.length > 240 ? `${item.body.slice(0, 240)}…` : item.body}
+        </p>
+        <div className="testimonial-who">
+          <strong>{person ? item.title : storyByline(item.title, city)}</strong>
+          {person ? (
+            <span className="testimonial-person">
+              {storyByline(person, city)}
+            </span>
+          ) : null}
+        </div>
       </div>
     </>
   );
@@ -39,12 +48,13 @@ export function TestimonialCard({
       : temple
         ? `/temples/${temple.id}`
         : "";
+  const className = photo ? "testimonial-card has-photo" : "testimonial-card";
   if (href) {
     return (
-      <Link href={href} className="testimonial-card">
+      <Link href={href} className={className}>
         {inner}
       </Link>
     );
   }
-  return <blockquote className="testimonial-card">{inner}</blockquote>;
+  return <blockquote className={className}>{inner}</blockquote>;
 }

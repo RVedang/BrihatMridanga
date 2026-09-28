@@ -5,6 +5,7 @@ import type { Content, MonthlyTarget, Temple, TempleTeam } from "@/lib/data";
 import { Empty } from "@/components/ui";
 import { Progress } from "@/components/charts";
 import { TestimonialCard } from "@/components/testimonial-card";
+import { TestimonialStrip } from "@/components/testimonial-strip";
 import { booksForMonth, monthKey } from "@/lib/campaign";
 import { monthLabel } from "@/lib/dates";
 import {
@@ -127,7 +128,7 @@ export function TempleProfile({
       <section>
         <h2>Testimonials</h2>
         {testimonials.length ? (
-          <div className="testimonial-grid">
+          <TestimonialStrip>
             {testimonials.map((t) => (
               <TestimonialCard
                 key={t.id}
@@ -135,7 +136,7 @@ export function TempleProfile({
                 temple={temple}
               />
             ))}
-          </div>
+          </TestimonialStrip>
         ) : (
           <Empty title="No testimonials yet">
             Distributor testimonials and recipient experiences from published

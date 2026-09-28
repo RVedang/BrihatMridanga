@@ -16,6 +16,17 @@
   border-radius: 24px;
   gap: 22px;
 }
+.grid :global(.testimonial-copy) {
+  gap: 22px;
+}
+.grid > :global(.testimonial-card.has-photo) {
+  padding: 0;
+  overflow: hidden;
+  gap: 0;
+}
+.grid > :global(.has-photo) :global(.testimonial-copy) {
+  padding: clamp(24px, 2.5vw, 36px);
+}
 .grid :global(.testimonial-quote) {
   display: block;
   overflow: visible;
@@ -29,9 +40,19 @@
 }
 .grid > :first-child {
   grid-row: span 2;
-  background: var(--wash);
+  background: var(--paper);
   border-color: #ae1e3526;
   justify-content: center;
+}
+.grid > :first-child :global(.testimonial-copy) {
+  justify-content: center;
+}
+.grid > :first-child:global(.has-photo) :global(.testimonial-photo) :global(.story-photo) {
+  aspect-ratio: 16 / 10;
+  max-height: 360px;
+}
+.grid > :first-child:global(.has-photo) :global(.testimonial-copy) {
+  justify-content: flex-start;
 }
 .grid > :first-child :global(.testimonial-mark) {
   width: 42px;
@@ -49,9 +70,27 @@
 .grid > :nth-child(6):last-child {
   grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) minmax(160px, 0.4fr);
+  grid-template-columns: minmax(0, 1fr);
   align-items: center;
   background: var(--paper);
+}
+.grid > :nth-child(6):last-child :global(.testimonial-copy) {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(160px, 0.4fr);
+  align-items: center;
+  width: 100%;
+}
+.grid > :nth-child(6):last-child:global(.has-photo) {
+  grid-template-columns: minmax(180px, 280px) minmax(0, 1fr);
+  align-items: stretch;
+}
+.grid > :nth-child(6):last-child:global(.has-photo) :global(.testimonial-photo) :global(.story-photo) {
+  height: 100%;
+  min-height: 180px;
+  aspect-ratio: auto;
+}
+.grid > :nth-child(6):last-child:global(.has-photo) :global(.testimonial-copy) {
+  padding: clamp(20px, 2.4vw, 32px) clamp(24px, 2.5vw, 36px);
 }
 .grid > :nth-child(6):last-child :global(.testimonial-who) {
   margin: 0;
@@ -108,6 +147,16 @@
   }
   .grid > :nth-child(6):last-child {
     display: flex;
+    flex-direction: column;
+  }
+  .grid > :nth-child(6):last-child :global(.testimonial-copy) {
+    display: flex;
+    flex-direction: column;
+  }
+  .grid > :nth-child(6):last-child:global(.has-photo) :global(.testimonial-photo) :global(.story-photo) {
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 16 / 10;
   }
   .grid > :nth-child(6):last-child :global(.testimonial-who) {
     border-left: 0;

@@ -3,7 +3,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReadingProgress } from "@/components/reading-progress";
 import { useEffect, useRef, useState } from "react";
-import { Menu, X } from "lucide-react";
 
 const links: [string, string][] = [
   ["/", "Home"],
@@ -49,7 +48,18 @@ export function Navigation() {
         aria-controls="navigation"
         onClick={() => setOpen(!open)}
       >
-        {open ? <X /> : <Menu />}
+        {open ? (
+          <svg className="menu-glyph" viewBox="5 5 14 14" aria-hidden="true">
+            <path d="M18 6 6 18" />
+            <path d="M6 6 18 18" />
+          </svg>
+        ) : (
+          <svg className="menu-glyph" viewBox="3 4 18 16" aria-hidden="true">
+            <path d="M4 5h16" />
+            <path d="M4 12h16" />
+            <path d="M4 19h16" />
+          </svg>
+        )}
       </button>
       <nav
         ref={nav}

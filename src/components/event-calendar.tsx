@@ -2,10 +2,41 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import type { CSSProperties } from "react";
 import type { Campaign, Content, Temple } from "@/lib/data";
 import { dateLabel } from "@/lib/dates";
 import { Empty } from "@/components/ui";
 import { ListingCard } from "@/components/listing-card";
+
+const EVENT_MARK = "#ae1e35";
+
+const CAMPAIGN_TONES = [
+  { bar: "#494a55", wash: "#f3f1ec" },
+  { bar: "#3d6b54", wash: "#e7f0ea" },
+  { bar: "#3d5278", wash: "#e7edf5" },
+  { bar: "#8a5a12", wash: "#f6efe2" },
+  { bar: "#6b4c7a", wash: "#f1ebf4" },
+  { bar: "#2f6f7a", wash: "#e5f2f4" },
+  { bar: "#8a3d4a", wash: "#f8ecee" },
+  { bar: "#6a6230", wash: "#f3f0e4" },
+] as const;
+
+function campaignTones(campaigns: Campaign[]) {
+  const map = new Map<string, (typeof CAMPAIGN_TONES)[number]>();
+  [...campaigns]
+    .sort(
+      (a, b) =>
+        a.starts_on.localeCompare(b.starts_on) || a.id.localeCompare(b.id),
+    )
+    .forEach((campaign, index) => {
+      map.set(campaign.id, CAMPAIGN_TONES[index % CAMPAIGN_TONES.length]);
+    });
+  return map;
+}
+
+function markVars(tone: { bar: string; wash: string }): CSSProperties {
+  return { "--mark": tone.bar, "--mark-wash": tone.wash } as CSSProperties;
+}
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -89,6 +120,8 @@ export function EventCalendar({
   const offset = new Date(Date.UTC(year, month, 1)).getUTCDay();
   const today = now.toISOString().slice(0, 10);
 
+  const tones = useMemo(() => campaignTones(campaigns), [campaigns]);
+
   const marksByDay = useMemo(() => {
     const map = new Map<string, Mark[]>();
     const add = (date: string, mark: Mark) => {
@@ -157,18 +190,8 @@ export function EventCalendar({
       </div>
       <p className="muted">
         Browse any month of the year. Dates are shown in UTC. Campaigns appear
-        across every day they run; events appear on their start date.
-      </p>
-      <p className="calendar-key" aria-label="Calendar key">
-        <span>
-          <i className="cal-key cal-key-event" /> Event
-        </span>
-        <span>
-          <i className="cal-key cal-key-campaign" /> Movement-wide campaign
-        </span>
-        <span>
-          <i className="cal-key cal-key-regional" /> Regional campaign
-        </span>
+        across every day they run; events appear on their start date. Each
+        campaign keeps its own color.
       </p>
       <div className="calendar">
         {WEEKDAYS.map((day) => (
@@ -192,19 +215,46 @@ export function EventCalendar({
               }`}
             >
               <span className="cal-num">{i + 1}</span>
-              {marks.map((mark) => (
-                <Link
-                  key={`${mark.kind}-${mark.id}`}
-                  href={mark.href}
-                  className={`cal-mark cal-mark-${mark.kind}`}
-                >
-                  {mark.title}
-                </Link>
-              ))}
+              {marks.map((mark) => {
+                const tone = mark.kind === "event" ? null : tones.get(mark.id);
+                return (
+                  <Link
+                    key={`${mark.kind}-${mark.id}`}
+                    href={mark.href}
+                    className={`cal-mark cal-mark-${mark.kind}`}
+                    style={tone ? markVars(tone) : undefined}
+                  >
+                    {mark.title}
+                  </Link>
+                );
+              })}
             </div>
           );
         })}
       </div>
+      {monthEvents.length || monthCampaigns.length ? (
+        <ul className="calendar-key" aria-label="Calendar key">
+          {monthEvents.length ? (
+            <li>
+              <i className="mark-swatch mark-swatch-event" aria-hidden="true" />
+              <span>Event</span>
+            </li>
+          ) : null}
+          {monthCampaigns.map((campaign) => {
+            const tone = tones.get(campaign.id) || CAMPAIGN_TONES[0];
+            return (
+              <li key={campaign.id}>
+                <i
+                  className="mark-swatch"
+                  style={{ background: tone.bar }}
+                  aria-hidden="true"
+                />
+                <span>{campaign.name}</span>
+              </li>
+            );
+          })}
+        </ul>
+      ) : null}
       <div className="section-title">
         <h2>This month</h2>
       </div>
@@ -219,6 +269,7 @@ export function EventCalendar({
                 href={`/campaigns/${campaign.id}`}
                 pill={regional ? "Regional campaign" : "Movement-wide campaign"}
                 tone={regional ? "regional" : "campaign"}
+                accent={(tones.get(campaign.id) || CAMPAIGN_TONES[0]).bar}
                 kicker={regional ? temple : "All temples"}
                 title={campaign.name}
                 dates={`${dateLabel(campaign.starts_on)} – ${dateLabel(campaign.ends_on)}`}
@@ -236,6 +287,7 @@ export function EventCalendar({
               href={`/events/${event.id}`}
               pill="Event"
               tone="event"
+              accent={EVENT_MARK}
               kicker={event.location || undefined}
               title={event.title}
               dates={

@@ -1,5 +1,6 @@
 /* Shared presentation tokens. Business components retain their original contracts. */
 :root {
+  --header-mark: 68px;
   --surface-radius: 24px;
   --surface-shadow: 0 8px 28px #494a5506, 0 24px 60px #494a5504;
   --surface-hover-shadow: 0 18px 42px #494a5512;
@@ -74,7 +75,7 @@ main {
   box-shadow: 0 8px 32px #494a550a;
 }
 .brand-logo {
-  height: 68px;
+  height: var(--header-mark);
 }
 .navigation {
   margin-top: 10px;
@@ -103,8 +104,11 @@ main {
   }
 }
 @media (min-width: 1001px) and (max-width: 1240px) {
+  :root {
+    --header-mark: 56px;
+  }
   .brand-logo {
-    height: 56px;
+    height: var(--header-mark);
   }
   .navigation .nav-link {
     padding-inline: 8px;
@@ -151,6 +155,13 @@ form.nav-login .button,
   background: color-mix(in srgb, var(--ink) 9%, white);
   border-color: transparent;
   color: var(--ink);
+}
+a.button.nav-login {
+  box-sizing: border-box;
+  height: var(--header-mark);
+  min-height: var(--header-mark);
+  padding-top: 0;
+  padding-bottom: 0;
 }
 a.nav-login {
   background: var(--brand-accent);
@@ -501,9 +512,25 @@ tbody tr:hover {
     border: 0;
   }
   .menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     min-width: 44px;
-    min-height: 44px;
+    min-height: var(--header-mark);
+    padding: 0;
     border-radius: 10px;
+    line-height: 0;
+  }
+  .menu-glyph {
+    display: block;
+    height: var(--header-mark);
+    width: auto;
+    overflow: visible;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
   .home-board {
     gap: 24px;
@@ -531,32 +558,42 @@ tbody tr:hover {
     padding: 8px 10px;
     column-gap: 8px;
   }
+  :root {
+    --header-mark: 48px;
+  }
   .brand-logo {
-    height: 48px;
+    height: var(--header-mark);
     width: auto;
     max-width: 52vw;
   }
   .menu-toggle {
-    width: 44px;
+    width: auto;
     min-width: 44px;
-    height: 44px;
-    min-height: 44px;
+    height: var(--header-mark);
+    min-height: var(--header-mark);
     padding: 0;
     border-radius: 12px;
   }
-  .menu-toggle svg {
-    width: 22px;
-    height: 22px;
+  .menu-glyph {
+    height: var(--header-mark);
+    width: auto;
   }
   .nav-auth {
     gap: 4px;
   }
-  a.nav-login,
   form.nav-login .button,
   .nav-auth .button {
     min-height: 36px;
     height: 36px;
     padding: 0 10px;
+    border-radius: 10px;
+    font-size: 11px;
+  }
+  a.button.nav-login {
+    height: var(--header-mark);
+    min-height: var(--header-mark);
+    padding-top: 0;
+    padding-bottom: 0;
     border-radius: 10px;
     font-size: 11px;
   }
@@ -640,12 +677,14 @@ tbody tr:hover {
   }
 }
 
-.pill-regional,
-.cal-key-regional,
-.calendar a.cal-mark-regional {
+.pill-regional {
   background: var(--wash);
   color: var(--ink);
-  border-left-color: var(--brand-accent);
+}
+.calendar a.cal-mark-regional {
+  background: var(--mark-wash, var(--wash));
+  color: var(--ink);
+  border-left-color: var(--mark, var(--ink));
 }
 .calendar .has-regional {
   background: var(--paper);
@@ -923,11 +962,14 @@ tbody tr:hover {
   .calendar a {
     background: var(--brand-accent);
   }
-  .calendar a.cal-mark-campaign {
-    background: var(--ink);
-  }
+  .calendar a.cal-mark-campaign,
   .calendar a.cal-mark-regional {
-    background: #3d6b54;
+    background: var(--mark, var(--ink));
+  }
+  .calendar-key {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
