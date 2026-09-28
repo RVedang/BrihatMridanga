@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Quote } from "lucide-react";
 import type { Content, Temple } from "@/lib/data";
 import { StoryPhoto } from "@/components/story-photo";
+import { excerpt } from "@/lib/excerpt";
 import { storyByline } from "@/lib/story-byline";
 
 export function TestimonialCard({
@@ -29,7 +30,7 @@ export function TestimonialCard({
           aria-hidden
         />
         <p className="testimonial-quote">
-          {item.body.length > 240 ? `${item.body.slice(0, 240)}…` : item.body}
+          {excerpt(item.body, 240)}
         </p>
         <div className="testimonial-who">
           <strong>{person ? item.title : storyByline(item.title, city)}</strong>

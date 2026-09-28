@@ -4135,6 +4135,13 @@ a.testimonial-card:hover {
   -webkit-line-clamp: 5;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+.story-rail .card h3,
+.story-rail .card > p {
+  overflow-wrap: normal;
+  word-break: normal;
 }
 .testimonial-who {
   margin-top: auto;

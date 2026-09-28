@@ -5,6 +5,7 @@ import { StoryRail } from "@/components/story-rail";
 import { Empty, SectionTitle } from "@/components/ui";
 import { StoryPhoto } from "@/components/story-photo";
 import styles from "./home-stories.module.css";
+import { excerpt } from "@/lib/excerpt";
 import { storyByline } from "@/lib/story-byline";
 import {
   communityStoryTypeLabel,
@@ -21,7 +22,7 @@ function StoryCard({ item, temple }: { item: Content; temple?: Temple }) {
       <span className="card-meta">{item.language}</span>
       <h3>{item.title}</h3>
       {byline ? <p className="card-person">{byline}</p> : null}
-      <p>{item.body.slice(0, 160)}</p>
+      <p>{excerpt(item.body, 160)}</p>
       <span className="card-go">
         Read more <ArrowUpRight size={15} strokeWidth={1.6} />
       </span>
@@ -163,8 +164,7 @@ export function HomeStories({
                   )}
                   <h3>{story.title}</h3>
                   <p className={styles.excerpt}>
-                    {story.body.slice(0, index === 0 ? 180 : 120)}
-                    {story.body.length > (index === 0 ? 180 : 120) ? "…" : ""}
+                    {excerpt(story.body, index === 0 ? 180 : 120)}
                   </p>
                   <span className={styles.read}>
                     Read more <ArrowUpRight size={17} aria-hidden="true" />

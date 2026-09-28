@@ -72,7 +72,8 @@
   margin: 0;
   font-size: 14px;
   line-height: 1.8;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 .read {
   display: flex;
