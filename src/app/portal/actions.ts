@@ -24,6 +24,36 @@ export async function submitDistribution(
     version: data.version,
   };
 }
+export async function setPeriodLock(
+  _previous: ActionResult,
+  form: FormData,
+): Promise<ActionResult> {
+  const { client, profile } = await requireActor();
+  if (profile.role !== "admin")
+    return { ok: false, message: "Only admins can close or reopen months." };
+  const templeId = String(form.get("temple_id") || "");
+  const month = String(form.get("month") || "");
+  if (!templeId) return { ok: false, message: "Choose a temple." };
+  if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(month))
+    return { ok: false, message: "Choose a month." };
+  const row = { temple_id: templeId, month: `${month}-01` };
+  const { error } =
+    form.get("intent") === "reopen"
+      ? await client
+          .from("period_locks")
+          .delete()
+          .eq("temple_id", row.temple_id)
+          .eq("month", row.month)
+      : await client
+          .from("period_locks")
+          .upsert(row, { onConflict: "temple_id,month", ignoreDuplicates: true });
+  if (error) return { ok: false, message: friendlyError(error, "setPeriodLock") };
+  revalidatePath("/portal");
+  return {
+    ok: true,
+    message: form.get("intent") === "reopen" ? "Month reopened." : "Month closed.",
+  };
+}
 const tables = [
   "temples",
   "centres",

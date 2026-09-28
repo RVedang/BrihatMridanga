@@ -3,6 +3,7 @@ import { PencilLine } from "lucide-react";
 import { isConfigured } from "@/lib/supabase";
 import { requireActor } from "@/lib/auth";
 import { PageIntro, Empty, number } from "@/components/ui";
+import { PeriodLocks, type PeriodLock } from "@/components/period-locks";
 import { ReportForm } from "@/components/report-form";
 import { RecordForms } from "@/components/record-forms";
 import catalog from "@/data/books.json";
@@ -146,6 +147,15 @@ export default async function Portal({
     ).filter(
       (g) => profile.role === "admin" || g.temple_id === profile.temple_id,
     );
+  const periodLocks: PeriodLock[] =
+    profile.role === "admin" && query.tab === "temples"
+      ? (
+          await client
+            .from("period_locks")
+            .select("temple_id,month")
+            .order("month", { ascending: false })
+        ).data || []
+      : [];
   let existing: Distribution | undefined;
   if (query.edit) {
     const { data, error } = await client
@@ -304,6 +314,7 @@ export default async function Portal({
       ) : ["records", "campaigns", "content", "temples", "targets"].includes(
           tab,
         ) ? (
+        <>
         <RecordForms
           key={tab}
           tab={tab}
@@ -324,6 +335,10 @@ export default async function Portal({
               profile.role === "admin" || c.temple_id === profile.temple_id,
           )}
         />
+        {tab === "temples" && profile.role === "admin" && (
+          <PeriodLocks temples={temples} locks={periodLocks} />
+        )}
+        </>
       ) : (
         <ReportForm
           key={existing?.id || "new"}

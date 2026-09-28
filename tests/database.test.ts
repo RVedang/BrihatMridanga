@@ -647,6 +647,46 @@ test("PostgreSQL reporting, permissions, scoring and date-range integration", as
       ),
     );
   });
+  await t.test("content can only use a centre from its own temple", async () => {
+    await actor(admin);
+    await db.query(
+      "insert into content(temple_id,centre_id,kind,title) values($1,$2,'story','Same temple')",
+      [ta, hall],
+    );
+    await assert.rejects(
+      db.query(
+        "insert into content(temple_id,centre_id,kind,title) values($1,$2,'story','Wrong temple')",
+        [ta, otherHall],
+      ),
+    );
+    await assert.rejects(
+      db.query(
+        "insert into content(temple_id,centre_id,kind,title) values(null,$1,'story','No temple')",
+        [hall],
+      ),
+    );
+  });
+  await t.test("admins close months; nobody reports into a closed month", async () => {
+    await actor(a);
+    await assert.rejects(
+      db.query("insert into period_locks(temple_id,month) values($1,'2024-03-01')", [ta]),
+    );
+    await actor(admin);
+    await db.query("insert into period_locks(temple_id,month) values($1,'2024-03-01')", [ta]);
+    await actor(a);
+    await assert.rejects(save(base({ date: "2024-03-15" })), /period is closed/);
+    const other = await save(base({ date: "2024-04-02" }));
+    assert.ok(other.books > 0, "open months still accept reports");
+    await assert.rejects(
+      db.query("delete from period_locks where temple_id=$1", [ta]).then((r) => {
+        if (r.affectedRows === 0) throw new Error("not deleted");
+      }),
+    );
+    await actor(admin);
+    await db.query("delete from period_locks where temple_id=$1 and month='2024-03-01'", [ta]);
+    await actor(a);
+    assert.ok((await save(base({ date: "2024-03-15" }))).books > 0, "reopened month accepts reports");
+  });
   await t.test("coordinators set monthly temple targets; others cannot", async () => {
     await actor(a);
     await db.query(
