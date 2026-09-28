@@ -212,6 +212,17 @@ export function SubmissionHistory({
 
       <div className="table-wrap history-table">
         <table>
+          <colgroup>
+            <col className="history-col-date" />
+            {admin && <col className="history-col-text" />}
+            <col className="history-col-text" />
+            <col className="history-col-text" />
+            <col className="history-col-num" />
+            <col className="history-col-num" />
+            <col className="history-col-num" />
+            <col className="history-col-num" />
+            <col className="history-col-action" />
+          </colgroup>
           <thead>
             <tr>
               <th>Date</th>
@@ -229,15 +240,33 @@ export function SubmissionHistory({
             {reports.length ? (
               reports.map((r) => (
                 <tr key={r.id}>
-                  <td>{r.distributed_on}</td>
-                  {admin && <td>{temples.find((t) => t.id === r.temple_id)?.name}</td>}
-                  <td>{campaignName(r.campaign_id)}</td>
-                  <td>{reportedFor(r)}</td>
-                  <td>{number(r.book_count)}</td>
-                  <td>{r.mode === "total" ? "Incomplete" : number(r.set_count ?? 0)}</td>
-                  <td>{r.points === null ? "Incomplete" : number(r.points)}</td>
-                  <td>{r.version}</td>
-                  <td>
+                  <td className="history-wide" data-label="Date">
+                    {r.distributed_on}
+                  </td>
+                  {admin && (
+                    <td className="history-wide" data-label="Temple">
+                      {temples.find((t) => t.id === r.temple_id)?.name}
+                    </td>
+                  )}
+                  <td className="history-wide" data-label="Campaign">
+                    {campaignName(r.campaign_id)}
+                  </td>
+                  <td className="history-wide" data-label="For">
+                    {reportedFor(r)}
+                  </td>
+                  <td className="num" data-label="Books">
+                    {number(r.book_count)}
+                  </td>
+                  <td className="num" data-label="Sets">
+                    {r.mode === "total" ? "Incomplete" : number(r.set_count ?? 0)}
+                  </td>
+                  <td className="num" data-label="Points">
+                    {r.points === null ? "Incomplete" : number(r.points)}
+                  </td>
+                  <td className="num" data-label="Version">
+                    {r.version}
+                  </td>
+                  <td className="history-wide" data-label="Action">
                     <Link className="button secondary small history-update" href={`/portal?edit=${r.id}`}>
                       <PencilLine size={14} strokeWidth={1.8} />
                       Update
