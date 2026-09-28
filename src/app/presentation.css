@@ -609,9 +609,16 @@ tbody tr:hover {
   }
   .menu-toggle {
     width: auto;
-    height: var(--logo-ink);
-    min-height: var(--logo-ink);
+    height: 20px;
+    min-height: 20px;
     padding: 0;
+  }
+  .menu-glyph.is-open {
+    width: 20px;
+  }
+  .menu-glyph.is-open span {
+    width: calc(20px * 1.4142);
+    margin-left: calc(20px * -0.7071);
   }
   .nav-auth {
     gap: 4px;
@@ -625,8 +632,8 @@ tbody tr:hover {
     font-size: 11px;
   }
   a.button.nav-login {
-    height: var(--logo-ink);
-    min-height: var(--logo-ink);
+    height: 32px;
+    min-height: 32px;
     padding-top: 0;
     padding-bottom: 0;
     border-radius: 10px;
