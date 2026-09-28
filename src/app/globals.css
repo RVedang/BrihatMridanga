@@ -1665,6 +1665,8 @@ table small {
   margin-top: 10px;
 }
 .workspace .nice-select-trigger,
+.workspace .history-filters .nice-select-trigger,
+.workspace .history-filters .date-field-trigger,
 .workspace .date-field-trigger,
 .workspace-form .nice-select-trigger,
 .workspace-form .date-field-trigger {
@@ -1678,6 +1680,8 @@ table small {
   line-height: 1.4;
 }
 .workspace .nice-select-trigger:hover:not(:disabled),
+.workspace .history-filters .nice-select-trigger:hover:not(:disabled),
+.workspace .history-filters .date-field-trigger:hover:not(:disabled),
 .workspace .date-field-trigger:hover:not(:disabled),
 .workspace-form .nice-select-trigger:hover:not(:disabled),
 .workspace-form .date-field-trigger:hover:not(:disabled) {
@@ -1685,6 +1689,8 @@ table small {
   border-color: transparent;
 }
 .workspace .nice-select-trigger[aria-expanded="true"],
+.workspace .history-filters .nice-select-trigger[aria-expanded="true"],
+.workspace .history-filters .date-field-trigger[aria-expanded="true"],
 .workspace .date-field-trigger[aria-expanded="true"],
 .workspace-form .nice-select-trigger[aria-expanded="true"],
 .workspace-form .date-field-trigger[aria-expanded="true"] {
@@ -1803,6 +1809,53 @@ table small {
 }
 .history-board {
   margin-bottom: 80px;
+}
+.history-filters {
+  border-radius: 20px;
+  margin-bottom: 24px;
+  background: white;
+}
+.history-filters .nice-select,
+.history-filters .date-field {
+  margin-top: 0;
+}
+.history-dates {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+.history-filter-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.history-summary {
+  margin-bottom: 20px;
+}
+.history-summary .eyebrow {
+  margin-bottom: 10px;
+}
+.history-months {
+  margin-bottom: 24px;
+}
+.history-months summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding: 10px 0;
+}
+.history-months .history-table {
+  margin-top: 8px;
+}
+@media (max-width: 700px) {
+  .history-filters label,
+  .history-dates {
+    flex: 1 1 100%;
+  }
+  .history-dates .date-range-fields .date-field {
+    min-width: 0;
+    flex: 1;
+  }
 }
 .history-table {
   background: white;

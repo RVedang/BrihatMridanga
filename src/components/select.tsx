@@ -101,6 +101,7 @@ export function Select({
     ? options.filter((option) => option.value !== "")
     : options;
   const generated = useId();
+  const triggerId = id || generated;
   const listId = `${generated}-list`;
   const searchId = `${generated}-search`;
   const wrap = useRef<HTMLDivElement>(null);
@@ -178,7 +179,7 @@ export function Select({
     >
       <select
         {...rest}
-        id={id}
+        id={triggerId}
         name={name}
         multiple={multiple}
         required={required}
@@ -186,6 +187,7 @@ export function Select({
         value={multiple ? selectedValues : selected}
         tabIndex={-1}
         aria-hidden="true"
+        style={{ display: "none" }}
         className="nice-select-native"
         onChange={(e) => {
           if (multiple) {
@@ -216,6 +218,7 @@ export function Select({
       <button
         type="button"
         className="nice-select-trigger"
+        id={`${triggerId}-trigger`}
         disabled={disabled}
         aria-haspopup="listbox"
         aria-expanded={open}

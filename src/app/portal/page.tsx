@@ -1,8 +1,11 @@
 import Link from "next/link";
-import { PencilLine } from "lucide-react";
 import { isConfigured } from "@/lib/supabase";
 import { requireActor } from "@/lib/auth";
-import { PageIntro, Empty, number } from "@/components/ui";
+import { PageIntro, Empty } from "@/components/ui";
+import {
+  SubmissionHistory,
+  type HistoryTotalsRow as HistoryRow,
+} from "@/components/submission-history";
 import { PeriodLocks, type PeriodLock } from "@/components/period-locks";
 import { ReportForm } from "@/components/report-form";
 import { RecordForms } from "@/components/record-forms";
@@ -27,7 +30,15 @@ const HISTORY_PAGE = 100;
 export default async function Portal({
   searchParams,
 }: {
-  searchParams: Promise<{ tab?: string; edit?: string; page?: string }>;
+  searchParams: Promise<{
+    tab?: string;
+    edit?: string;
+    page?: string;
+    start?: string;
+    end?: string;
+    campaign?: string;
+    temple?: string;
+  }>;
 }) {
   if (!isConfigured())
     return (
@@ -60,12 +71,38 @@ export default async function Portal({
   );
   const historyFrom = (historyPage - 1) * HISTORY_PAGE;
   const historyTo = historyFrom + HISTORY_PAGE - 1;
-  let reportsQuery = client
-    .from("distributions")
-    .select("*", { count: "exact" })
-    .order("updated_at", { ascending: false });
-  if (profile.role !== "admin")
-    reportsQuery = reportsQuery.eq("temple_id", profile.temple_id);
+  const isDate = (v?: string) =>
+    v && /^\d{4}-\d{2}-\d{2}$/.test(v) ? v : "";
+  const isId = (v?: string) =>
+    v && /^[0-9a-f-]{36}$/i.test(v) ? v : "";
+  const historyFilter = {
+    start: isDate(query.start),
+    end: isDate(query.end),
+    campaign: isId(query.campaign),
+    temple: profile.role === "admin" ? isId(query.temple) : "",
+  };
+  type Filterable = {
+    eq(column: string, value: string): Filterable;
+    gte(column: string, value: string): Filterable;
+    lte(column: string, value: string): Filterable;
+  };
+  const scoped = <Q,>(query: Q): Q => {
+    let q = query as unknown as Filterable;
+    if (profile.role !== "admin")
+      q = q.eq("temple_id", profile.temple_id || "");
+    if (historyFilter.temple) q = q.eq("temple_id", historyFilter.temple);
+    if (historyFilter.campaign) q = q.eq("campaign_id", historyFilter.campaign);
+    if (historyFilter.start) q = q.gte("distributed_on", historyFilter.start);
+    if (historyFilter.end) q = q.lte("distributed_on", historyFilter.end);
+    return q as unknown as Q;
+  };
+  const reportsQuery = scoped(
+    client
+      .from("distributions")
+      .select("*", { count: "exact" })
+      .order("distributed_on", { ascending: false })
+      .order("updated_at", { ascending: false }),
+  );
   const [
     templesR,
     campaignsR,
@@ -147,6 +184,23 @@ export default async function Portal({
     ).filter(
       (g) => profile.role === "admin" || g.temple_id === profile.temple_id,
     );
+  const historyRows: HistoryRow[] = [];
+  if (query.tab === "history") {
+    const batches = await Promise.all(
+      Array.from({ length: Math.ceil(reportCount / 1000) }, (_, i) =>
+        scoped(
+          client
+            .from("distributions")
+            .select("distributed_on,book_count,set_count,points")
+            .order("id"),
+        ).range(i * 1000, i * 1000 + 999),
+      ),
+    );
+    for (const { data, error } of batches) {
+      if (error) throw new Error("Unable to load report totals");
+      historyRows.push(...((data || []) as HistoryRow[]));
+    }
+  }
   const periodLocks: PeriodLock[] =
     profile.role === "admin" && query.tab === "temples"
       ? (
@@ -221,96 +275,20 @@ export default async function Portal({
         ))}
       </nav>
       {query.tab === "history" ? (
-        <div className="history-board">
-          <div className="table-wrap history-table">
-            <table>
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  {profile.role === "admin" && <th>Temple</th>}
-                  <th>Books</th>
-                  <th>Sets</th>
-                  <th>Points</th>
-                  <th>Version</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {reports.length ? (
-                  reports.map((r) => (
-                    <tr key={r.id}>
-                      <td>{r.distributed_on}</td>
-                      {profile.role === "admin" && (
-                        <td>
-                          {temples.find((t) => t.id === r.temple_id)?.name}
-                        </td>
-                      )}
-                      <td>{number(r.book_count)}</td>
-                      <td>
-                        {r.mode === "total"
-                          ? "Incomplete"
-                          : number(r.set_count ?? 0)}
-                      </td>
-                      <td>
-                        {r.points === null ? "Incomplete" : number(r.points)}
-                      </td>
-                      <td>{r.version}</td>
-                      <td>
-                        <Link
-                          className="button secondary small history-update"
-                          href={`/portal?edit=${r.id}`}
-                        >
-                          <PencilLine size={14} strokeWidth={1.8} />
-                          Update
-                        </Link>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={profile.role === "admin" ? 7 : 6}>
-                      {reportCount
-                        ? "No submissions on this page."
-                        : "No submissions yet."}
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-          {reportCount > HISTORY_PAGE && (
-            <nav className="history-pager" aria-label="Submission pages">
-              {historyPage > 1 ? (
-                <Link
-                  className="button secondary small history-prev"
-                  href={
-                    historyPage === 2
-                      ? "/portal?tab=history"
-                      : `/portal?tab=history&page=${historyPage - 1}`
-                  }
-                >
-                  Previous 100
-                </Link>
-              ) : null}
-              <p className="muted">
-                {number(historyFrom + 1)}–
-                {number(Math.min(historyTo + 1, reportCount))} of{" "}
-                {number(reportCount)}
-              </p>
-              {historyTo + 1 < reportCount ? (
-                <Link
-                  className="button secondary small history-next"
-                  href={`/portal?tab=history&page=${historyPage + 1}`}
-                >
-                  Next 100
-                </Link>
-              ) : null}
-            </nav>
-          )}
-          <p className="muted history-hint">
-            To add details to a total-only report, use Update on that entry.
-          </p>
-        </div>
+        <SubmissionHistory
+          admin={profile.role === "admin"}
+          reports={reports}
+          totalsRows={historyRows}
+          reportCount={reportCount}
+          page={historyPage}
+          pageSize={HISTORY_PAGE}
+          filter={historyFilter}
+          temples={temples}
+          campaigns={campaigns}
+          centres={centres}
+          individuals={individuals}
+          teams={teams}
+        />
       ) : ["records", "campaigns", "content", "temples", "targets"].includes(
           tab,
         ) ? (

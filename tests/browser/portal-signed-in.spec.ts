@@ -65,3 +65,28 @@ test("team without members is rejected before anything is saved", async ({ page 
     "Select the team members first",
   );
 });
+
+test("submission history shows totals and filters by date", async ({ page }) => {
+  await signIn(page);
+  await page.goto("/portal?tab=history");
+  const summary = page.getByRole("region", { name: "Totals for these submissions" });
+  await expect(summary.getByText("Books distributed")).toBeVisible();
+  await expect(page.getByRole("form", { name: "History filters" })).toBeVisible();
+  await page.screenshot({ path: "test-results/history-desktop.png" });
+
+  await page.goto("/portal?tab=history&start=2026-01-01&end=2026-12-31");
+  await expect(summary.getByText(/1 Jan 2026/)).toBeVisible();
+  const dates = await page
+    .locator(".history-board > .history-table tbody tr td:first-child")
+    .allTextContents();
+  for (const d of dates)
+    if (/^\d{4}-/.test(d)) expect(d >= "2026-01-01" && d <= "2026-12-31").toBe(true);
+  await expect(page.getByRole("link", { name: "Clear filters" })).toBeVisible();
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/portal?tab=history");
+  expect(
+    await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+  ).toBe(true);
+  await page.screenshot({ path: "test-results/history-phone.png" });
+});
