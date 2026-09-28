@@ -3,6 +3,8 @@ import assert from "node:assert/strict";
 import {
   communityStoryTypeLabel,
   isCommunityStoryType,
+  isDistributorTestimonial,
+  isHomepageStory,
   storySearchText,
   videoEmbedUrl,
 } from "../src/lib/story-types";
@@ -14,6 +16,21 @@ test("community story types match the six public labels", () => {
     communityStoryTypeLabel("miracle"),
     "Book distribution miracle stories",
   );
+});
+
+test("homepage testimonials are distributor stories only", () => {
+  const distributor = { kind: "community_story", story_type: "distributor" };
+  const recipient = { kind: "community_story", story_type: "recipient" };
+  const miracle = { kind: "community_story", story_type: "miracle" };
+  const interview = { kind: "community_story", story_type: "interview" };
+  const success = { kind: "community_story", story_type: "success" };
+  assert.equal(isDistributorTestimonial(distributor), true);
+  assert.equal(isDistributorTestimonial(recipient), false);
+  assert.equal(isHomepageStory(distributor), false);
+  assert.equal(isHomepageStory(recipient), true);
+  assert.equal(isHomepageStory(miracle), true);
+  assert.equal(isHomepageStory(interview), true);
+  assert.equal(isHomepageStory(success), true);
 });
 
 test("video links become embeddable YouTube or Vimeo addresses", () => {

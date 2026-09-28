@@ -39,6 +39,22 @@ export function isTestimonialStory(item: {
   );
 }
 
+/** Homepage testimonials: book-distribution voices only. */
+export function isDistributorTestimonial(item: {
+  kind: string;
+  story_type?: string | null;
+}) {
+  return item.kind === "community_story" && item.story_type === "distributor";
+}
+
+/** Homepage stories: every published experience except distributor testimonials. */
+export function isHomepageStory(item: {
+  kind: string;
+  story_type?: string | null;
+}) {
+  return item.kind === "community_story" && item.story_type !== "distributor";
+}
+
 export function storyImageSrc(item: {
   image_url?: string | null;
   link_url?: string | null;

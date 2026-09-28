@@ -2379,7 +2379,7 @@ table small {
   overflow-x: auto;
   overflow-y: clip;
   overscroll-behavior-x: contain;
-  touch-action: pan-x pan-y;
+  touch-action: pan-y;
   padding: 8px 0 4px;
   margin: 4px 0 0;
   scroll-snap-type: none;
@@ -2440,6 +2440,7 @@ table small {
   width: 280px;
   min-width: 280px;
   max-width: 280px;
+  touch-action: pan-y;
 }
 .story-rail.is-fit {
   width: 100%;
@@ -4167,7 +4168,7 @@ a.testimonial-card:hover {
     overflow-x: auto;
     overflow-y: clip;
     overscroll-behavior-x: contain;
-    touch-action: pan-x pan-y;
+    touch-action: pan-y;
     scrollbar-width: none;
     padding-bottom: 4px;
   }
@@ -4180,6 +4181,7 @@ a.testimonial-card:hover {
     width: 280px;
     min-width: 280px;
     max-width: 280px;
+    touch-action: pan-y;
   }
 }
 .export-bar {

@@ -2,8 +2,15 @@
 
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { bindVerticalPan } from "@/components/vertical-pan";
 
-export function TestimonialRail({ children }: { children: ReactNode }) {
+export function TestimonialRail({
+  children,
+  label = "Recent testimonials",
+}: {
+  children: ReactNode;
+  label?: string;
+}) {
   const id = useId();
   const rail = useRef<HTMLDivElement>(null);
   const [edges, setEdges] = useState({ start: true, end: false });
@@ -20,9 +27,11 @@ export function TestimonialRail({ children }: { children: ReactNode }) {
     observer.observe(element);
     update();
     element.addEventListener("scroll", update, { passive: true });
+    const releaseTouch = bindVerticalPan(element);
     return () => {
       observer.disconnect();
       element.removeEventListener("scroll", update);
+      releaseTouch();
     };
   }, []);
   function move(direction: number) {
@@ -41,7 +50,7 @@ export function TestimonialRail({ children }: { children: ReactNode }) {
       <div className="testimonial-controls">
         <button
           type="button"
-          className="icon-btn"
+          className="testimonial-arrow"
           aria-label="Previous testimonials"
           aria-controls={id}
           disabled={edges.start}
@@ -51,7 +60,7 @@ export function TestimonialRail({ children }: { children: ReactNode }) {
         </button>
         <button
           type="button"
-          className="icon-btn"
+          className="testimonial-arrow"
           aria-label="Next testimonials"
           aria-controls={id}
           disabled={edges.end}
@@ -65,7 +74,7 @@ export function TestimonialRail({ children }: { children: ReactNode }) {
         ref={rail}
         className="testimonial-scroll"
         role="region"
-        aria-label="Recent testimonials"
+        aria-label={label}
         tabIndex={0}
         onKeyDown={(event) => {
           if (event.target !== event.currentTarget) return;

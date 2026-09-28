@@ -48,18 +48,11 @@ export function Navigation() {
         aria-controls="navigation"
         onClick={() => setOpen(!open)}
       >
-        {open ? (
-          <svg className="menu-glyph" viewBox="5 5 14 14" aria-hidden="true">
-            <path d="M18 6 6 18" />
-            <path d="M6 6 18 18" />
-          </svg>
-        ) : (
-          <svg className="menu-glyph" viewBox="3 4 18 16" aria-hidden="true">
-            <path d="M4 5h16" />
-            <path d="M4 12h16" />
-            <path d="M4 19h16" />
-          </svg>
-        )}
+        <span className={open ? "menu-glyph is-open" : "menu-glyph"} aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </span>
       </button>
       <nav
         ref={nav}

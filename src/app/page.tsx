@@ -10,13 +10,16 @@ import {
 } from "@/lib/data";
 import { Empty, SectionTitle, HomeStats } from "@/components/ui";
 import { TestimonialCard } from "@/components/testimonial-card";
+import { TestimonialRail } from "@/components/testimonial-rail";
 import { HomeStories } from "@/components/story-sections";
 import { AgendaCard } from "@/components/agenda-card";
-import { isTestimonialStory } from "@/lib/story-types";
+import {
+  isDistributorTestimonial,
+  isHomepageStory,
+} from "@/lib/story-types";
 import { dateLabel } from "@/lib/dates";
 import styles from "./home.module.css";
 import agenda from "./agenda.module.css";
-import testimonialsStyles from "./testimonials.module.css";
 export const dynamic = "force-dynamic";
 export default async function Home() {
   const data = await publicData();
@@ -50,7 +53,7 @@ export default async function Home() {
       : null;
 
   const today = now.toISOString().slice(0, 10);
-  const testimonials = data.content.filter(isTestimonialStory),
+  const testimonials = data.content.filter(isDistributorTestimonial),
     upcomingEvents = data.content
       .filter((c) => c.kind === "event")
       .filter((c) => !c.ends_at || c.ends_at.slice(0, 10) >= today)
@@ -185,7 +188,7 @@ export default async function Home() {
           <div className="container home-testimonials">
             <SectionTitle title="Recent testimonials" />
             {testimonials.length ? (
-              <div className={testimonialsStyles.grid}>
+              <TestimonialRail>
                 {testimonials.slice(0, 6).map((t) => (
                   <TestimonialCard
                     key={t.id}
@@ -193,11 +196,11 @@ export default async function Home() {
                     temple={data.temples.find((x) => x.id === t.temple_id)}
                   />
                 ))}
-              </div>
+              </TestimonialRail>
             ) : (
               <Empty title="Testimonials will appear here">
-                Distributor testimonials and recipient experiences from
-                published stories will be shown in this section.
+                Book distribution testimonials from published stories will be
+                shown in this section.
               </Empty>
             )}
           </div>
@@ -280,7 +283,7 @@ export default async function Home() {
         <div className={styles.stories}>
           <div className="container">
             <HomeStories
-              items={data.content.filter((c) => c.kind === "community_story")}
+              items={data.content.filter(isHomepageStory)}
               temples={data.temples}
             />
           </div>
