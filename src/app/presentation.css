@@ -1002,6 +1002,7 @@ tbody tr:hover {
     min-height: 300px;
   }
   .temple-profile .testimonial-carousel {
+    container-type: inline-size;
     overflow: visible;
     width: calc(100% + 40px);
     max-width: none;
@@ -1013,12 +1014,16 @@ tbody tr:hover {
   .temple-profile .testimonial-scroll {
     position: relative;
     z-index: 0;
-    padding: 10px 12px 24px;
-    scroll-padding-inline: 12px;
+    padding: 10px 0 24px;
+    scroll-padding-inline: 0;
+    scroll-snap-type: x mandatory;
     touch-action: pan-x pan-y;
   }
   .temple-profile .testimonial-scroll > .testimonial-card {
-    flex-basis: calc(100% - 28px);
+    flex: 0 0 calc(100cqw - 112px);
+    width: calc(100cqw - 112px);
+    max-width: none;
+    scroll-snap-align: center;
     touch-action: pan-x pan-y;
   }
   .temple-profile .testimonial-carousel.more-before::before,
@@ -1028,7 +1033,7 @@ tbody tr:hover {
     z-index: 3;
     top: 10px;
     bottom: 24px;
-    width: 36px;
+    width: 18px;
     pointer-events: none;
   }
   .temple-profile .testimonial-carousel.more-before::before {
@@ -1074,8 +1079,8 @@ tbody tr:hover {
     touch-action: pan-x pan-y;
   }
   .stories-board .story-rail .card {
-    flex: 0 0 calc(100cqw - 96px);
-    width: calc(100cqw - 96px);
+    flex: 0 0 calc(100cqw - 128px);
+    width: calc(100cqw - 128px);
     min-width: 0;
     max-width: none;
     scroll-snap-align: center;
@@ -1091,7 +1096,7 @@ tbody tr:hover {
     z-index: 3;
     top: 8px;
     bottom: 4px;
-    width: 36px;
+    width: 18px;
     pointer-events: none;
   }
   .stories-board .story-rail-frame.more-before::before {

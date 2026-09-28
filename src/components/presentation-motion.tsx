@@ -23,8 +23,8 @@ function skipReveal(target: Element) {
     target.closest(".page-intro")
   )
     return true;
-  // Temple testimonials only peek the next card. That sliver never
-  // reaches the usual reveal threshold, so later cards stay transparent.
+  // A neighboring temple testimonial may only peek in from either side.
+  // Later cards skip the reveal so that sliver stays visible.
   const rail = target.closest(".testimonial-scroll");
   if (!rail || !target.matches(".testimonial-card")) return false;
   const first = rail.querySelector(":scope > .testimonial-card");
