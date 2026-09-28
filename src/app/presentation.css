@@ -785,6 +785,31 @@ tbody tr:hover {
   .filter-dates .date-range-sep {
     text-align: center;
   }
+  .reports-board .filter-dates .date-range-fields {
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: nowrap;
+  }
+  .reports-board .filter-dates .date-range-fields .date-field {
+    flex: 1 1 0;
+    width: auto;
+    min-width: 0;
+  }
+  .reports-board .reports-toolbar {
+    align-items: stretch;
+  }
+  .reports-board .export-bar {
+    flex-wrap: nowrap;
+    width: 100%;
+    gap: 8px;
+  }
+  .reports-board .export-bar .button {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 10px 6px;
+    gap: 5px;
+    font-size: 12px;
+  }
 }
 
 /* Homepage motion and direct-manipulation controls. */

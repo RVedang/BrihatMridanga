@@ -4347,6 +4347,12 @@ a.testimonial-card:hover {
   line-height: 1.1;
   margin: 10px 0 8px;
 }
+.reports-board .stats strong span {
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+}
 .reports-board .stats small {
   font-size: 12px;
   line-height: 1.45;
