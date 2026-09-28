@@ -1079,23 +1079,24 @@ tbody tr:hover {
   .stories-board .story-rail-clip {
     position: relative;
     z-index: 0;
-    padding-inline: 28px;
-    /* Snap the active card right of center so the previous card
-       peeks on the left, using space taken from the next card. */
-    scroll-padding-left: 36px;
-    scroll-padding-right: 20px;
+    padding-inline: 12px;
+    /* Snap the active card right of center so a previous card
+       can peek on the left by borrowing space from the next card. */
+    scroll-padding-left: 16px;
+    scroll-padding-right: 12px;
     scroll-snap-type: x mandatory;
     touch-action: pan-x pan-y;
   }
   .stories-board .story-rail .card {
-    flex: 0 0 calc(100cqw - 96px);
-    width: calc(100cqw - 96px);
+    flex: 0 0 calc(100cqw - 52px);
+    width: calc(100cqw - 52px);
     min-width: 0;
     max-width: none;
     scroll-snap-align: center;
   }
   .stories-board .story-rail .card:first-child {
     scroll-snap-align: start;
+    scroll-margin-inline-start: -4px;
   }
   .stories-board .story-rail .card:last-child {
     scroll-snap-align: end;
@@ -1111,7 +1112,7 @@ tbody tr:hover {
     z-index: 3;
     top: 8px;
     bottom: 4px;
-    width: 12px;
+    width: 4px;
     pointer-events: none;
   }
   .stories-board .story-rail-frame.more-before::before {
