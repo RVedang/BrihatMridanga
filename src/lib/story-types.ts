@@ -16,6 +16,48 @@ export function communityStoryTypeLabel(value: string | null | undefined) {
   return communityStoryTypes[value as CommunityStoryType] || "Story";
 }
 
+/** Portal content-type filter. Older story rows share the Story option. */
+export function portalContentKind(kind: string) {
+  if (kind === "story" || kind === "photo" || kind === "testimonial")
+    return "community_story";
+  return kind;
+}
+
+/** Portal story-type filter, including older photo and testimonial rows. */
+export function portalStoryType(item: {
+  kind: string;
+  story_type?: string | null;
+}) {
+  if (item.kind === "photo") return "media";
+  if (item.kind === "testimonial") return "distributor";
+  return item.story_type || "";
+}
+
+export function contentMatchesPortalFilters(
+  item: {
+    kind: string;
+    story_type?: string | null;
+    temple_id?: string | null;
+  },
+  filters: { templeId?: string; kind?: string; storyType?: string },
+) {
+  if (
+    filters.templeId &&
+    item.temple_id &&
+    item.temple_id !== filters.templeId
+  )
+    return false;
+  if (filters.kind && portalContentKind(item.kind) !== filters.kind)
+    return false;
+  if (
+    filters.kind === "community_story" &&
+    filters.storyType &&
+    portalStoryType(item) !== filters.storyType
+  )
+    return false;
+  return true;
+}
+
 export function isCommunityStoryType(
   value: string,
 ): value is CommunityStoryType {

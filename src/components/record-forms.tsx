@@ -15,6 +15,9 @@ import { DateField, DateTimeField } from "./date-field";
 import {
   communityStoryTypes,
   communityStoryTypeLabel,
+  contentMatchesPortalFilters,
+  portalContentKind,
+  portalStoryType,
 } from "@/lib/story-types";
 
 const MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
@@ -235,6 +238,8 @@ export function RecordForms(props: Props) {
         ? ""
         : props.temples[0]?.id || "",
   );
+  const [contentKind, setContentKind] = useState("");
+  const [storyType, setStoryType] = useState("");
   const templeName = (id: string | null) =>
     id
       ? props.temples.find((t) => t.id === id)?.name || "Temple"
@@ -283,11 +288,13 @@ export function RecordForms(props: Props) {
                         ...g,
                         name: `${monthTitle(g.year, g.month)} · ${templeName(g.temple_id)} · ${g.books.toLocaleString("en-IN")} books`,
                       }))
-                : !templeId
-                  ? props.content
-                  : props.content.filter(
-                      (c) => !c.temple_id || c.temple_id === templeId,
-                    );
+                : props.content.filter((c) =>
+                    contentMatchesPortalFilters(c, {
+                      templeId,
+                      kind: contentKind,
+                      storyType,
+                    }),
+                  );
   const recordTitle = (r: (typeof records)[number]) =>
     "name" in r ? r.name : r.title;
   const recordMeta = (r: (typeof records)[number]) => {
@@ -329,8 +336,10 @@ export function RecordForms(props: Props) {
     }
     return "";
   };
-  const selected = records.find((r) => r.id === edit) as unknown as
-    Record<string, string | boolean> | undefined;
+  const selected = (records.find((r) => r.id === edit) ||
+    (edit && type === "content"
+      ? props.content.find((item) => item.id === edit)
+      : undefined)) as unknown as Record<string, string | boolean> | undefined;
   return (
     <div className="editorial-grid">
       <section>
@@ -420,6 +429,13 @@ export function RecordForms(props: Props) {
           onTempleId={chooseTemple}
           savedNotice={notice}
           onCreated={type === "content" ? contentAdded : undefined}
+          contentKind={contentKind}
+          storyType={storyType}
+          onContentKind={(next) => {
+            setContentKind(next);
+            if (next !== "community_story") setStoryType("");
+          }}
+          onStoryType={setStoryType}
         />
       </section>
       <aside className="record-rail">
@@ -451,8 +467,22 @@ export function RecordForms(props: Props) {
                     onClick={() => {
                       setNotice("");
                       setEdit(r.id);
-                      if (type === "content" && "temple_id" in r)
-                        setTempleId(String(r.temple_id || ""));
+                      if (type === "content" && "kind" in r) {
+                        setTempleId(String(("temple_id" in r && r.temple_id) || ""));
+                        const nextKind = portalContentKind(String(r.kind));
+                        setContentKind(nextKind);
+                        setStoryType(
+                          nextKind === "community_story"
+                            ? portalStoryType({
+                                kind: String(r.kind),
+                                story_type:
+                                  "story_type" in r
+                                    ? String(r.story_type || "")
+                                    : "",
+                              })
+                            : "",
+                        );
+                      }
                     }}
                   >
                     <span className="record-item-title">{recordTitle(r)}</span>
@@ -465,7 +495,13 @@ export function RecordForms(props: Props) {
             })}
           </ul>
         ) : (
-          <p className="muted record-empty">No records yet. Create the first.</p>
+          <p className="muted record-empty">
+            {type === "content" &&
+            props.content.length &&
+            (contentKind || storyType || templeId)
+              ? "No records match these filters."
+              : "No records yet. Create the first."}
+          </p>
         )}
       </aside>
     </div>
@@ -483,6 +519,10 @@ function Editor({
   onTempleId,
   savedNotice = "",
   onCreated,
+  contentKind,
+  storyType,
+  onContentKind,
+  onStoryType,
 }: {
   type: string;
   selected?: Record<string, string | boolean>;
@@ -495,6 +535,10 @@ function Editor({
   onTempleId: (id: string) => void;
   savedNotice?: string;
   onCreated?: () => void;
+  contentKind: string;
+  storyType: string;
+  onContentKind: (kind: string) => void;
+  onStoryType: (storyType: string) => void;
 }) {
   const [state, action, pending] = useActionState(saveRecord, {
     ok: false,
@@ -503,13 +547,7 @@ function Editor({
   useEffect(() => {
     if (state.ok && !selected) onCreated?.();
   }, [state.ok, selected, onCreated]);
-  const [kind, setKind] = useState(() => {
-    if (!selected?.kind) return "";
-    const current = String(selected.kind);
-    if (current === "story" || current === "photo" || current === "testimonial")
-      return "community_story";
-    return current;
-  });
+  const kind = type === "content" ? contentKind : "";
   const templeBound = ["initiative", "event"].includes(kind);
   const value = (key: string, fallback = "") =>
     String(selected?.[key] ?? fallback);
@@ -828,7 +866,7 @@ function Editor({
                 required
                 placeholder="Choose a type"
                 value={kind}
-                onChange={(e) => setKind(e.target.value)}
+                onChange={(e) => onContentKind(e.target.value)}
               >
                 <option value="community_story">Story</option>
                 <option value="resource">Resource</option>
@@ -843,13 +881,8 @@ function Editor({
                   name="story_type"
                   required
                   placeholder="Choose a type"
-                  defaultValue={
-                    String(selected?.kind) === "photo"
-                      ? "media"
-                      : String(selected?.kind) === "testimonial"
-                        ? "distributor"
-                        : value("story_type")
-                  }
+                  value={storyType}
+                  onChange={(e) => onStoryType(e.target.value)}
                 >
                   {Object.entries(communityStoryTypes).map(([key, label]) => (
                     <option key={key} value={key}>

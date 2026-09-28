@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   communityStoryTypeLabel,
+  contentMatchesPortalFilters,
   isCommunityStoryType,
   isDistributorTestimonial,
   isHomepageStory,
@@ -16,6 +17,45 @@ test("community story types match the six public labels", () => {
     communityStoryTypeLabel("miracle"),
     "Book distribution miracle stories",
   );
+});
+
+test("portal content list follows content type and story type", () => {
+  const distributor = {
+    kind: "community_story",
+    story_type: "distributor",
+    temple_id: "temple-a",
+  };
+  const recipient = {
+    kind: "community_story",
+    story_type: "recipient",
+    temple_id: "temple-a",
+  };
+  const legacyPhoto = { kind: "photo", story_type: "", temple_id: null };
+  const resource = { kind: "resource", story_type: "", temple_id: "temple-a" };
+  const filters = { kind: "community_story", storyType: "distributor" };
+  assert.equal(contentMatchesPortalFilters(distributor, filters), true);
+  assert.equal(contentMatchesPortalFilters(recipient, filters), false);
+  assert.equal(contentMatchesPortalFilters(legacyPhoto, filters), false);
+  assert.equal(
+    contentMatchesPortalFilters(legacyPhoto, {
+      kind: "community_story",
+      storyType: "media",
+    }),
+    true,
+  );
+  assert.equal(contentMatchesPortalFilters(resource, filters), false);
+  assert.equal(
+    contentMatchesPortalFilters(resource, { kind: "resource" }),
+    true,
+  );
+  assert.equal(
+    contentMatchesPortalFilters(distributor, {
+      ...filters,
+      templeId: "temple-b",
+    }),
+    false,
+  );
+  assert.equal(contentMatchesPortalFilters(recipient, {}), true);
 });
 
 test("homepage testimonials are distributor stories only", () => {

@@ -380,7 +380,7 @@ export function ReportForm({
                               setLines(lines.filter((_, n) => n !== i))
                             }
                           >
-                            <X size={14} />
+                            <X size={16} strokeWidth={1.75} />
                           </button>
                           {selected && (
                             <span className="muted book-line-meta">

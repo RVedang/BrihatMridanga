@@ -1720,26 +1720,48 @@ table small {
 .workspace .icon-button,
 .workspace-form .icon-button {
   border: 0;
-  background: var(--wash);
-  border-radius: 12px;
-  min-height: 50px;
-  width: 50px;
+  background: transparent;
+  border-radius: 0;
+  min-height: 0;
+  width: auto;
+  padding: 0;
+  color: var(--muted);
 }
 .workspace .icon-button:hover:not(:disabled),
 .workspace-form .icon-button:hover:not(:disabled) {
-  background: #ebe6dc;
+  background: transparent;
+  color: var(--ink);
+}
+.workspace .book-line-remove,
+.workspace-form .book-line-remove {
+  align-self: center;
+  justify-self: center;
+  width: 36px;
+  height: 50px;
+  min-height: 50px;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  color: var(--muted);
 }
 .workspace .book-line,
 .workspace-form .book-line {
-  grid-template-columns: minmax(0, 1fr) 7.75rem 3.25rem;
+  grid-template-columns: minmax(0, 1fr) 7.75rem auto;
+  align-items: center;
   border-bottom: 0;
   background: var(--paper);
   border-radius: 16px;
   padding: 18px 18px 16px;
   margin-bottom: 12px;
 }
-.workspace-form input.book-line-amount:not([type="checkbox"]):not([type="radio"]),
-.workspace input.book-line-amount:not([type="checkbox"]):not([type="radio"]) {
+.workspace .book-line .nice-select,
+.workspace-form .book-line .nice-select {
+  margin-top: 0;
+}
+.workspace-form input.book-line-amount:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not(.nice-select-search-input),
+.workspace input.book-line-amount:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not(.nice-select-search-input) {
   margin-top: 0;
   height: 50px;
   min-height: 50px;
@@ -1976,12 +1998,12 @@ table small {
 }
 .book-line {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 7.75rem 3.25rem;
+  grid-template-columns: minmax(0, 1fr) 7.75rem auto;
   grid-template-areas:
     "book-label qty-label spacer"
     "book-field qty-field remove"
     "meta meta meta";
-  align-items: stretch;
+  align-items: center;
   column-gap: 12px;
   row-gap: 8px;
   border-bottom: 1px solid var(--line);
@@ -2018,13 +2040,21 @@ table small {
 }
 .book-line-remove {
   grid-area: remove;
+  align-self: center;
+  justify-self: center;
   box-sizing: border-box;
+  width: 36px;
   height: 50px;
   min-height: 50px;
-  width: 50px;
+  margin: 0;
+  padding: 0;
   display: grid;
   place-items: center;
-  justify-self: stretch;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  color: var(--muted);
 }
 .book-line .nice-select-trigger {
   box-sizing: border-box;
@@ -2038,10 +2068,11 @@ table small {
 }
 .icon-button {
   background: transparent;
-  border: 1px solid var(--line);
-  border-radius: 3px;
-  min-height: 44px;
-  color: var(--ink);
+  border: 0;
+  border-radius: 0;
+  min-height: 0;
+  padding: 0;
+  color: var(--muted);
 }
 .segmented {
   display: flex;
@@ -3143,8 +3174,10 @@ details summary {
   .panel {
     padding: 20px;
   }
-  .book-line {
-    grid-template-columns: minmax(0, 1fr) 88px 44px;
+  .book-line,
+  .workspace .book-line,
+  .workspace-form .book-line {
+    grid-template-columns: minmax(0, 1fr) 88px auto;
     column-gap: 8px;
   }
   .book-line select {

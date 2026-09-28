@@ -1028,29 +1028,27 @@ tbody tr:hover {
     z-index: 3;
     top: 10px;
     bottom: 24px;
-    width: 64px;
+    width: 36px;
     pointer-events: none;
   }
   .temple-profile .testimonial-carousel.more-before::before {
     left: 0;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
     background: linear-gradient(
       to right,
-      var(--paper) 0%,
-      color-mix(in srgb, var(--paper) 88%, transparent) 38%,
-      transparent 100%
+      color-mix(in srgb, var(--paper) 55%, transparent) 0%,
+      transparent 70%
     );
   }
   .temple-profile .testimonial-carousel.more-after::after {
     right: 0;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
     background: linear-gradient(
       to left,
-      var(--paper) 0%,
-      color-mix(in srgb, var(--paper) 88%, transparent) 38%,
-      transparent 100%
+      color-mix(in srgb, var(--paper) 55%, transparent) 0%,
+      transparent 70%
     );
   }
   .stories-page,
@@ -1090,29 +1088,27 @@ tbody tr:hover {
     z-index: 3;
     top: 8px;
     bottom: 4px;
-    width: 64px;
+    width: 36px;
     pointer-events: none;
   }
   .stories-board .story-rail-frame.more-before::before {
     left: 0;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
     background: linear-gradient(
       to right,
-      var(--paper) 0%,
-      color-mix(in srgb, var(--paper) 88%, transparent) 38%,
-      transparent 100%
+      color-mix(in srgb, var(--paper) 55%, transparent) 0%,
+      transparent 70%
     );
   }
   .stories-board .story-rail-frame.more-after::after {
     right: 0;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
     background: linear-gradient(
       to left,
-      var(--paper) 0%,
-      color-mix(in srgb, var(--paper) 88%, transparent) 38%,
-      transparent 100%
+      color-mix(in srgb, var(--paper) 55%, transparent) 0%,
+      transparent 70%
     );
   }
 }
