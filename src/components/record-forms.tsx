@@ -249,12 +249,12 @@ export function RecordForms(props: Props) {
     setEdit("");
     setFormKey((k) => k + 1);
   };
-  const contentAdded = useCallback(() => {
+  const recordAdded = useCallback(() => {
     setNotice("Saved successfully.");
-    if (props.admin) setTempleId("");
+    if (props.admin && type === "content") setTempleId("");
     setEdit("");
     setFormKey((k) => k + 1);
-  }, [props.admin]);
+  }, [props.admin, type]);
   const chooseTemple = (id: string) => {
     setTempleId(id);
     startNew();
@@ -428,7 +428,7 @@ export function RecordForms(props: Props) {
           templeId={templeId}
           onTempleId={chooseTemple}
           savedNotice={notice}
-          onCreated={type === "content" ? contentAdded : undefined}
+          onCreated={recordAdded}
           contentKind={contentKind}
           storyType={storyType}
           onContentKind={(next) => {
@@ -799,6 +799,19 @@ function Editor({
                 Phone, email, address, or visiting hours for the public page.
               </span>
             </label>
+            {admin && selected && (
+              <label className="full">
+                <input type="hidden" name="approved_field" value="1" />
+                <span>
+                  <input
+                    type="checkbox"
+                    name="approved"
+                    defaultChecked={selected.approved !== false}
+                  />{" "}
+                  Approved (coordinators can report and the temple is public)
+                </span>
+              </label>
+            )}
           </>
         )}
         {type === "campaigns" && (
@@ -996,7 +1009,10 @@ function Editor({
         )}
       </div>
       {(state.message || (!selected && savedNotice)) && (
-        <p role="status" className="notice">
+        <p
+          role={state.message && !state.ok ? "alert" : "status"}
+          className={state.message && !state.ok ? "error" : "notice"}
+        >
           {state.message || savedNotice}
         </p>
       )}

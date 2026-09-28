@@ -2,6 +2,7 @@
 import { redirect } from "next/navigation";
 import { requireSignedIn } from "@/lib/auth";
 import { isValidTimeZone } from "@/lib/timezones";
+import { friendlyError } from "@/lib/errors";
 
 export async function registerTemple(
   _previous: { message: string },
@@ -39,7 +40,7 @@ export async function registerTemple(
       message:
         error.message.includes("schema cache") || error.code === "PGRST202"
           ? "Temple registration is not available on this database yet."
-          : error.message,
+          : friendlyError(error, "registerTemple"),
     };
   redirect("/portal");
 }

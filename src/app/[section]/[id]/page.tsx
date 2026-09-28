@@ -138,10 +138,48 @@ export default async function Detail({
     } catch (e) {
       error = (e as Error).message;
     }
-    const allRows =
-      error || (annual && !campaign)
-        ? []
-        : await scores(start, end, campaign?.id, centre);
+    const campaignWindow =
+      !!campaign &&
+      start === campaign.starts_on &&
+      end === campaign.ends_on &&
+      !centre &&
+      !selectedTemple &&
+      !selectedCountry &&
+      !temple;
+    const targetYear = Number(start.slice(0, 4));
+    const fullTargetYear =
+      start === `${targetYear}-01-01` && end === `${targetYear}-12-31` && !centre;
+    const [allRows, campaignRows, dash, separateYearDash, roster] =
+      await Promise.all([
+        error || (annual && !campaign)
+          ? []
+          : scores(start, end, campaign?.id, centre),
+        campaign && !error && !campaignWindow
+          ? scores(campaign.starts_on, campaign.ends_on, campaign.id)
+          : null,
+        error
+          ? null
+          : temple
+            ? dashboard({ start, end, temple: temple.id, centre })
+            : campaign
+              ? dashboard({
+                  start,
+                  end,
+                  campaign: campaign.id,
+                  country: selectedCountry,
+                  temple: campaign.temple_id || selectedTemple,
+                  centre,
+                })
+              : null,
+        temple && !error && !fullTargetYear
+          ? dashboard({
+              start: `${targetYear}-01-01`,
+              end: `${targetYear}-12-31`,
+              temple: id,
+            })
+          : null,
+        temple ? templeTeams(temple.id) : [],
+      ]);
     const rows = temple
       ? allRows.filter((r) => r.temple_id === id)
       : selectedTemple
@@ -167,65 +205,30 @@ export default async function Detail({
     const progressRows =
       !campaign || error
         ? rows
-        : start === campaign.starts_on &&
-            end === campaign.ends_on &&
-            !centre &&
-            !selectedTemple &&
-            !selectedCountry &&
-            !temple
-          ? campaign.temple_id
-            ? rows.filter((r) => r.temple_id === campaign.temple_id)
-            : rows
-          : (
-              await scores(
-                campaign.starts_on,
-                campaign.ends_on,
-                campaign.id,
-              )
-            ).filter((r) =>
+        : campaignRows
+          ? campaignRows.filter((r) =>
               campaign.temple_id ? r.temple_id === campaign.temple_id : true,
-            );
-    const dash =
-      error
-        ? null
-        : temple
-          ? await dashboard({
-              start,
-              end,
-              temple: temple.id,
-              centre,
-            })
-          : campaign
-            ? await dashboard({
-                start,
-                end,
-                campaign: campaign.id,
-                country: selectedCountry,
-                temple: campaign.temple_id || selectedTemple,
-                centre,
-              })
-            : null;
+            )
+          : campaign.temple_id
+            ? rows.filter((r) => r.temple_id === campaign.temple_id)
+            : rows;
     const lifetimeRows =
       temple && !dash && !error
         ? (await scores("1900-01-01", "9998-12-31", undefined, centre)).filter(
             (r) => r.temple_id === id,
           )
         : [];
-    const targetYear = Number(start.slice(0, 4));
     const yearDash =
       temple && !error
-        ? start === `${targetYear}-01-01` &&
-          end === `${targetYear}-12-31` &&
-          !centre &&
-          dash
-          ? dash
-          : await dashboard({
-              start: `${targetYear}-01-01`,
-              end: `${targetYear}-12-31`,
-              temple: id,
-            })
+        ? !fullTargetYear
+          ? separateYearDash
+          : dash ||
+          (await dashboard({
+            start: `${targetYear}-01-01`,
+            end: `${targetYear}-12-31`,
+            temple: id,
+          }))
         : null;
-    const roster = temple ? await templeTeams(temple.id) : [];
     return (
       <div className={section === "campaigns" ? "container campaign-page" : "container"}>
         <PageIntro

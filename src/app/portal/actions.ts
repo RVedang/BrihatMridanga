@@ -2,6 +2,7 @@
 import { revalidatePath } from "next/cache";
 import { requireActor } from "@/lib/auth";
 import { isCommunityStoryType } from "@/lib/story-types";
+import { friendlyError } from "@/lib/errors";
 export type ActionResult = {
   ok: boolean;
   message: string;
@@ -13,7 +14,8 @@ export async function submitDistribution(
 ): Promise<ActionResult> {
   const { client } = await requireActor();
   const { data, error } = await client.rpc("save_distribution", { request });
-  if (error) return { ok: false, message: error.message };
+  if (error)
+    return { ok: false, message: friendlyError(error, "submitDistribution") };
   revalidatePath("/", "layout");
   return {
     ok: true,
@@ -53,7 +55,8 @@ export async function saveRecord(
         .select("temple_id")
         .eq("id", id)
         .maybeSingle();
-      if (existingError) return { ok: false, message: existingError.message };
+      if (existingError)
+        return { ok: false, message: friendlyError(existingError, "saveRecord.existing") };
       if (!existing || existing.temple_id !== profile.temple_id)
         return {
           ok: false,
@@ -110,6 +113,9 @@ export async function saveRecord(
       timezone: text("timezone"),
       information: text("information"),
       contact: text("contact"),
+      ...(profile.role === "admin" && form.has("approved_field")
+        ? { approved: form.get("approved") === "on" }
+        : {}),
     };
     if (!text("country")) return { ok: false, message: "Country is required." };
   }
@@ -123,7 +129,8 @@ export async function saveRecord(
         .eq("id", centreId)
         .eq("temple_id", templeId)
         .maybeSingle();
-      if (centreError) return { ok: false, message: centreError.message };
+      if (centreError)
+        return { ok: false, message: friendlyError(centreError, "saveRecord.centre") };
       if (!centre)
         return { ok: false, message: "Choose a centre from this temple." };
     }
@@ -151,7 +158,8 @@ export async function saveRecord(
       .select("id, name")
       .eq("temple_id", templeId)
       .in("id", unique);
-    if (peopleError) return { ok: false, message: peopleError.message };
+    if (peopleError)
+      return { ok: false, message: friendlyError(peopleError, "saveRecord.people") };
     if ((people || []).length !== unique.length)
       return {
         ok: false,
@@ -265,26 +273,35 @@ export async function saveRecord(
       message:
         error.code === "42501"
           ? "You do not have access to this record."
-          : error.code === "23505"
-            ? table === "monthly_targets"
-              ? "That temple already has a target for this month."
-              : "A target already exists for this year and temple."
-            : error.message,
+          : error.code === "23505" && table === "monthly_targets"
+            ? "That temple already has a target for this month."
+            : error.code === "23505" && table === "targets"
+              ? "A target already exists for this year and temple."
+              : friendlyError(error, `saveRecord.${table}`),
     };
   if (table === "teams") {
-    await client.from("team_members").delete().eq("team_id", data.id);
-    const { error: memberError } = await client.from("team_members").insert(
+    const { error: memberError } = await client.from("team_members").upsert(
       teamMemberIds.map((individual_id) => ({
         team_id: data.id,
         individual_id,
       })),
+      { onConflict: "team_id,individual_id", ignoreDuplicates: true },
     );
+    if (!memberError) {
+      const { error: pruneError } = await client
+        .from("team_members")
+        .delete()
+        .eq("team_id", data.id)
+        .not("individual_id", "in", `(${teamMemberIds.join(",")})`);
+      if (pruneError)
+        return { ok: false, message: friendlyError(pruneError, "saveRecord.teamPrune") };
+    }
     if (memberError)
       return {
         ok: false,
         message: memberError.message.includes("same temple")
           ? "Team members must belong to this temple."
-          : memberError.message,
+          : friendlyError(memberError, "saveRecord.teamMembers"),
       };
   }
   revalidatePath("/", "layout");
@@ -320,7 +337,7 @@ async function storeStoryPhoto(
       ok: false,
       message: error.message.toLowerCase().includes("not found")
         ? "Photograph storage is not ready yet. Paste an HTTPS image address instead."
-        : error.message,
+        : friendlyError(error, "storeStoryPhoto", "The photograph could not be uploaded. Try a smaller image."),
     };
   const { data } = client.storage.from("story-photos").getPublicUrl(path);
   return { ok: true, message: "", url: data.publicUrl };

@@ -1,10 +1,11 @@
 import { categoryLabel } from "@/lib/catalog";
 import { scores, dashboard, publicData, type Campaign, type Dashboard } from "@/lib/data";
-import { validateRange } from "@/lib/dates";
+import { todayIn, validateRange } from "@/lib/dates";
 import { cellsToPdf } from "@/lib/report-pdf";
 
 const uuid = /^[0-9a-f-]{36}$/i;
 const categories = ["small", "medium", "big", "m-big"];
+const EARLIEST_EXPORT = "2000-01-01";
 
 export async function GET(request: Request) {
   const q = new URL(request.url).searchParams;
@@ -14,6 +15,12 @@ export async function GET(request: Request) {
   } catch {
     return new Response("Invalid date range", { status: 400 });
   }
+  const latestYear = Number(todayIn().slice(0, 4)) + 1;
+  if (range.start < EARLIEST_EXPORT || Number(range.end.slice(0, 4)) > latestYear)
+    return new Response(
+      `Exports cover ${EARLIEST_EXPORT.slice(0, 4)} to ${latestYear}. Choose a date range within those years.`,
+      { status: 400 },
+    );
   const campaign = q.get("campaign") || undefined,
     temple = q.get("temple") || undefined,
     centre = q.get("centre") || undefined,

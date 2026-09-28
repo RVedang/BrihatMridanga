@@ -192,6 +192,12 @@ export default async function Portal({
         Record your temple’s service, and add stories, local initiatives and
         events.
       </PageIntro>
+      {profile.role !== "admin" && temples[0]?.approved === false && (
+        <p role="status" className="notice">
+          Your temple is awaiting approval. You can look around, but reports and
+          records can be saved once an administrator approves it.
+        </p>
+      )}
       <nav className="portal-nav" aria-label="Portal areas">
         {areas.map(([id, href, label]) => (
           <Link

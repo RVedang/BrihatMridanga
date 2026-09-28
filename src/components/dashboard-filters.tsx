@@ -4,6 +4,7 @@ import Link from "next/link";
 import { SlidersHorizontal, ChevronDown } from "lucide-react";
 import type { Campaign, Temple, RecordItem, DashboardFilters } from "@/lib/data";
 import { partitionCampaigns } from "@/lib/campaign";
+import { shiftDate, todayIn } from "@/lib/dates";
 import { Select } from "@/components/select";
 import { DateField } from "@/components/date-field";
 import { CampaignSelect } from "@/components/campaign-select";
@@ -79,7 +80,8 @@ export function DashboardFilterForm({
     )
       setCentre("");
   }, [centre, temple, country, centres, temples]);
-  const year = new Date().getUTCFullYear();
+  const today = todayIn(),
+    year = Number(today.slice(0, 4));
   const preset = (label: string, start: string, end: string) => {
     const params = new URLSearchParams();
     params.set("start", start);
@@ -98,10 +100,6 @@ export function DashboardFilterForm({
       </Link>
     );
   };
-  const today = new Date().toISOString().slice(0, 10);
-  const yearAgo = new Date();
-  yearAgo.setUTCFullYear(yearAgo.getUTCFullYear() - 1);
-  yearAgo.setUTCDate(yearAgo.getUTCDate() + 1);
   return (
     <div className={open ? "filters open" : "filters"}>
       <button
@@ -122,7 +120,7 @@ export function DashboardFilterForm({
           {preset("Last year", `${year - 1}-01-01`, `${year - 1}-12-31`)}
           {preset(
             "Last 12 months",
-            yearAgo.toISOString().slice(0, 10),
+            shiftDate(today, -1, 1),
             today,
           )}
           {preset("All time", "2000-01-01", `${year}-12-31`)}

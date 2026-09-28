@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { PresentationMotion } from "@/components/presentation-motion";
+import { siteUrl } from "@/lib/site";
 import "./globals.css";
 import "./presentation.css";
 
@@ -36,13 +37,24 @@ const devanagari = localFont({
   display: "swap",
 });
 
+const description =
+  "A shared home for book distribution, temple reports, sankirtan stories and year-round service.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl()),
+  openGraph: {
+    type: "website",
+    siteName: "Brihat Mridanga",
+    title: "Brihat Mridanga · Every book, a new beginning",
+    description,
+    images: [{ url: "/home/prabhupada-books.jpg", width: 712, height: 1024 }],
+  },
+  twitter: { card: "summary_large_image" },
   title: {
     default: "Brihat Mridanga · Every book, a new beginning",
     template: "%s · Brihat Mridanga",
   },
-  description:
-    "A shared home for book distribution, temple reports, sankirtan stories and year-round service.",
+  description,
 };
 export default function RootLayout({
   children,

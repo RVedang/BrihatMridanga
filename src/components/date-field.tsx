@@ -2,6 +2,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
 import { Select } from "./select";
+import { todayIn } from "@/lib/dates";
 
 const weekdays = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 const months = [
@@ -31,8 +32,7 @@ function parse(value: string) {
   return { y, m: m - 1, d };
 }
 function utcToday() {
-  const n = new Date();
-  return ymd(n.getUTCFullYear(), n.getUTCMonth(), n.getUTCDate());
+  return todayIn();
 }
 function pretty(value: string) {
   const p = parse(value);

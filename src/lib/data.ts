@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { isConfigured, supabase } from "./supabase";
 import { withSampleContent } from "@/data/sample-content";
 export type Temple = {
@@ -9,6 +10,7 @@ export type Temple = {
   timezone: string;
   information?: string;
   contact?: string;
+  approved?: boolean;
 };
 export type Campaign = {
   id: string;
@@ -105,7 +107,9 @@ async function loadCentres(client: Awaited<ReturnType<typeof supabase>>) {
   return client.from("centres").select("id,name,temple_id").order("name");
 }
 
-export async function publicData() {
+/** Shared by generateMetadata and the page within one request. */
+export const publicData = cache(loadPublicData);
+async function loadPublicData() {
   if (!isConfigured())
     return {
       temples: [] as Temple[],

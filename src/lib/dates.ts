@@ -17,6 +17,27 @@ export function clampDate(value: string, min: string, max: string) {
   if (value > max) return max;
   return value;
 }
+export const DEFAULT_TIME_ZONE = "Asia/Kolkata";
+/** Today's YYYY-MM-DD in a time zone (the movement defaults to India time). */
+export function todayIn(timeZone = DEFAULT_TIME_ZONE, now = new Date()) {
+  try {
+    return new Intl.DateTimeFormat("en-CA", {
+      timeZone,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(now);
+  } catch {
+    return todayIn(DEFAULT_TIME_ZONE, now);
+  }
+}
+/** Shift a YYYY-MM-DD date by whole years and days. */
+export function shiftDate(value: string, years: number, days = 0) {
+  const d = new Date(`${value}T00:00:00Z`);
+  d.setUTCFullYear(d.getUTCFullYear() + years);
+  d.setUTCDate(d.getUTCDate() + days);
+  return d.toISOString().slice(0, 10);
+}
 export function annualRange(year = new Date().getUTCFullYear()) {
   return { start: `${year}-01-01`, end: `${year}-12-31` };
 }

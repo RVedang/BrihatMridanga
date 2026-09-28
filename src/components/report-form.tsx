@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Plus, X } from "lucide-react";
 import {
@@ -13,6 +13,7 @@ import { submitDistribution } from "@/app/portal/actions";
 import { number } from "./ui";
 import { Select } from "./select";
 import { DateField } from "./date-field";
+import { todayIn } from "@/lib/dates";
 type Props = {
   books: Book[];
   temples: Temple[];
@@ -24,7 +25,17 @@ type Props = {
   existing?: Distribution;
   admin?: boolean;
 };
-export function ReportForm({
+export function ReportForm(props: Props) {
+  const [round, setRound] = useState(0);
+  return (
+    <ReportFormBody
+      key={round}
+      {...props}
+      onAnother={() => setRound((n) => n + 1)}
+    />
+  );
+}
+function ReportFormBody({
   books,
   temples,
   campaigns,
@@ -34,8 +45,10 @@ export function ReportForm({
   preview = false,
   existing,
   admin = false,
-}: Props) {
+  onAnother,
+}: Props & { onAnother: () => void }) {
   const router = useRouter();
+  const inFlight = useRef(false);
   const [templeId, setTemple] = useState(
     existing?.temple_id || temples[0]?.id || "",
   );
@@ -81,14 +94,9 @@ export function ReportForm({
   const scope = (records: RecordItem[]) =>
     records.filter((r) => r.temple_id === templeId);
   const temple = temples.find((t) => t.id === templeId);
-  const today = new Intl.DateTimeFormat("en-CA", {
-    timeZone: temple?.timezone || "UTC",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(new Date());
+  const today = todayIn(temple?.timezone);
   async function publish(form: FormData) {
-    if (busy || saved) return;
+    if (inFlight.current || busy || saved) return;
     setMessage("");
     if (calculationError) {
       setMessage(calculationError);
@@ -117,6 +125,7 @@ export function ReportForm({
       total: mode === "total" ? total : null,
       reason: form.get("reason"),
     };
+    inFlight.current = true;
     setBusy(true);
     try {
       const result = await submitDistribution(payload);
@@ -135,6 +144,7 @@ export function ReportForm({
         "The connection was interrupted. Retry the same submission to confirm its status safely.",
       );
     } finally {
+      inFlight.current = false;
       setBusy(false);
     }
   }
@@ -446,6 +456,15 @@ export function ReportForm({
                         ? "Publish correction"
                         : "Publish distribution"}
               </button>
+              {saved && !existing && (
+                <button
+                  type="button"
+                  className="button secondary"
+                  onClick={onAnother}
+                >
+                  Enter another report
+                </button>
+              )}
               <span className="muted">Scores become public immediately.</span>
             </div>
           )}

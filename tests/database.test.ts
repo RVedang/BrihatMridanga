@@ -8,8 +8,10 @@ test("PostgreSQL reporting, permissions, scoring and date-range integration", as
   await db.exec(
     `create schema auth; create role anon; create role authenticated; create table auth.users(id uuid primary key); create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$; grant usage on schema auth,public to anon,authenticated; grant execute on function auth.uid() to anon,authenticated;`,
   );
+  // Firebase imports need the production admin account and catalog, so they run only on the live project.
   for (const file of readdirSync("supabase/migrations").sort())
-    await db.exec(readFileSync(`supabase/migrations/${file}`, "utf8"));
+    if (file.endsWith(".sql") && !file.includes("firebase"))
+      await db.exec(readFileSync(`supabase/migrations/${file}`, "utf8"));
   const a = randomUUID(),
     b = randomUUID(),
     admin = randomUUID(),
@@ -439,6 +441,49 @@ test("PostgreSQL reporting, permissions, scoring and date-range integration", as
         db.query("select public_dashboard('2025-01-01','2025-12-31', null, null, null, null, 'fake')"),
         /Invalid book category/,
       );
+      // All-time and yearly figures cover all history, not just the selected range
+      const whole = (
+        await db.query<{ d: { all_time: { books: number; reports: number }; by_year: { books: number }[] } }>(
+          "select public_dashboard('2025-06-01','2025-06-30') d",
+        )
+      ).rows[0].d;
+      await db.exec("reset role");
+      const stored = (
+        await db.query<{ books: string; reports: string }>(
+          "select sum(book_count) books, count(*) reports from distributions",
+        )
+      ).rows[0];
+      await db.exec("set role anon");
+      assert.equal(Number(whole.all_time.books), Number(stored.books), "all-time books from stored totals");
+      assert.equal(Number(whole.all_time.reports), Number(stored.reports), "all-time reports");
+      assert.equal(
+        whole.by_year.reduce((n, y) => n + Number(y.books), 0),
+        Number(stored.books),
+        "yearly rows add up to all time",
+      );
+      const smallAll = (
+        await db.query<{ d: { all_time: { books: number } } }>(
+          "select public_dashboard('2025-06-01','2025-06-30', null, null, null, null, 'small') d",
+        )
+      ).rows[0].d;
+      assert.ok(Number(smallAll.all_time.books) <= Number(stored.books), "line filter uses line detail");
+      // Changing a book's volumes later must not rewrite past dashboard totals
+      await db.exec("reset role");
+      const setBook = (
+        await db.query<{ id: string; volumes: number }>(
+          "select id, volumes from books where volumes > 1 order by id limit 1",
+        )
+      ).rows[0];
+      await db.query("update books set volumes = volumes + 5 where id = $1", [setBook.id]);
+      await db.exec("set role anon");
+      const after = (
+        await db.query<{ d: { totals: { books: number } } }>(
+          "select public_dashboard('2025-01-01','2025-12-31') d",
+        )
+      ).rows[0].d;
+      await db.exec("reset role");
+      await db.query("update books set volumes = $2 where id = $1", [setBook.id, setBook.volumes]);
+      assert.equal(Number(after.totals.books), Number(d.totals.books), "frozen volumes");
     },
   );
   await t.test("users sign in without a temple; coordinators register once", async () => {
@@ -525,6 +570,33 @@ test("PostgreSQL reporting, permissions, scoring and date-range integration", as
     ).rows[0];
     assert.equal(profile.role, "temple_coordinator");
     assert.equal(profile.temple_id, registered.temple_id);
+    await assert.rejects(
+      save(base({ templeId: registered.temple_id })),
+      /access denied/,
+    );
+    await db
+      .query("update temples set approved = true where id=$1", [registered.temple_id])
+      .catch(() => undefined);
+    await actor(admin);
+    assert.equal(
+      (
+        await db.query<{ approved: boolean }>(
+          "select approved from temples where id=$1",
+          [registered.temple_id],
+        )
+      ).rows[0].approved,
+      false,
+    );
+    await actor(a);
+    assert.equal(
+      (await db.query("select id from temples where id=$1", [registered.temple_id])).rows.length,
+      0,
+    );
+    await actor(admin);
+    await db.query("update temples set approved = true where id=$1", [registered.temple_id]);
+    await actor(fresh);
+    const approvedSave = await save(base({ templeId: registered.temple_id }));
+    assert.ok(approvedSave.books > 0);
     const repeat = (
       await db.query<{ result: { already: boolean; temple_id: string } }>(
         `select register_temple($1::jsonb) result`,

@@ -16,16 +16,16 @@ import {
   isDistributorTestimonial,
   isHomepageStory,
 } from "@/lib/story-types";
-import { dateLabel } from "@/lib/dates";
+import { dateLabel, todayIn } from "@/lib/dates";
 import styles from "./home.module.css";
 import agenda from "./agenda.module.css";
 import testimonialsStyles from "./testimonials.module.css";
 export const dynamic = "force-dynamic";
 export default async function Home() {
   const data = await publicData();
-  const now = new Date(),
-    year = now.getUTCFullYear(),
-    month = now.getUTCMonth(),
+  const today = todayIn(),
+    year = Number(today.slice(0, 4)),
+    month = Number(today.slice(5, 7)) - 1,
     monthStart = `${year}-${String(month + 1).padStart(2, "0")}-01`,
     lastDay = new Date(Date.UTC(year, month + 1, 0)).getUTCDate(),
     monthEnd = `${year}-${String(month + 1).padStart(2, "0")}-${String(lastDay).padStart(2, "0")}`;
@@ -52,7 +52,6 @@ export default async function Home() {
       ? [...monthScores].sort((a, b) => Number(b.books) - Number(a.books))[0]
       : null;
 
-  const today = now.toISOString().slice(0, 10);
   const testimonials = data.content.filter(isDistributorTestimonial),
     upcomingEvents = data.content
       .filter((c) => c.kind === "event")
@@ -79,9 +78,9 @@ export default async function Home() {
             <Image
               src="/home/prabhupada-books.jpg"
               alt=""
-              width={712}
-              height={1024}
-              sizes="100vw"
+              width={1046}
+              height={1504}
+              sizes="(max-width: 480px) 82vw, 390px"
               loading="eager"
             />
           </div>
@@ -89,9 +88,9 @@ export default async function Home() {
             <Image
               src="/home/prabhupada-books.jpg"
               alt=""
-              width={712}
-              height={1024}
-              sizes="100vw"
+              width={1046}
+              height={1504}
+              sizes="(max-width: 480px) 82vw, 390px"
               loading="eager"
             />
           </div>

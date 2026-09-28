@@ -32,10 +32,6 @@ export async function proxy(request: NextRequest) {
 }
 export const config = {
   matcher: [
-    "/portal/:path*",
-    "/login",
-    "/auth/:path*",
-    "/onboarding",
-    "/account",
+    "/((?!api/|_next/static|_next/image|favicon.ico|.*\\.(?:png|jpg|jpeg|gif|webp|svg|ico|css|js|woff2?|txt|xml)$).*)",
   ],
 };

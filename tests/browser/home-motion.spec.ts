@@ -1,25 +1,13 @@
 import { expect, test } from "@playwright/test";
 
-test("testimonial controls preserve cards and support keyboard scrolling", async ({
-  page,
-}) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/");
-  const rail = page.getByRole("region", { name: "Recent testimonials" });
-  await expect(rail).toBeVisible();
-  const count = await rail.locator(".testimonial-card").count();
-  expect(count).toBeGreaterThan(1);
-  await page.getByRole("button", { name: "Next testimonials" }).click();
-  await expect
-    .poll(() => rail.evaluate((el) => el.scrollLeft))
-    .toBeGreaterThan(100);
-  await rail.focus();
-  await page.keyboard.press("ArrowLeft");
-  await expect.poll(() => rail.evaluate((el) => el.scrollLeft)).toBeLessThan(2);
-  expect(await rail.locator(".testimonial-card").count()).toBe(count);
-  await expect(
-    page.getByRole("button", { name: "Previous testimonials" }),
-  ).toBeDisabled();
+test("recent testimonials render on phones and desktop", async ({ page }) => {
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/");
+    const section = page.locator(".home-testimonials");
+    await expect(section.getByRole("heading", { name: "Recent testimonials" })).toBeVisible();
+    expect(await section.locator("a:visible").count(), `width ${width}`).toBeGreaterThan(0);
+  }
 });
 
 test("homepage motion fits each viewport and reduced motion cancels it", async ({
@@ -34,7 +22,7 @@ test("homepage motion fits each viewport and reduced motion cancels it", async (
       ),
     ).toBe(true);
     await page
-      .getByRole("region", { name: "Recent testimonials" })
+      .getByRole("heading", { name: "Recent testimonials" })
       .scrollIntoViewIfNeeded();
     await expect
       .poll(() =>
