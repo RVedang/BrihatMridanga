@@ -370,7 +370,9 @@ a.nav-login:hover {
   line-height: 1.3;
 }
 .card .story-photo {
-  border-radius: 16px;
+  margin: -30px -30px 18px;
+  border-radius: calc(var(--surface-radius) - 1px) calc(var(--surface-radius) - 1px) 0 0;
+  background: white;
   overflow: hidden;
 }
 .card .story-photo img {
@@ -687,7 +689,7 @@ tbody tr:hover {
     padding: 24px;
   }
   .card .story-photo {
-    margin: -22px -22px 16px;
+    margin: -24px -24px 16px;
   }
   .home-sankirtan {
     grid-template-columns: 1fr;

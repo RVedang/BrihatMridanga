@@ -4090,12 +4090,13 @@ details summary {
 }
 .testimonial-photo .story-photo {
   display: block;
-  width: 100%;
+  width: calc(100% + 2px);
   height: auto;
   aspect-ratio: 16 / 10;
-  margin: 0;
+  margin: -1px -1px 0;
   border: 0;
   border-radius: 0;
+  background: white;
 }
 .testimonial-photo img {
   width: 100%;
