@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import type { TempleTeam } from "../src/lib/data";
 import {
+  displayName,
   normalizeTeamSearch,
   teamDirectoryEntry,
   teamDirectoryEntries,
@@ -29,7 +30,7 @@ test("imported team-name placeholders are not people or confirmed leads", () => 
       ],
     }),
   );
-  assert.equal(entry.lead?.name, "Nilesh");
+  assert.equal(entry.lead, null);
   assert.equal(entry.people.length, 2);
   assert.deepEqual(entry.people.map((person) => person.id).sort(), [
     "person-1",
@@ -50,20 +51,20 @@ test("placeholder detection tolerates capitalization and whitespace", () => {
   assert.equal(entry.people.length, 0);
 });
 
-test("missing lead uses the first listed member without inventing a person", () => {
+test("a team without a recorded lead shows no lead and invents no one", () => {
   const entry = teamDirectoryEntry(
     team({
       coordinator_name: "",
       members: [{ id: "person-1", name: "Shriraj", coordinator: false }],
     }),
   );
-  assert.equal(entry.lead?.name, "Shriraj");
-  assert.equal(entry.people[0].coordinator, true);
+  assert.equal(entry.lead, null);
+  assert.equal(entry.people[0].coordinator, false);
   assert.equal(entry.people.length, 1);
   assert.equal(teamDirectoryEntry(team()).people.length, 0);
 });
 
-test("duplicate team rows combine their rosters once and choose the first alphabetical member", () => {
+test("duplicate team rows combine their rosters once without inventing a lead", () => {
   const teams = [
     team({
       id: "team-2",
@@ -93,8 +94,8 @@ test("duplicate team rows combine their rosters once and choose the first alphab
     entries[0].people.map((p) => p.name),
     ["Abhay", "Kunal"],
   );
-  assert.equal(entries[0].lead?.name, "Abhay");
-  assert.equal(entries[0].people.filter((p) => p.coordinator).length, 1);
+  assert.equal(entries[0].lead, null);
+  assert.equal(entries[0].people.filter((p) => p.coordinator).length, 0);
   assert.deepEqual(teamDirectoryEntries([...teams].reverse()), entries);
   assert.deepEqual(teams, original);
 });
@@ -133,7 +134,7 @@ test("different centres and numbered teams stay separate; empty teams remain hid
     team({ id: "d", name: "Empty", coordinator_name: "Empty" }),
   ]);
   assert.equal(entries.length, 3);
-  assert.ok(entries.every((entry) => entry.lead?.name === "Abhay"));
+  assert.ok(entries.every((entry) => entry.lead === null));
 });
 
 test("an actual roster lead can share the team name", () => {
@@ -169,7 +170,7 @@ test("a separately named coordinator is retained once and sorted first", () => {
   assert.equal(withoutMembership.people.length, 1);
 });
 
-test("distinct members with the same name are preserved", () => {
+test("the same name listed twice in one team appears once and keeps the lead", () => {
   const entry = teamDirectoryEntry(
     team({
       coordinator_name: "Nilesh",
@@ -179,7 +180,32 @@ test("distinct members with the same name are preserved", () => {
       ],
     }),
   );
-  assert.equal(entry.people.length, 2);
+  assert.equal(entry.people.length, 1);
+  assert.equal(entry.lead?.id, "person-1");
+});
+
+test("team names differing only in case, spacing or hyphens merge; numbers stay apart", () => {
+  const entries = teamDirectoryEntries([
+    team({ id: "a", name: "Akinchana Vittaya - 3", coordinator_name: "Akinchana Vittaya - 3",
+      members: [{ id: "vasu", name: "Vasu", coordinator: false }, { id: "raj", name: "Raj", coordinator: false }] }),
+    team({ id: "b", name: "Akinchana vittaya 3", coordinator_name: "Akinchana vittaya 3",
+      members: [{ id: "vasu-2", name: "Vasu prabhu", coordinator: false }] }),
+    team({ id: "c", name: "Akinchana Vittaya 4", coordinator_name: "Akinchana Vittaya 4",
+      members: [{ id: "k", name: "Kunal", coordinator: false }] }),
+  ]);
+  assert.equal(entries.length, 2);
+  assert.equal(entries[0].team.name, "Akinchana Vittaya - 3");
+  assert.deepEqual(entries[0].people.map((p) => p.name), ["Raj", "Vasu Prabhu"]);
+});
+
+test("names typed in all lower or upper case are tidied; mixed case is kept", () => {
+  assert.equal(displayName("  aniket "), "Aniket");
+  assert.equal(displayName("YASH PRAJAPATI"), "Yash Prajapati");
+  assert.equal(displayName("ABD"), "ABD");
+  assert.equal(displayName("MadanMohan"), "MadanMohan");
+  assert.equal(displayName("servants of prabhupada"), "Servants of Prabhupada");
+  assert.equal(displayName("nama-hatta"), "Nama-hatta");
+  assert.equal(displayName("PRABHUPADA'S DASA"), "Prabhupada's Dasa");
 });
 
 test("search handles accents, punctuation, centres and member names", () => {

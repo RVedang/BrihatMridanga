@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 // Read-only checks against the imported Mumbai roster; no portal writes.
 const mumbai = "/temples/f0d11e67-cdef-5462-9a93-36a410360717";
 
-test("Mumbai teams are paginated and searchable with provisional leads", async ({
+test("Mumbai teams are paginated and searchable without invented leads", async ({
   page,
 }) => {
   await page.goto(mumbai);
@@ -25,13 +25,13 @@ test("Mumbai teams are paginated and searchable with provisional leads", async (
   const baldeva = rows.filter({
     has: page.locator("summary > span:first-child", { hasText: /^Baldeva 1$/ }),
   });
-  await expect(baldeva.locator("summary")).not.toContainText("Not listed");
+  await expect(baldeva.locator("summary")).toContainText("Not listed");
   await baldeva.locator("summary").focus();
   await page.keyboard.press("Enter");
   await expect(baldeva).toHaveAttribute("open", "");
   await expect(baldeva.locator("li")).toHaveCount(4);
-  await expect(baldeva.getByText(/^shriraj$/i)).toBeVisible();
-  await expect(baldeva.getByText("Team lead", { exact: true })).toHaveCount(1);
+  await expect(baldeva.getByText(/^Shriraj$/)).toBeVisible();
+  await expect(baldeva.getByText("Team lead", { exact: true })).toHaveCount(0);
   await directory.getByRole("searchbox").fill("shriraj");
   await expect(rows).toHaveCount(2);
   await directory
@@ -57,7 +57,7 @@ test("Mumbai teams are paginated and searchable with provisional leads", async (
   ).toBeVisible();
 });
 
-test("Dasanudasa appears once with Abhay as lead and two unique members", async ({
+test("Dasanudasa appears once with two unique members and no invented lead", async ({
   page,
 }) => {
   await page.goto(mumbai);
@@ -66,15 +66,10 @@ test("Dasanudasa appears once with Abhay as lead and two unique members", async 
   const row = directory.locator("details");
   await expect(row).toHaveCount(1);
   await expect(directory.getByRole("status")).toContainText("1 team found");
-  await expect(row.locator("summary")).toContainText("Abhay");
+  await expect(row.locator("summary")).toContainText("Not listed");
   await row.locator("summary").click();
   await expect(row.locator("li")).toHaveCount(2);
-  await expect(row.locator("li").filter({ hasText: "Abhay" })).toContainText(
-    "Team lead",
-  );
-  await expect(
-    row.locator("li").filter({ hasText: "Kunal" }),
-  ).not.toContainText("Team lead");
+  await expect(row.locator("li").filter({ hasText: "Team lead" })).toHaveCount(0);
 });
 
 test("centre dropdown supports search, keyboard selection and dismissal", async ({
