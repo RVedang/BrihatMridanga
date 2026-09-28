@@ -1,5 +1,6 @@
 "use server";
 import { redirect } from "next/navigation";
+import { pathAfterSignIn } from "@/lib/after-sign-in";
 import { isConfigured, supabase } from "@/lib/supabase";
 
 function intentOf(value: FormDataEntryValue | null) {
@@ -15,7 +16,7 @@ export async function signIn(_previous: { message: string }, form: FormData) {
   });
   if (error)
     return { message: "Unable to sign in. Check your email and password." };
-  redirect(`/auth/continue?intent=${intentOf(form.get("intent"))}`);
+  redirect(await pathAfterSignIn(client, intentOf(form.get("intent"))));
 }
 
 export async function signOut() {

@@ -43,7 +43,9 @@ export function TestimonialRail({
     });
   }
   return (
-    <div className="testimonial-carousel">
+    <div
+      className={`testimonial-carousel${edges.start ? "" : " more-before"}${edges.end ? "" : " more-after"}`}
+    >
       <div className="testimonial-controls">
         <button
           type="button"

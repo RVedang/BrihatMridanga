@@ -90,7 +90,9 @@ export function StoryRail({
       <div className="section-title">
         <h2>{title}</h2>
       </div>
-      <div className="story-rail-frame">
+      <div
+        className={`story-rail-frame${canPrev ? " more-before" : ""}${canNext ? " more-after" : ""}`}
+      >
         {canPrev ? (
           <button
             type="button"

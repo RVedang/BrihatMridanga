@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { ReadingProgress } from "@/components/reading-progress";
+import { isPortalPath, useBrowserPath } from "@/lib/use-browser-path";
 import { useLayoutEffect, useRef, useState } from "react";
 
 const links: [string, string][] = [
@@ -17,9 +17,9 @@ const links: [string, string][] = [
 ];
 
 export function Navigation() {
-  const path = usePathname(),
+  const path = useBrowserPath(),
     [open, setOpen] = useState(false);
-  const portalOpen = path === "/portal" || path.startsWith("/portal/");
+  const portalOpen = isPortalPath(path);
   const nav = useRef<HTMLElement>(null);
   const indicator = useRef<HTMLSpanElement>(null);
   useLayoutEffect(() => {

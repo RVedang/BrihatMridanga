@@ -162,8 +162,14 @@
     display: none;
   }
   .mobile {
-    display: block;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
     min-width: 0;
+  }
+  .mobile > :global(.testimonial-card) {
+    min-width: 0;
+    width: 100%;
   }
 }
 @media (max-width: 600px) {

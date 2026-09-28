@@ -1,8 +1,8 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { ClipboardList, LogIn, LogOut } from "lucide-react";
 import { signOut } from "@/app/login/actions";
+import { isPortalPath, useBrowserPath } from "@/lib/use-browser-path";
 
 export function AuthNav({
   signedIn,
@@ -11,8 +11,7 @@ export function AuthNav({
   signedIn: boolean;
   showPortal: boolean;
 }) {
-  const path = usePathname();
-  const portalOpen = path === "/portal" || path.startsWith("/portal/");
+  const portalOpen = isPortalPath(useBrowserPath());
   if (signedIn)
     return (
       <div className="nav-login nav-auth">

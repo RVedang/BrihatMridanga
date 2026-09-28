@@ -10,7 +10,6 @@ import {
 } from "@/lib/data";
 import { Empty, SectionTitle, HomeStats } from "@/components/ui";
 import { TestimonialCard } from "@/components/testimonial-card";
-import { TestimonialRail } from "@/components/testimonial-rail";
 import { HomeStories } from "@/components/story-sections";
 import { AgendaCard } from "@/components/agenda-card";
 import {
@@ -202,15 +201,13 @@ export default async function Home() {
                   </div>
                 </div>
                 <div className={testimonialsStyles.mobile}>
-                  <TestimonialRail>
-                    {testimonials.slice(0, 6).map((t) => (
-                      <TestimonialCard
-                        key={t.id}
-                        item={t}
-                        temple={data.temples.find((x) => x.id === t.temple_id)}
-                      />
-                    ))}
-                  </TestimonialRail>
+                  {testimonials.slice(0, 3).map((t) => (
+                    <TestimonialCard
+                      key={t.id}
+                      item={t}
+                      temple={data.temples.find((x) => x.id === t.temple_id)}
+                    />
+                  ))}
                 </div>
               </>
             ) : (
