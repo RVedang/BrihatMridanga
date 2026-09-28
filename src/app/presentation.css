@@ -1068,14 +1068,17 @@ tbody tr:hover {
     container-type: inline-size;
     position: relative;
     z-index: 0;
-    padding-inline: 12px;
+    padding-inline: 28px;
+    scroll-padding-inline: 28px;
+    scroll-snap-type: x mandatory;
     touch-action: pan-x pan-y;
   }
   .stories-board .story-rail .card {
-    flex: 0 0 calc(100cqw - 28px);
-    width: calc(100cqw - 28px);
+    flex: 0 0 calc(100cqw - 36px);
+    width: calc(100cqw - 36px);
     min-width: 0;
     max-width: none;
+    scroll-snap-align: center;
   }
   .stories-board .story-rail.is-fit .card {
     flex: 1 1 auto;

@@ -23,12 +23,16 @@ function skipReveal(target: Element) {
     target.closest(".page-intro")
   )
     return true;
-  // A sideways row only peeks the next card. That sliver never reaches
-  // the reveal threshold, so the card stays transparent until a swipe.
-  const rail = target.closest(".story-rail, .testimonial-scroll");
-  if (!rail || !target.matches(".card, .testimonial-card")) return false;
-  const first = rail.querySelector(":scope > .card, :scope > .testimonial-card");
+  // Temple testimonials only peek the next card. That sliver never
+  // reaches the usual reveal threshold, so later cards stay transparent.
+  const rail = target.closest(".testimonial-scroll");
+  if (!rail || !target.matches(".testimonial-card")) return false;
+  const first = rail.querySelector(":scope > .testimonial-card");
   return target !== first;
+}
+
+function storyRailCard(target: Element) {
+  return Boolean(target.closest(".story-rail") && target.matches(".card"));
 }
 
 /** Enhance server-rendered content without moving data or pages into the client. */
@@ -47,44 +51,51 @@ export function PresentationMotion() {
       node.style.removeProperty("will-change");
       animations.delete(target);
     };
-    const observer = new IntersectionObserver(
-      (entries) => {
-        let stagger = 0;
-        const incoming = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort(
-            (a, b) =>
-              a.boundingClientRect.top - b.boundingClientRect.top ||
-              a.boundingClientRect.left - b.boundingClientRect.left,
-          );
-        for (const entry of incoming) {
-          observer.unobserve(entry.target);
-          if (preference.matches) continue;
-          const target = entry.target as HTMLElement;
-          const photo = target.matches(
-            '[data-reveal="image"], .story-photo, .about-meaning-stage, .about-vision-stage, .about-mission-figure, .about-lead-frame',
-          );
-          target.style.willChange = "opacity, transform";
-          const delay = Math.min(stagger++ * MOTION.stagger, MOTION.staggerCap);
-          const animation = animate(
-            target,
-            {
-              opacity: [0, 1],
-              transform: photo
-                ? [`scale(${MOTION.scale})`, "scale(1)"]
-                : [`translateY(${MOTION.distance}px)`, "translateY(0px)"],
-            },
-            {
-              duration: photo ? MOTION.photoDuration : MOTION.duration,
-              delay,
-              ease: MOTION.ease,
-            },
-          );
-          animations.set(target, animation);
-          void animation.then(() => finish(target, animation));
-        }
-      },
-      { threshold: 0.12, rootMargin: "0px 0px -10% 0px" },
+    const reveal = (entries: IntersectionObserverEntry[], source: IntersectionObserver) => {
+      let stagger = 0;
+      const incoming = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort(
+          (a, b) =>
+            a.boundingClientRect.top - b.boundingClientRect.top ||
+            a.boundingClientRect.left - b.boundingClientRect.left,
+        );
+      for (const entry of incoming) {
+        source.unobserve(entry.target);
+        if (preference.matches) continue;
+        const target = entry.target as HTMLElement;
+        const photo = target.matches(
+          '[data-reveal="image"], .story-photo, .about-meaning-stage, .about-vision-stage, .about-mission-figure, .about-lead-frame',
+        );
+        target.style.willChange = "opacity, transform";
+        const delay = Math.min(stagger++ * MOTION.stagger, MOTION.staggerCap);
+        const animation = animate(
+          target,
+          {
+            opacity: [0, 1],
+            transform: photo
+              ? [`scale(${MOTION.scale})`, "scale(1)"]
+              : [`translateY(${MOTION.distance}px)`, "translateY(0px)"],
+          },
+          {
+            duration: photo ? MOTION.photoDuration : MOTION.duration,
+            delay,
+            ease: MOTION.ease,
+          },
+        );
+        animations.set(target, animation);
+        void animation.then(() => finish(target, animation));
+      }
+    };
+    const observer = new IntersectionObserver((entries) => reveal(entries, observer), {
+      threshold: 0.12,
+      rootMargin: "0px 0px -10% 0px",
+    });
+    // A story card beside the main one may only peek in. Any visible
+    // sliver should still run the same rise, instead of staying hidden.
+    const storyObserver = new IntersectionObserver(
+      (entries) => reveal(entries, storyObserver),
+      { threshold: 0, rootMargin: "0px 0px -10% 0px" },
     );
     const scan = () =>
       root.querySelectorAll(revealTargets).forEach((element) => {
@@ -105,7 +116,7 @@ export function PresentationMotion() {
             ? `scale(${MOTION.scale})`
             : `translateY(${MOTION.distance}px)`;
         }
-        observer.observe(element);
+        (storyRailCard(element) ? storyObserver : observer).observe(element);
       });
     scan();
     const mutations = new MutationObserver((records) => {
@@ -132,6 +143,7 @@ export function PresentationMotion() {
     window.addEventListener("beforeprint", stopOnFocus);
     return () => {
       observer.disconnect();
+      storyObserver.disconnect();
       mutations.disconnect();
       stopOnFocus();
       preference.removeEventListener("change", stop);
