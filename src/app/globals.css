@@ -1139,6 +1139,22 @@ textarea {
 .date-day:disabled {
   color: #c5c2bc;
 }
+.month-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2px;
+}
+.month-grid .date-day {
+  aspect-ratio: auto;
+  min-height: 34px;
+  font-size: 12px;
+}
+.month-pop .date-pop-head strong {
+  flex-direction: row;
+}
+.month-pop .date-pop-foot {
+  justify-content: space-between;
+}
 .date-pop-foot {
   display: flex;
   align-items: center;

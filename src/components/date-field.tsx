@@ -2,7 +2,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
 import { Select } from "./select";
-import { todayIn } from "@/lib/dates";
+import { monthLabel, todayIn } from "@/lib/dates";
 
 const weekdays = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 const months = [
@@ -38,6 +38,17 @@ function pretty(value: string) {
   const p = parse(value);
   if (!p) return "Choose a date";
   return `${p.d} ${months[p.m].slice(0, 3)} ${p.y}`;
+}
+function parseMonth(value: string) {
+  if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(value)) return null;
+  const [y, m] = value.split("-").map(Number);
+  return { y, m: m - 1 };
+}
+function ym(year: number, month: number) {
+  return `${year}-${pad(month + 1)}`;
+}
+function prettyMonth(value: string) {
+  return parseMonth(value) ? monthLabel(value) : "Choose a month";
 }
 
 export function DateField({
@@ -212,6 +223,151 @@ export function DateField({
               }}
             >
               Today
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function MonthField({
+  name,
+  required,
+  disabled,
+  defaultValue = "",
+  value,
+  onChange,
+  "aria-label": ariaLabel,
+}: {
+  name?: string;
+  required?: boolean;
+  disabled?: boolean;
+  defaultValue?: string;
+  value?: string;
+  onChange?: (value: string) => void;
+  "aria-label"?: string;
+}) {
+  const id = useId();
+  const wrap = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = useState(false);
+  const [inner, setInner] = useState(value ?? defaultValue);
+  const selected = value ?? inner;
+  const parsed = parseMonth(selected) || parseMonth(todayIn().slice(0, 7))!;
+  const [viewYear, setViewYear] = useState(parsed.y);
+
+  useEffect(() => {
+    if (value !== undefined) setInner(value);
+  }, [value]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDoc = (e: MouseEvent) => {
+      if (!wrap.current?.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", onDoc);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDoc);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  const choose = (next: string) => {
+    setInner(next);
+    onChange?.(next);
+    setOpen(false);
+  };
+
+  const thisMonth = todayIn().slice(0, 7);
+  const shortMonths = months.map((m) => m.slice(0, 3));
+
+  return (
+    <div className="date-field" ref={wrap}>
+      <button
+        type="button"
+        id={id}
+        className="date-field-trigger"
+        disabled={disabled}
+        aria-expanded={open}
+        aria-haspopup="dialog"
+        aria-label={ariaLabel}
+        onClick={() => {
+          if (disabled) return;
+          const p = parseMonth(selected) || parseMonth(thisMonth)!;
+          setViewYear(p.y);
+          setOpen((v) => !v);
+        }}
+      >
+        <CalendarDays size={16} strokeWidth={1.7} />
+        <span className={selected ? "" : "placeholder"}>{prettyMonth(selected)}</span>
+      </button>
+      {name && (
+        <input type="hidden" name={name} value={selected} required={required} />
+      )}
+      {open && (
+        <div className="date-pop month-pop" role="dialog" aria-label="Choose a month">
+          <div className="date-pop-head">
+            <button
+              type="button"
+              onClick={() => setViewYear((y) => y - 1)}
+              aria-label="Previous year"
+            >
+              <ChevronLeft size={16} />
+            </button>
+            <strong>
+              <span className="date-pop-year">{viewYear}</span>
+            </strong>
+            <button
+              type="button"
+              onClick={() => setViewYear((y) => y + 1)}
+              aria-label="Next year"
+            >
+              <ChevronRight size={16} />
+            </button>
+          </div>
+          <div className="month-grid">
+            {shortMonths.map((label, m) => {
+              const iso = ym(viewYear, m);
+              const isSelected = iso === selected;
+              const isThisMonth = iso === thisMonth;
+              return (
+                <button
+                  key={iso}
+                  type="button"
+                  className={[
+                    "date-day",
+                    isSelected ? "is-selected" : "",
+                    isThisMonth ? "is-today" : "",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                  onClick={() => choose(iso)}
+                >
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+          <div className="date-pop-foot">
+            {!required && (
+              <button type="button" className="date-pop-action" onClick={() => choose("")}>
+                Clear
+              </button>
+            )}
+            <button
+              type="button"
+              className="date-pop-action"
+              onClick={() => {
+                const p = parseMonth(thisMonth)!;
+                setViewYear(p.y);
+                choose(thisMonth);
+              }}
+            >
+              This month
             </button>
           </div>
         </div>

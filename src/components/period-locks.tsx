@@ -3,7 +3,8 @@ import { useActionState } from "react";
 import type { Temple } from "@/lib/data";
 import { setPeriodLock, type ActionResult } from "@/app/portal/actions";
 import { Select } from "./select";
-import { monthLabel } from "@/lib/dates";
+import { MonthField } from "./date-field";
+import { monthLabel, todayIn } from "@/lib/dates";
 
 export type PeriodLock = { temple_id: string; month: string };
 
@@ -39,7 +40,12 @@ export function PeriodLocks({
         </label>
         <label>
           Month
-          <input type="month" name="month" required />
+          <MonthField
+            name="month"
+            required
+            defaultValue={todayIn().slice(0, 7)}
+            aria-label="Month to close"
+          />
         </label>
         <div className="form-actions full">
           <button className="button" name="intent" value="close" disabled={pending}>
