@@ -1,3 +1,4 @@
+import {formatPoints} from "@/lib/weekly-distribution";
 import { AnimatedNumber } from "@/components/presentation-motion";
 import Link from "next/link";
 import { ArrowUpRight, TrendingUp, TrendingDown, Minus } from "lucide-react";
@@ -12,13 +13,13 @@ import {
 import { PageIntro, Empty, number } from "@/components/ui";
 import { Bars, Columns, Progress, ChartCard } from "@/components/charts";
 import { DashboardFilterForm } from "@/components/dashboard-filters";
-import { categoryLabel } from "@/lib/catalog";
+import { weeklyCategoryLabels } from "@/lib/weekly-distribution";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Global dashboard" };
 
 const uuid = /^[0-9a-f-]{36}$/i;
-const categories = ["small", "medium", "big", "m-big"];
+const categories = Object.keys(weeklyCategoryLabels);
 
 export default async function DashboardPage({
   searchParams,
@@ -81,22 +82,18 @@ export default async function DashboardPage({
     temple: temple?.id,
     centre: centre?.id,
     country: query.country || undefined,
-    language: query.language || undefined,
     category,
   };
   const dash = await dashboard(filters);
   if (dash) {
     if (filters.country && !dash.options.countries.includes(filters.country))
       problems.push("Unknown country.");
-    if (filters.language && !dash.options.languages.includes(filters.language))
-      problems.push("Unknown language.");
   }
   const active = [
     filters.campaign,
     filters.country,
     filters.temple,
     filters.centre,
-    filters.language,
     filters.category,
     start !== defaults.start || end !== defaults.end ? "range" : "",
   ].filter(Boolean).length;
@@ -107,7 +104,6 @@ export default async function DashboardPage({
       "country",
       "temple",
       "centre",
-      "language",
       "category",
     ] as const)
       if (filters[k]) p.set(k, filters[k]!);
@@ -118,8 +114,7 @@ export default async function DashboardPage({
     filters.country,
     temple?.name,
     centre?.name,
-    filters.language,
-    category ? categoryLabel(category) : undefined,
+    category ? weeklyCategoryLabels[category] : undefined,
   ].filter(Boolean) as string[];
 
   return (
@@ -133,7 +128,6 @@ export default async function DashboardPage({
         temples={data.temples}
         centres={data.centres}
         countries={dash?.options.countries || []}
-        languages={dash?.options.languages || []}
         active={active}
       />
 
@@ -184,7 +178,6 @@ function DashboardBody({
   temple?: string;
 }) {
   const { totals, all_time, previous } = dash;
-  const lineFilter = Boolean(filters.language || filters.category);
   const months = monthsBetween(filters.start, filters.end);
   const monthly = months.map((m) => ({
     label: monthLabel(m),
@@ -237,16 +230,9 @@ function DashboardBody({
 
   return (
     <>
-      {lineFilter && Number(dash.excluded_total_only) > 0 && (
-        <p className="notice">
-          Language and book-type filters use book details, so{" "}
-          {number(Number(dash.excluded_total_only))} total-only{" "}
-          {Number(dash.excluded_total_only) === 1 ? "report is" : "reports are"}{" "}
-          not included in these figures.
-        </p>
-      )}
 
       <div className="kpis">
+        <div className="stat-card kpi"><span>Points</span><strong>{formatPoints(totals.points)}</strong></div>
         <Kpi
           label="Books distributed"
           value={Number(totals.books)}
@@ -254,7 +240,7 @@ function DashboardBody({
             Number(totals.sets) === 1 || Number(totals.sets) === 0
               ? "set"
               : "sets"
-          } included`}
+          } reported separately`}
           delta={delta(Number(totals.books), Number(previous.books))}
           deltaLabel={`vs ${dateLabel(previous.start)} – ${dateLabel(previous.end)}`}
         />
@@ -270,7 +256,7 @@ function DashboardBody({
         <Kpi
           label="Sets Distributed"
           value={Number(totals.sets)}
-          sub="Srimad Bhagavatam, Caitanya Caritamrta, and Srila Prabhupada Lilamrita sets distributed"
+          sub="Srimad Bhagavatam, Caitanya Caritamrta, and Life Patron Membership sets distributed"
           delta={delta(Number(totals.sets), Number(previous.sets))}
           deltaLabel="vs previous period"
         />
@@ -378,7 +364,7 @@ function DashboardBody({
           </ChartCard>
           <ChartCard
             title="Books by year"
-            note="All-time, under the current campaign, place, language and book-type filters"
+            note="All-time, under the current campaign, place and category filters"
             csv={csv("yearly")}
             chart={{ points: yearly, filename: "books-by-year" }}
           >
@@ -406,7 +392,7 @@ function DashboardBody({
 
       <section className="dash-section" id="breakdown">
         <div className="section-title">
-          <h2>Distribution by place, language and book type</h2>
+          <h2>Distribution by place and category</h2>
         </div>
         <div className="chart-grid">
           <ChartCard
@@ -426,7 +412,7 @@ function DashboardBody({
                 label: r.country,
                 sub: `${number(Number(r.temples))} ${Number(r.temples) === 1 ? "temple" : "temples"}`,
                 value: Number(r.books),
-                detail: `${number(Number(r.sets))} sets`,
+                detail: `${number(Number(r.sets))} sets · ${formatPoints(r.points)} points`,
               }))}
             />
           </ChartCard>
@@ -448,39 +434,18 @@ function DashboardBody({
                 sub: r.country,
                 href: `/temples/${r.temple_id}`,
                 value: Number(r.books),
-                detail: `${number(Number(r.sets))} sets`,
+                detail: `${number(Number(r.sets))} sets · ${formatPoints(r.points)} points`,
               }))}
             />
           </ChartCard>
           <ChartCard
-            title="By language"
-            note="Detailed reports only"
-            csv={csv("languages")}
-            chart={{
-              points: dash.by_language.map((r) => ({
-                label: r.language,
-                value: Number(r.books),
-              })),
-              filename: "books-by-language",
-            }}
-          >
-            <Bars
-              rows={dash.by_language.map((r) => ({
-                key: r.language,
-                label: r.language,
-                value: Number(r.books),
-                detail: `${number(Number(r.sets))} sets`,
-              }))}
-            />
-          </ChartCard>
-          <ChartCard
-            title="By book type"
-            note="Detailed reports only"
+            title="By category"
+            note="Books and sets are counted separately"
             csv={csv("categories")}
             chart={{
               points: dash.by_category.map((r) => ({
-                label: categoryLabel(r.category),
-                value: Number(r.books),
+                label: weeklyCategoryLabels[r.category],
+                value: Number(r.books)+Number(r.sets),
               })),
               filename: "books-by-type",
             }}
@@ -488,9 +453,9 @@ function DashboardBody({
             <Bars
               rows={dash.by_category.map((r) => ({
                 key: r.category,
-                label: categoryLabel(r.category),
-                value: Number(r.books),
-                detail: `${number(Number(r.sets))} sets`,
+                label: weeklyCategoryLabels[r.category],
+                value: Number(r.books)+Number(r.sets),
+                detail: `${number(Number(r.sets))} sets · ${formatPoints(r.points)} points`,
               }))}
             />
           </ChartCard>
@@ -511,7 +476,7 @@ function DashboardBody({
                 sub: r.country,
                 href: `/temples/${r.temple_id}`,
                 value: Number(r.books),
-                detail: `${number(Number(r.sets))} sets`,
+                detail: `${number(Number(r.sets))} sets · ${formatPoints(r.points)} points`,
               }))}
             />
           </ChartCard>
@@ -527,7 +492,7 @@ function DashboardBody({
                 label: r.name,
                 sub: `${r.temple_name} · ${r.country}`,
                 value: Number(r.books),
-                detail: `${number(Number(r.sets))} sets`,
+                detail: `${number(Number(r.sets))} sets · ${formatPoints(r.points)} points`,
               }))}
             />
           </ChartCard>
@@ -543,7 +508,7 @@ function DashboardBody({
                 label: r.name,
                 sub: `${r.temple_name} · ${r.country}`,
                 value: Number(r.books),
-                detail: `${number(Number(r.sets))} sets`,
+                detail: `${number(Number(r.sets))} sets · ${formatPoints(r.points)} points`,
               }))}
             />
           </ChartCard>

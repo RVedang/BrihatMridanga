@@ -648,6 +648,7 @@ function Editor({
             />
           </label>
         )}
+        {["centres","individuals","teams","campaigns"].includes(type) && <label>Logo URL (optional)<input name="logo_url" type="url" defaultValue={value("logo_url")} placeholder="https://" /></label>}
         {type === "targets" && (
           <>
             <label>

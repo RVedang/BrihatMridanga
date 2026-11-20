@@ -56,6 +56,7 @@ function pretty(header: string, value: unknown) {
     return dateLabel(text);
   if (label === "month" && /^\d{4}-\d{2}/.test(text))
     return monthLabel(text.slice(0, 7));
+  if (typeof value === "string" && /^\d+\.\d{2}$/.test(value)) return value;
   if (isNumeric(value))
     return Number(value).toLocaleString("en-GB");
   return text;

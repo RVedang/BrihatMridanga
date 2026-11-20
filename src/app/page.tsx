@@ -1,3 +1,5 @@
+import { MarathonHero } from "@/components/marathon-hero";
+import { marathonPublicDirectory, marathonStandings } from "@/lib/marathon-data";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight, CalendarDays, Flag } from "lucide-react";
@@ -12,10 +14,7 @@ import { Empty, SectionTitle, HomeStats } from "@/components/ui";
 import { TestimonialCard } from "@/components/testimonial-card";
 import { HomeStories } from "@/components/story-sections";
 import { AgendaCard } from "@/components/agenda-card";
-import {
-  isDistributorTestimonial,
-  isHomepageStory,
-} from "@/lib/story-types";
+import { isDistributorTestimonial, isHomepageStory } from "@/lib/story-types";
 import { dateLabel, todayIn } from "@/lib/dates";
 import { siteUrl } from "@/lib/site";
 import styles from "./home.module.css";
@@ -23,7 +22,11 @@ import agenda from "./agenda.module.css";
 import testimonialsStyles from "./testimonials.module.css";
 export const dynamic = "force-dynamic";
 export default async function Home() {
-  const data = await publicData();
+  const [data, marathonTemples, standings] = await Promise.all([
+    publicData(),
+    marathonPublicDirectory(),
+    marathonStandings(),
+  ]);
   const today = todayIn(),
     year = Number(today.slice(0, 4)),
     month = Number(today.slice(5, 7)) - 1,
@@ -99,78 +102,7 @@ export default async function Home() {
           __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
         }}
       />
-      <section className={styles.hero} aria-label="Our inspiration">
-        <div className={styles.field} aria-hidden="true">
-          <div className={styles.ambient}>
-            <Image
-              src="/home/prabhupada-books.jpg"
-              alt=""
-              width={1046}
-              height={1504}
-              sizes="(max-width: 480px) 82vw, 390px"
-              loading="eager"
-            />
-          </div>
-          <div className={styles.veil}>
-            <Image
-              src="/home/prabhupada-books.jpg"
-              alt=""
-              width={1046}
-              height={1504}
-              sizes="(max-width: 480px) 82vw, 390px"
-              loading="eager"
-            />
-          </div>
-        </div>
-        <div className={styles.shade} aria-hidden="true" />
-        <div className={styles.stage}>
-          <figure className={styles.photo}>
-            <Image
-              src="/home/prabhupada-books.jpg"
-              alt="Śrīla Prabhupāda receiving a stack of books"
-              width={1046}
-              height={1504}
-              sizes="(max-width: 480px) 82vw, 390px"
-              preload
-            />
-          </figure>
-          <div className={styles.copy}>
-            <h1 className="visually-hidden">Brihat Mridanga</h1>
-            <figure className={styles.quote}>
-              <p className={styles.kicker}>Books are the Basis</p>
-              <blockquote>
-                <p>
-                  <span>Distribute books, </span>
-                  <span>Distribute books, </span>
-                  <span>Distribute books.</span>
-                </p>
-              </blockquote>
-              <figcaption className={styles.attribution}>
-                <cite>
-                  His Divine Grace A.C.
-                  <br />
-                  Bhaktivedanta Swami Prabhupada
-                </cite>
-                <span>
-                  Founder-Acharya of the worldwide Hare Krishna Movement
-                </span>
-              </figcaption>
-            </figure>
-            <p className={styles.description}>
-              A shared home for the stories, service and collective efforts of
-              our book distribution community.
-            </p>
-            <div className={styles.actions}>
-              <Link className={`button ${styles.primary}`} href="/dashboard">
-                View Dashboard <ArrowUpRight size={17} />
-              </Link>
-              <Link className={styles.secondary} href="/portal">
-                Submit Distribution <ArrowUpRight size={17} />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <MarathonHero initial={standings} temples={marathonTemples} />
       <div className={styles.content}>
         <section className={styles.offering} id="collective-offering">
           <div className={styles.worldMap} aria-hidden="true">

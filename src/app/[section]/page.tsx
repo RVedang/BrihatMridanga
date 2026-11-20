@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ArrowUpRight } from "lucide-react";
-import { dashboard, dailyScores, publicData, scores } from "@/lib/data";
+import { dashboard, publicData, scores } from "@/lib/data";
 import { annualRange, dateLabel, validateRange } from "@/lib/dates";
 import { PageIntro, Empty } from "@/components/ui";
 import { ContentFilters } from "@/components/content-filters";
@@ -27,7 +27,7 @@ const titles: Record<string, [string, string, string]> = {
   reports: [
     "A record of service",
     "Distribution reports",
-    "Daily, monthly, temple, regional, campaign and year-over-year figures. Filter by campaign, country, temple and center. Recorded points appear in the tables.",
+    "Daily, monthly, temple, regional, campaign and year-over-year figures. Filter by campaign, country, temple and center.",
   ],
   stories: [
     "From our community",
@@ -136,7 +136,7 @@ export default async function Section({
             country: r.country,
             books: Number(r.books),
             sets: Number(r.sets),
-            known_points: Number(r.points),
+            points: Number(r.points),
             incomplete_reports: Number(r.incomplete_reports),
           }))
         : (await scores(
@@ -150,27 +150,7 @@ export default async function Section({
               (!selectedTemple || r.temple_id === selectedTemple.id),
           )
       : [];
-  const days =
-    section === "reports" && !rangeError
-      ? await dailyScores({
-          start,
-          end,
-          campaign: selectedCampaign?.id,
-          country: selectedCountry,
-          temple: selectedTemple?.id,
-          centre: selectedCentre?.id,
-        }).then((rows) =>
-          rows.length
-            ? rows
-            : (dash?.by_day || []).map((r) => ({
-                day: String(r.day).slice(0, 10),
-                books: Number(r.books),
-                sets: Number(r.sets),
-                points: Number(r.points),
-                reports: Number(r.reports),
-              })),
-        )
-      : [];
+  const days = dash?.by_day || [];
   const exportHref = (view: string, format?: string) => {
     const p = new URLSearchParams({ view, start, end });
     if (selectedCampaign) p.set("campaign", selectedCampaign.id);

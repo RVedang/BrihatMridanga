@@ -13,6 +13,7 @@ export type Temple = {
   approved?: boolean;
 };
 export type Campaign = {
+ logo_url?:string;
   id: string;
   name: string;
   description: string;
@@ -24,6 +25,7 @@ export type Campaign = {
   target_books: number | null;
 };
 export type RecordItem = {
+ logo_url?:string;
   id: string;
   name: string;
   temple_id: string;
@@ -50,7 +52,7 @@ export type Score = {
   country: string;
   books: number;
   sets: number;
-  known_points: number;
+  points: number;
   incomplete_reports: number;
 };
 export type Content = {
@@ -78,26 +80,9 @@ export type Content = {
   location: string;
   created_at: string;
 };
-export type Distribution = {
-  id: string;
-  temple_id: string;
-  distributed_on: string;
-  campaign_id: string;
-  centre_id: string | null;
-  individual_id: string | null;
-  team_id: string | null;
-  mode: "detailed" | "total";
-  book_count: number;
-  set_count?: number;
-  points: number | null;
-  version: number;
-  lines: {
-    bookId: string;
-    quantity: number;
-    score: number;
-    category: string;
-    volumes?: number;
-  }[];
+export type WeeklyReport = import("./weekly-distribution").Quantities & {
+ id:string; temple_id:string; week_start:string; submitted_on:string; version:number;
+ pending:number; books:number; sets:number; tags:Record<string,string[]>;
 };
 
 async function loadCentres(client: Awaited<ReturnType<typeof supabase>>) {
@@ -168,52 +153,13 @@ async function loadPublicData() {
 }
 export type DailyScore = Measure & { day: string; reports: number };
 
-export async function dailyScores(
-  filters: DashboardFilters,
-): Promise<DailyScore[]> {
-  if (!isConfigured()) return [];
-  const client = await supabase();
-  const { data, error } = await client.rpc("public_daily_scores", {
-    start_date: filters.start,
-    end_date: filters.end,
-    selected_campaign: filters.campaign || null,
-    selected_country: filters.country || null,
-    selected_temple: filters.temple || null,
-    selected_centre: filters.centre || null,
-  });
-  if (!error)
-    return ((data as DailyScore[]) || []).map((r) => ({
-      ...r,
-      day: String(r.day).slice(0, 10),
-      books: Number(r.books),
-      sets: Number(r.sets),
-      points: Number(r.points),
-      reports: Number(r.reports),
-    }));
-  if (isMissingSchema(error)) return [];
-  throw new Error(`Unable to load daily reports. ${error.message}`);
-}
 export async function scores(
   start: string,
   end: string,
   campaign?: string,
   centre?: string,
 ): Promise<Score[]> {
-  if (!isConfigured()) return [];
-  const client = await supabase();
-  const args: Record<string, string | null> = {
-    start_date: start,
-    end_date: end,
-    selected_campaign: campaign || null,
-  };
-  if (centre) args.selected_centre = centre;
-  const { data, error } = await client.rpc("public_scores_range", args);
-  if (!error) return data as Score[];
-  if (isMissingSchema(error)) {
-    if (centre) return scores(start, end, campaign);
-    return [];
-  }
-  throw new Error(`Unable to load scores. ${error.message}`);
+  return (await dashboard({start,end,campaign,centre}))?.by_temple || [];
 }
 
 export type DashboardFilters = {
@@ -226,8 +172,9 @@ export type DashboardFilters = {
   language?: string;
   category?: string;
 };
-export type Measure = { books: number; sets: number; points: number };
+export type Measure = { books: number; sets: number; points:number };
 export type Dashboard = {
+  weekly: (import("./weekly-distribution").Quantities & { week_start:string; books:number; sets:number; points:number; pending:number; temple_name:string; country:string })[];
   range: { start: string; end: string };
   totals: Measure & {
     reports: number;
@@ -319,11 +266,11 @@ export async function dashboard(
     selected_category: filters.category || null,
   };
   if (filters.centre) args.selected_centre = filters.centre;
-  const first = await client.rpc("public_dashboard", args);
+  const first = await client.rpc("public_weekly_dashboard", args);
   if (!first.error) return first.data as Dashboard;
   if (filters.centre && isMissingSchema(first.error)) {
     delete args.selected_centre;
-    const retry = await client.rpc("public_dashboard", args);
+    const retry = await client.rpc("public_weekly_dashboard", args);
     if (!retry.error) return retry.data as Dashboard;
     if (isMissingSchema(retry.error)) return null;
     throw new Error(`Unable to load the dashboard. ${retry.error.message}`);

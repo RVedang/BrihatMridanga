@@ -1,3 +1,5 @@
+import { marathonName } from "@/lib/marathon";
+import { marathonDirectory } from "@/lib/marathon-data";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { dashboard, publicData, scores, templeTeams } from "@/lib/data";
@@ -81,9 +83,18 @@ export default async function Detail({
     const temple =
       section === "temples" ? data.temples.find((t) => t.id === id) : null;
     if (!annual && !campaign && !temple) notFound();
-    const range = campaign
-      ? { start: campaign.starts_on, end: campaign.ends_on }
-      : annualRange(year);
+    const isMarathon = campaign?.name === marathonName && !campaign.temple_id;
+    const entries = isMarathon ? await marathonDirectory() : [];
+    const starts = entries
+      .flatMap((e) => (e.starts_on ? [e.starts_on] : []))
+      .sort();
+    const ends = entries.flatMap((e) => (e.ends_on ? [e.ends_on] : [])).sort();
+    const range =
+      isMarathon && starts.length
+        ? { start: starts[0], end: ends[ends.length - 1] }
+        : campaign
+          ? { start: campaign.starts_on, end: campaign.ends_on }
+          : annualRange(year);
     let start = query.start || range.start,
       end = query.end || range.end;
     if (campaign) {
@@ -140,22 +151,24 @@ export default async function Detail({
     }
     const campaignWindow =
       !!campaign &&
-      start === campaign.starts_on &&
-      end === campaign.ends_on &&
+      start === range.start &&
+      end === range.end &&
       !centre &&
       !selectedTemple &&
       !selectedCountry &&
       !temple;
     const targetYear = Number(start.slice(0, 4));
     const fullTargetYear =
-      start === `${targetYear}-01-01` && end === `${targetYear}-12-31` && !centre;
+      start === `${targetYear}-01-01` &&
+      end === `${targetYear}-12-31` &&
+      !centre;
     const [allRows, campaignRows, dash, separateYearDash, roster] =
       await Promise.all([
         error || (annual && !campaign)
           ? []
           : scores(start, end, campaign?.id, centre),
         campaign && !error && !campaignWindow
-          ? scores(campaign.starts_on, campaign.ends_on, campaign.id)
+          ? scores(range.start, range.end, campaign.id)
           : null,
         error
           ? null
@@ -223,14 +236,18 @@ export default async function Detail({
         ? !fullTargetYear
           ? separateYearDash
           : dash ||
-          (await dashboard({
-            start: `${targetYear}-01-01`,
-            end: `${targetYear}-12-31`,
-            temple: id,
-          }))
+            (await dashboard({
+              start: `${targetYear}-01-01`,
+              end: `${targetYear}-12-31`,
+              temple: id,
+            }))
         : null;
     return (
-      <div className={section === "campaigns" ? "container campaign-page" : "container"}>
+      <div
+        className={
+          section === "campaigns" ? "container campaign-page" : "container"
+        }
+      >
         <PageIntro
           eyebrow={
             temple
@@ -245,7 +262,7 @@ export default async function Detail({
             temple?.name || campaign?.name || `Whole-Year Marathon ${year}`
           }
           meta={
-            temple
+            temple || isMarathon
               ? undefined
               : `${dateLabel(viewCampaign?.starts_on || range.start)} – ${dateLabel(viewCampaign?.ends_on || range.end)}`
           }
@@ -271,6 +288,23 @@ export default async function Detail({
             "Year-round distribution outside special campaigns. These figures cover the Whole-Year Marathon campaign only."
           )}
         </PageIntro>
+        {isMarathon && (
+          <section className="panel">
+            <h2>Participating temple dates</h2>
+            <dl>
+              {entries.map((entry) => (
+                <div key={entry.temple_id}>
+                  <dt>{entry.name}</dt>
+                  <dd>
+                    {entry.starts_on && entry.ends_on
+                      ? `${dateLabel(entry.starts_on)} – ${dateLabel(entry.ends_on)}`
+                      : "Dates pending"}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        )}
         <DateFilter
           start={start}
           end={end}
@@ -280,7 +314,9 @@ export default async function Detail({
           country={selectedCountry}
           temples={movementWide ? data.temples : undefined}
           temple={selectedTemple}
-          centres={temple || section === "campaigns" ? filterCentres : undefined}
+          centres={
+            temple || section === "campaigns" ? filterCentres : undefined
+          }
           centre={centre}
         />
         {error ? (
@@ -308,10 +344,7 @@ export default async function Detail({
                     : lifetimeRows.reduce((a, r) => a + Number(r.books), 0),
                   sets: dash
                     ? Number(dash.all_time.sets)
-                    : lifetimeRows.reduce(
-                        (a, r) => a + Number(r.sets || 0),
-                        0,
-                      ),
+                    : lifetimeRows.reduce((a, r) => a + Number(r.sets || 0), 0),
                   reports: dash ? Number(dash.all_time.reports) : undefined,
                   firstDate: dash?.all_time.first_date,
                 }}
@@ -322,6 +355,7 @@ export default async function Detail({
                 {viewCampaign && (
                   <CampaignOverview
                     campaign={viewCampaign}
+                    showSharedDates={!isMarathon}
                     temples={data.temples}
                     targets={data.targets}
                     rows={

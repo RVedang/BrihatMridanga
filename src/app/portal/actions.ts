@@ -13,9 +13,10 @@ export async function submitDistribution(
   request: Record<string, unknown>,
 ): Promise<ActionResult> {
   const { client } = await requireActor();
-  const { data, error } = await client.rpc("save_distribution", { request });
+  const { data, error } = await client.rpc("save_weekly_report", { request });
   if (error)
     return { ok: false, message: friendlyError(error, "submitDistribution") };
+  if (data.conflict) return { ok: false, id: data.id, message: "This report already exists or has changed. Open its latest version." };
   revalidatePath("/", "layout");
   return {
     ok: true,
@@ -114,6 +115,11 @@ export async function saveRecord(
     name: text("name"),
     temple_id: templeId,
   };
+  if (["centres","individuals","teams","campaigns"].includes(table) && form.has("logo_url")) {
+    const logo=text("logo_url");
+    if (logo && (!logo.startsWith("https://") || logo.length>2000)) return {ok:false,message:"Enter an HTTPS logo URL."};
+    row.logo_url=logo || null;
+  }
   if (table === "targets") {
     const year = Number(text("year")),
       books = Number(text("books"));

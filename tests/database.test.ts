@@ -3,14 +3,14 @@ import { readFileSync, readdirSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 import test from "node:test";
 import assert from "node:assert/strict";
-test("PostgreSQL reporting, permissions, scoring and date-range integration", async (t) => {
+test("Legacy schema before weekly migration: reporting and permissions", async (t) => {
   const db = new PGlite();
   await db.exec(
     `create schema auth; create role anon; create role authenticated; create table auth.users(id uuid primary key); create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$; grant usage on schema auth,public to anon,authenticated; grant execute on function auth.uid() to anon,authenticated;`,
   );
   // Firebase imports need the production admin account and catalog, so they run only on the live project.
   for (const file of readdirSync("supabase/migrations").sort())
-    if (file.endsWith(".sql") && !file.includes("firebase"))
+    if (file.endsWith(".sql") && !file.includes("firebase") && file < "20261119")
       await db.exec(readFileSync(`supabase/migrations/${file}`, "utf8"));
   const a = randomUUID(),
     b = randomUUID(),

@@ -64,15 +64,13 @@ export function participationCopy(
   const regional = campaign.temple_id
     ? `This is a regional campaign for ${templeName || "one temple"} only. Reports from other temples cannot be filed against it.`
     : "This is a movement-wide campaign. Any participating temple can file reports against it.";
-  const automatic = campaign.fallback_year
-    ? "Leave Campaign as Whole-Year Marathon when publishing. Ordinary distributions outside a special campaign are counted here."
-    : "When publishing a distribution, choose this campaign. The distribution date must fall between the campaign start and end dates.";
+  const automatic = campaign.fallback_year ? "Select the reporting week and add its Whole-Year Marathon campaign." : "Select the reporting week and include this campaign among its participants.";
   return {
     custom,
     steps: [
       "Sign in to the temple portal.",
       automatic,
-      "Enter the books (each volume in a set counts as one book) and publish.",
+      "Enter book and set quantities in their separate categories, then submit.",
       regional,
     ],
   };

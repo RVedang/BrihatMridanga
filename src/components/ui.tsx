@@ -1,3 +1,4 @@
+import {formatPoints} from "@/lib/weekly-distribution";
 import { AnimatedNumber } from "@/components/presentation-motion";
 import { TableScroll } from "@/components/table-scroll";
 import Link from "next/link";
@@ -117,12 +118,12 @@ export function Stats({
         <div>
           <span>Books distributed</span>
           <strong>{connected ? <AnimatedNumber value={count} /> : "—"}</strong>
-          <small>Each volume in a set is one book</small>
+          <small>Magazines and individual books</small>
         </div>
         <div>
           <span>Sets distributed</span>
           <strong>{connected ? <AnimatedNumber value={sets} /> : "—"}</strong>
-          <small>Complete multi-volume sets only</small>
+          <small>Full SB, Full CC and Life Patron Membership sets</small>
         </div>
         <div>
           <span>Reporting temples</span>
@@ -147,8 +148,7 @@ export function Stats({
       </div>
       {incomplete > 0 && (
         <p className="notice">
-          Book totals include total-only submissions. Recorded points remain in
-          the detailed tables and stay incomplete until book details are added.
+          Category breakdown pending for some historical books.
         </p>
       )}
     </>
@@ -233,9 +233,8 @@ export function ScoreTable({ rows }: { rows: Score[] }) {
             <th>Temple</th>
             <th>Country</th>
             <th className="num">Books</th>
-            <th className="num">Sets</th>
-            <th className="num">Recorded points</th>
-            <th>Scoring status</th>
+            <th className="num">Sets</th><th className="num">Points</th>
+            <th>Category breakdown</th>
           </tr>
         </thead>
         <tbody>
@@ -246,11 +245,10 @@ export function ScoreTable({ rows }: { rows: Score[] }) {
               </td>
               <td>{r.country}</td>
               <td className="num">{number(r.books)}</td>
-              <td className="num">{number(r.sets || 0)}</td>
-              <td className="num">{number(r.known_points)}</td>
+              <td className="num">{number(r.sets || 0)}</td><td className="num">{formatPoints(r.points)}</td>
               <td>
                 {Number(r.incomplete_reports) > 0 ? (
-                  <span className="status-pill is-warn">Incomplete</span>
+                  <span className="status-pill is-warn">Pending</span>
                 ) : (
                   <span className="status-pill is-ok">Complete</span>
                 )}

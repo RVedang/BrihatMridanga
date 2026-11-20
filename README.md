@@ -11,7 +11,7 @@ npm ci
 npm run dev
 ```
 
-Visit `http://localhost:3000`. `/preview` provides the working catalog and score calculator without saving reports. Public pages have empty states until a backend contains actual records; demo records are not inserted.
+Visit `http://localhost:3000`. `/preview` provides the weekly category form and running book and set totals without saving reports. Public pages have empty states until a backend contains actual records; demo records are not inserted.
 
 ## Connect a Supabase project
 
@@ -27,13 +27,10 @@ The application uses authenticated Supabase sessions, explicit role checks and R
 
 ## Reporting conventions
 
-- Score = catalog item quantity × the book's listed score. Category is a grouping, not a fixed rate.
-- One set quantity is one set. Book totals add every volume in the set. Set scores are not multiplied by the number of volumes.
-- Total-only reports publish book counts with `points = null`; public results label incomplete scoring.
-- Corrections use the existing report ID, expected version and a reason. The transaction replaces the original contribution. Request IDs prevent a network retry from inserting a second contribution.
-- Each entry belongs to one campaign. Omitted special campaigns use the Whole-Year Marathon for the distribution's calendar year.
-- Start/end filters include both selected dates and use the temple's recorded distribution date. Annual fallback results exclude special-campaign entries, while all-campaign results include them once.
-- Retries are protected; two independently created forms claiming the same event are not automatically identifiable as duplicates. Users must correct existing entries instead of resubmitting the same activity. Aggregate reconciliation/import tooling remains to be built.
+- Each temple submits one report per Monday–Sunday week. Sunday determines its month and year. New weekly-only quantities have no daily distribution date.
+- Books include magazines, the four individual book sizes and any unclassified historical book count. SB, CC and Life Patron membership sets count separately.
+- Coordinators may edit through the same date next month in their temple time zone, clamped to month end. Admins may edit after that date. Concurrent edits must use the latest version.
+- The weekly migrations merge by temple and week and retain historical source attribution. Reapplying them preserves subsequent edits. When an unknown multi-volume edition is encountered, the conversion transaction stops. Record its confirmed category and units per copy in the restricted `weekly_title_mappings` table before rerunning.
 
 ## Checks
 

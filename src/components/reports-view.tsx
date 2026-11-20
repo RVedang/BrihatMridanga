@@ -1,10 +1,18 @@
 "use client";
+import { formatPoints, weeklyCategories } from "@/lib/weekly-distribution";
 import { useState } from "react";
 import Link from "next/link";
 import { FileSpreadsheet, FileText, Table } from "lucide-react";
-import type { Campaign, Dashboard, DailyScore, RecordItem, Score, Temple } from "@/lib/data";
+import type {
+  Campaign,
+  Dashboard,
+  DailyScore,
+  RecordItem,
+  Score,
+  Temple,
+} from "@/lib/data";
 import { dateLabel, monthLabel } from "@/lib/dates";
-import { Empty, number, ScoreTable, Stats } from "@/components/ui";
+import { number, ScoreTable, Stats } from "@/components/ui";
 import { TableScroll } from "@/components/table-scroll";
 import { CampaignSelect } from "@/components/campaign-select";
 import { Select } from "@/components/select";
@@ -42,7 +50,9 @@ export function ReportFilters({
   const centresShown = centres.filter((c) => {
     if (templeId) return c.temple_id === templeId;
     if (!countryName) return true;
-    return temples.some((t) => t.id === c.temple_id && t.country === countryName);
+    return temples.some(
+      (t) => t.id === c.temple_id && t.country === countryName,
+    );
   });
   return (
     <form
@@ -81,9 +91,7 @@ export function ReportFilters({
           name="temple"
           searchable
           placeholder="All temples"
-          value={
-            templesShown.some((t) => t.id === templeId) ? templeId : ""
-          }
+          value={templesShown.some((t) => t.id === templeId) ? templeId : ""}
           onChange={(e) => {
             setTempleId(e.target.value);
             setCentreId("");
@@ -104,9 +112,7 @@ export function ReportFilters({
           name="centre"
           searchable
           placeholder="All centers"
-          value={
-            centresShown.some((c) => c.id === centreId) ? centreId : ""
-          }
+          value={centresShown.some((c) => c.id === centreId) ? centreId : ""}
           onChange={(e) => setCentreId(e.target.value)}
         >
           {centresShown.map((c) => (
@@ -173,7 +179,11 @@ export function ReportsView({
   const months = dash?.by_month || [];
   const years = dash?.by_year || [];
   const campaigns = dash?.by_campaign || [];
-  const movementCampaigns = fillCampaignRows(catalogCampaigns, campaigns, false);
+  const movementCampaigns = fillCampaignRows(
+    catalogCampaigns,
+    campaigns,
+    false,
+  );
   const regionalCampaigns = fillCampaignRows(catalogCampaigns, campaigns, true);
   const countries = dash?.by_country || [];
   return (
@@ -198,6 +208,30 @@ export function ReportsView({
           <h2>Global summary</h2>
         </div>
         <Stats rows={rows} connected={connected} />
+      </section>
+      <section className="report-panel">
+        <h2>Weekly distributions</h2>
+        <ReportTable
+          columns={[
+            "Temple",
+            "Week beginning",
+            ...weeklyCategories.map((c) => c[1]),
+            "Total books distributed",
+            "Total sets distributed",
+            "Points",
+            "Category breakdown pending",
+          ]}
+          rows={(dash?.weekly || []).map((r) => [
+            r.temple_name,
+            r.week_start,
+            ...weeklyCategories.map(([k]) => number(r[k])),
+            number(r.books),
+            number(r.sets),
+            formatPoints(r.points),
+            number(r.pending),
+          ])}
+          empty="No weekly reports in this period."
+        />
       </section>
       <section className="report-panel" id="yoy">
         <div className="report-panel-head">
@@ -233,18 +267,13 @@ export function ReportsView({
               </div>
             </div>
             <ReportTable
-              columns={[
-                "Year",
-                "Books",
-                "Sets",
-                "Recorded points",
-                "Reports",
-              ]}
+              columns={["Year", "Books", "Sets", "Points", "Reports"]}
               rows={years.map((r) => [
                 String(r.year),
                 number(Number(r.books)),
                 number(Number(r.sets)),
-                number(Number(r.points)),
+                formatPoints(r.points),
+
                 number(Number(r.reports)),
               ])}
               empty="No yearly figures yet."
@@ -263,20 +292,14 @@ export function ReportsView({
           <h2>Regional summaries</h2>
         </div>
         <ReportTable
-          columns={[
-            "Country",
-            "Temples",
-            "Books",
-            "Sets",
-            "Recorded points",
-            "Reports",
-          ]}
+          columns={["Country", "Temples", "Books", "Sets", "Points", "Reports"]}
           rows={countries.map((r) => [
             r.country,
             number(Number(r.temples)),
             number(Number(r.books)),
             number(Number(r.sets)),
-            number(Number(r.points)),
+            formatPoints(r.points),
+
             number(Number(r.reports)),
           ])}
           empty="No country figures for this filter."
@@ -295,12 +318,13 @@ export function ReportsView({
           <h2>Daily reports</h2>
         </div>
         <ReportTable
-          columns={["Date", "Books", "Sets", "Recorded points", "Reports"]}
+          columns={["Date", "Books", "Sets", "Points", "Reports"]}
           rows={days.map((r) => [
             dateLabel(String(r.day).slice(0, 10)),
             number(Number(r.books)),
             number(Number(r.sets)),
-            number(Number(r.points)),
+            formatPoints(r.points),
+
             number(Number(r.reports)),
           ])}
           empty="No daily reports in this range."
@@ -312,12 +336,13 @@ export function ReportsView({
           <h2>Monthly reports</h2>
         </div>
         <ReportTable
-          columns={["Month", "Books", "Sets", "Recorded points", "Reports"]}
+          columns={["Month", "Books", "Sets", "Points", "Reports"]}
           rows={months.map((r) => [
             monthLabel(r.month),
             number(Number(r.books)),
             number(Number(r.sets)),
-            number(Number(r.points)),
+            formatPoints(r.points),
+
             number(Number(r.reports)),
           ])}
           empty="No monthly reports in this range."
@@ -328,8 +353,16 @@ export function ReportsView({
           <div>
             <p className="eyebrow">By campaign</p>
             <h2>Campaign reports</h2>
+            <p>
+              When a week names several campaigns, its totals appear under each
+              participating campaign. The temple total counts the week once.
+            </p>
           </div>
-          <div className="campaign-kind-toggle" role="group" aria-label="Campaign type">
+          <div
+            className="campaign-kind-toggle"
+            role="group"
+            aria-label="Campaign type"
+          >
             <button
               type="button"
               aria-pressed={campaignKind === "movement"}
@@ -384,6 +417,7 @@ function fillCampaignRows(
         books: 0,
         sets: 0,
         points: 0,
+
         reports: 0,
         temples: 0,
       }
@@ -425,7 +459,8 @@ function CampaignReportTable({
                 {showTemple ? null : <th className="num">Temples</th>}
                 <th className="num">Books</th>
                 <th className="num">Sets</th>
-                <th className="num">Recorded points</th>
+                <th className="num">Points</th>
+
                 <th className="num">Reports</th>
               </tr>
             </thead>
@@ -453,7 +488,8 @@ function CampaignReportTable({
                   )}
                   <td className="num">{number(Number(r.books))}</td>
                   <td className="num">{number(Number(r.sets))}</td>
-                  <td className="num">{number(Number(r.points))}</td>
+                  <td className="num">{formatPoints(r.points)}</td>
+
                   <td className="num">{number(Number(r.reports))}</td>
                 </tr>
               ))}

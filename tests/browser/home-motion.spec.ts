@@ -5,8 +5,13 @@ test("recent testimonials render on phones and desktop", async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/");
     const section = page.locator(".home-testimonials");
-    await expect(section.getByRole("heading", { name: "Recent testimonials" })).toBeVisible();
-    expect(await section.locator("a:visible").count(), `width ${width}`).toBeGreaterThan(0);
+    await expect(
+      section.getByRole("heading", { name: "Recent testimonials" }),
+    ).toBeVisible();
+    expect(
+      await section.locator("a:visible").count(),
+      `width ${width}`,
+    ).toBeGreaterThan(0);
   }
 });
 
@@ -46,20 +51,42 @@ test("homepage motion fits each viewport and reduced motion cancels it", async (
     .toBe(0);
 });
 
-test("hero has sequential text entrances and stationary photograph", async ({
+test("hero slides rotate, pause on hover, and omit dashboard and submission actions", async ({
   page,
 }) => {
+  await page.clock.install();
   await page.goto("/");
-  const hero = page.locator('section[aria-label="Our inspiration"]');
-  const quote = hero.locator("blockquote p span");
-  const delays = await quote.evaluateAll((elements) =>
-    elements.map((el) => getComputedStyle(el).animationDelay),
+  const hero = page.getByRole("region", {
+    name: "Book distribution marathon carousel",
+  });
+  await expect(
+    hero.getByRole("heading", { name: "60 Days of Bliss" }),
+  ).toBeVisible();
+  await hero.getByRole("heading", { name: "60 Days of Bliss" }).hover();
+  await page.clock.runFor(6000);
+  await expect(
+    hero.getByRole("heading", { name: "60 Days of Bliss" }),
+  ).toBeVisible();
+  await page.mouse.move(0, 0);
+  await page.clock.runFor(5100);
+  await expect(
+    hero.getByRole("heading", { name: "Live Weekly Standings" }),
+  ).toBeVisible();
+  await hero.getByRole("button", { name: "Next slide" }).click();
+  await expect(hero.locator("blockquote")).toContainText(
+    "simply holds if and sees it",
   );
-  expect(new Set(delays).size).toBe(3);
-  const photo = hero.locator(
-    'img[alt="Śrīla Prabhupāda receiving a stack of books"]',
+  await expect(hero.locator("figcaption")).toContainText(
+    "Letter to German Disciples — Bombay, May 06, 1977",
   );
-  expect(await photo.evaluate((el) => getComputedStyle(el).animationName)).toBe(
-    "none",
+  await expect(hero.getByRole("link", { name: "View Dashboard" })).toHaveCount(
+    0,
   );
+  await expect(
+    hero.getByRole("link", { name: "Submit Distribution" }),
+  ).toHaveCount(0);
+  await hero.getByRole("button", { name: "Marathon Announcement" }).click();
+  await expect(
+    hero.getByRole("heading", { name: "60 Days of Bliss" }),
+  ).toBeVisible();
 });

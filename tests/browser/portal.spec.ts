@@ -1,8 +1,4 @@
-import { test, expect, type Page } from "@playwright/test";
-async function chooseBook(page: Page, row: number, id: string) {
-  await page.locator(".book-line").nth(row - 1).locator(".nice-select-trigger").click();
-  await page.getByRole("option", { name: new RegExp(`^#${id} ·`) }).click();
-}
+import { test, expect } from "@playwright/test";
 test("public navigation and campaign date range preserve scope", async ({
   page,
 }) => {
@@ -34,32 +30,11 @@ test("public navigation and campaign date range preserve scope", async ({
   await expect(page.getByRole("main")).toContainText("10 Mar 2025");
   expect(errors).toEqual([]);
 });
-test("catalog calculator handles sets, exact points and total-only incomplete state", async ({
-  page,
-}) => {
-  await page.goto("/preview");
-  await chooseBook(page, 1, "290");
-  await page
-    .getByRole("spinbutton", { name: "Quantity 1", exact: true })
-    .fill("2");
-  await expect(page.locator(".summary-box")).toContainText("72");
-  await expect(page.locator(".summary-box strong").first()).toHaveText("36");
-  await page.getByRole("button", { name: "Add another book" }).click();
-  await chooseBook(page, 2, "167");
-  await page
-    .getByRole("spinbutton", { name: "Quantity 2", exact: true })
-    .fill("3");
-  await expect(page.locator(".summary-box")).toContainText("72.3");
-  await expect(page.locator(".summary-box strong").first()).toHaveText("39");
-  await page
-    .getByRole("button", { name: "Total count only", exact: true })
-    .click();
-  await page.getByLabel("Total items distributed").fill("250");
-  await expect(page.locator(".summary-box strong").first()).toHaveText("250");
-  await expect(page.locator(".summary-box")).toContainText("Incomplete");
-  await expect(
-    page.getByRole("button", { name: "Publish distribution" }),
-  ).toHaveCount(0);
+test("weekly preview counts books and sets separately",async({page})=>{
+ await page.goto("/preview");await page.getByLabel(/Small Books/).fill("5");await page.getByLabel("Full SB Sets").fill("1");
+ await expect(page.locator("[aria-live=polite]")).toContainText("Total books distributed 5 · Total sets distributed 1");
+ await expect(page.locator("[aria-live=polite]")).toContainText("Points 37.25");
+ await expect(page.getByText(/total count only/i)).toHaveCount(0);
 });
 test("mobile navigation, forms and date filters fit the viewport", async ({
   page,

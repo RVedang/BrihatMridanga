@@ -9,6 +9,7 @@ import { dateLabel } from "@/lib/dates";
 
 export function CampaignOverview({
   campaign,
+  showSharedDates = true,
   temples,
   targets,
   rows,
@@ -16,6 +17,7 @@ export function CampaignOverview({
   dash,
 }: {
   campaign: Campaign;
+  showSharedDates?:boolean;
   temples: Temple[];
   targets: Target[];
   rows: Score[];
@@ -87,7 +89,7 @@ export function CampaignOverview({
           <div className="chart-card">
             <Progress
               label={goal.label}
-              sub={`${dateLabel(campaign.starts_on)} – ${dateLabel(campaign.ends_on)} · Books distributed toward the target`}
+              sub={showSharedDates?`${dateLabel(campaign.starts_on)} – ${dateLabel(campaign.ends_on)} · Books distributed toward the target`:"Books distributed toward the target"}
               value={achieved}
               target={goal.books}
             />

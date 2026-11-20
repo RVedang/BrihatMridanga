@@ -1,10 +1,17 @@
-import { categoryLabel } from "@/lib/catalog";
-import { scores, dashboard, publicData, type Campaign, type Dashboard } from "@/lib/data";
+import { formatPoints, weeklyCategories } from "@/lib/weekly-distribution";
+import { weeklyCategoryLabels } from "@/lib/weekly-distribution";
+import {
+  scores,
+  dashboard,
+  publicData,
+  type Campaign,
+  type Dashboard,
+} from "@/lib/data";
 import { todayIn, validateRange } from "@/lib/dates";
 import { cellsToPdf } from "@/lib/report-pdf";
 
 const uuid = /^[0-9a-f-]{36}$/i;
-const categories = ["small", "medium", "big", "m-big"];
+const categories = Object.keys(weeklyCategoryLabels);
 const EARLIEST_EXPORT = "2000-01-01";
 
 export async function GET(request: Request) {
@@ -16,7 +23,10 @@ export async function GET(request: Request) {
     return new Response("Invalid date range", { status: 400 });
   }
   const latestYear = Number(todayIn().slice(0, 4)) + 1;
-  if (range.start < EARLIEST_EXPORT || Number(range.end.slice(0, 4)) > latestYear)
+  if (
+    range.start < EARLIEST_EXPORT ||
+    Number(range.end.slice(0, 4)) > latestYear
+  )
     return new Response(
       `Exports cover ${EARLIEST_EXPORT.slice(0, 4)} to ${latestYear}. Choose a date range within those years.`,
       { status: 400 },
@@ -25,9 +35,8 @@ export async function GET(request: Request) {
     temple = q.get("temple") || undefined,
     centre = q.get("centre") || undefined,
     country = (q.get("country") || "").slice(0, 120) || undefined,
-    language = (q.get("language") || "").slice(0, 60) || undefined,
     category = q.get("category") || undefined,
-    view = q.get("view") || "temples",
+    view = q.get("view") || "weekly",
     format = q.get("format") || "csv",
     spreadsheet = format === "xls",
     pdf = format === "pdf";
@@ -40,7 +49,7 @@ export async function GET(request: Request) {
   if (category && !categories.includes(category))
     return new Response("Invalid book type", { status: 400 });
 
-  const filtered = Boolean(temple || centre || country || language || category);
+  const filtered = Boolean(temple || centre || country || category);
   const dash = await dashboard({
     start: range.start,
     end: range.end,
@@ -48,7 +57,7 @@ export async function GET(request: Request) {
     temple,
     centre,
     country,
-    language,
+
     category,
   });
   let cells: unknown[][];
@@ -63,7 +72,8 @@ export async function GET(request: Request) {
         "Country",
         "Books",
         "Sets",
-        "Recorded points",
+        "Points",
+
         "Incomplete reports",
         "Start date (inclusive)",
         "End date (inclusive)",
@@ -73,7 +83,8 @@ export async function GET(request: Request) {
         r.country,
         r.books,
         r.sets || 0,
-        r.known_points,
+        formatPoints(r.points),
+
         r.incomplete_reports,
         range.start,
         range.end,
@@ -88,8 +99,8 @@ export async function GET(request: Request) {
       range.start,
       range.end,
       country || "",
-      language || "",
-      category ? categoryLabel(category) : "",
+
+      category ? weeklyCategoryLabels[category] : "",
     ];
     cells = [
       [
@@ -97,7 +108,7 @@ export async function GET(request: Request) {
         "Start date (inclusive)",
         "End date (inclusive)",
         "Country filter",
-        "Language filter",
+
         "Book type filter",
       ],
       ...rows.map((r) => [...r, ...scope]),
@@ -144,6 +155,8 @@ function excelXml(cells: unknown[][]) {
     const numeric =
       Number.isFinite(n) &&
       (typeof v === "number" || String(v).trim() === String(n));
+    if (typeof v === "string" && /^\d+\.\d{2}$/.test(v))
+      return `<Cell ss:StyleID="points"><Data ss:Type="Number">${v}</Data></Cell>`;
     if (numeric) return `<Cell><Data ss:Type="Number">${n}</Data></Cell>`;
     let s = String(v);
     if (/^[=+@\-\t\r]/.test(s)) s = "'" + s;
@@ -157,14 +170,33 @@ function excelXml(cells: unknown[][]) {
     `<?mso-application progid="Excel.Sheet"?>` +
     `<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" ` +
     `xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">` +
+    `<Styles><Style ss:ID="points"><NumberFormat ss:Format="0.00"/></Style></Styles>` +
     `<Worksheet ss:Name="Reports"><Table>${rows}</Table></Worksheet>` +
     `</Workbook>`
   );
 }
 
 type Table = (d: Dashboard) => [string[], unknown[][]];
-const measure = ["Books", "Sets", "Recorded points"];
+const measure = ["Total books distributed", "Total sets distributed", "Points"];
 const tables: Record<string, Table> = {
+  weekly: (d) => [
+    [
+      "Temple",
+      "Week beginning",
+      ...weeklyCategories.map((c) => c[1]),
+      ...measure,
+      "Category breakdown pending",
+    ],
+    d.weekly.map((r) => [
+      r.temple_name,
+      r.week_start,
+      ...weeklyCategories.map(([k]) => r[k]),
+      r.books,
+      r.sets,
+      formatPoints(r.points),
+      r.pending,
+    ]),
+  ],
   temples: (d) => [
     ["Rank", "Temple", "Country", ...measure, "Reports", "Incomplete reports"],
     d.by_temple.map((r, i) => [
@@ -173,7 +205,8 @@ const tables: Record<string, Table> = {
       r.country,
       r.books,
       r.sets,
-      r.points,
+      formatPoints(r.points),
+
       r.reports,
       r.incomplete_reports,
     ]),
@@ -185,7 +218,8 @@ const tables: Record<string, Table> = {
       r.country,
       r.books,
       r.sets,
-      r.points,
+      formatPoints(r.points),
+
       r.temples,
       r.reports,
     ]),
@@ -199,22 +233,28 @@ const tables: Record<string, Table> = {
       r.country,
       r.books,
       r.sets,
-      r.points,
+      formatPoints(r.points),
+
       r.reports,
     ]),
   ],
   categories: (d) => [
     ["Book type", ...measure],
     d.by_category.map((r) => [
-      categoryLabel(r.category),
+      weeklyCategoryLabels[r.category],
       r.books,
       r.sets,
-      r.points,
+      formatPoints(r.points),
     ]),
   ],
   languages: (d) => [
     ["Language", ...measure],
-    d.by_language.map((r) => [r.language, r.books, r.sets, r.points]),
+    d.by_language.map((r) => [
+      r.language,
+      r.books,
+      r.sets,
+      formatPoints(r.points),
+    ]),
   ],
   teams: (d) => [
     ["Rank", "Team", "Temple", "Country", ...measure, "Reports"],
@@ -225,7 +265,8 @@ const tables: Record<string, Table> = {
       r.country,
       r.books,
       r.sets,
-      r.points,
+      formatPoints(r.points),
+
       r.reports,
     ]),
   ],
@@ -238,21 +279,40 @@ const tables: Record<string, Table> = {
       r.country,
       r.books,
       r.sets,
-      r.points,
+      formatPoints(r.points),
+
       r.reports,
     ]),
   ],
   monthly: (d) => [
     ["Month", ...measure, "Reports"],
-    d.by_month.map((r) => [r.month, r.books, r.sets, r.points, r.reports]),
+    d.by_month.map((r) => [
+      r.month,
+      r.books,
+      r.sets,
+      formatPoints(r.points),
+      r.reports,
+    ]),
   ],
   yearly: (d) => [
     ["Year", ...measure, "Reports"],
-    d.by_year.map((r) => [r.year, r.books, r.sets, r.points, r.reports]),
+    d.by_year.map((r) => [
+      r.year,
+      r.books,
+      r.sets,
+      formatPoints(r.points),
+      r.reports,
+    ]),
   ],
   daily: (d) => [
     ["Date", ...measure, "Reports"],
-    (d.by_day || []).map((r) => [r.day, r.books, r.sets, r.points, r.reports]),
+    (d.by_day || []).map((r) => [
+      r.day,
+      r.books,
+      r.sets,
+      formatPoints(r.points),
+      r.reports,
+    ]),
   ],
   campaigns: (d) => [
     ["Type", "Campaign", "Temple", "Temples", ...measure, "Reports"],
@@ -263,7 +323,8 @@ const tables: Record<string, Table> = {
       r.temples,
       r.books,
       r.sets,
-      r.points,
+      formatPoints(r.points),
+
       r.reports,
     ]),
   ],
@@ -300,6 +361,7 @@ function campaignRows(
         books: 0,
         sets: 0,
         points: 0,
+
         reports: 0,
         temples: 0,
       },
@@ -333,7 +395,8 @@ function campaignGroups(
         r.temples,
         r.books,
         r.sets,
-        r.points,
+        formatPoints(r.points),
+
         r.reports,
       ]),
     ] as [string[], unknown[][]],
@@ -344,7 +407,8 @@ function campaignGroups(
         names[r.temple_id || ""] || "",
         r.books,
         r.sets,
-        r.points,
+        formatPoints(r.points),
+
         r.reports,
       ]),
     ] as [string[], unknown[][]],
@@ -362,6 +426,7 @@ function workbook(
     ["Measure", "Value"],
     ["Books", d.totals.books],
     ["Sets", d.totals.sets],
+    ["Points", formatPoints(d.totals.points)],
     ["Temples", d.totals.temples],
     ["Countries", d.totals.countries],
     [],
@@ -369,7 +434,9 @@ function workbook(
     ["Measure", "This period", "Previous period"],
     ["Books", d.totals.books, d.previous.books],
     ["Sets", d.totals.sets, d.previous.sets],
+    ["Points", formatPoints(d.totals.points), formatPoints(d.previous.points)],
     [],
+    ...section("Weekly distributions", tables.weekly(d)),
     ...section("Regional summaries", tables.countries(d)),
     ...section("Temple performance", tables.temples(d)),
     ...section("Daily reports", tables.daily(d)),

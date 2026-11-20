@@ -36,11 +36,8 @@ test("admin portal tabs load and fit a phone screen", async ({ page }) => {
 test("report form calculates totals without publishing", async ({ page }) => {
   await signIn(page);
   await page.goto("/portal");
-  await page.getByRole("button", { name: "Total count only", exact: true }).click();
-  await page.getByLabel("Total items distributed").fill("12");
-  await expect(page.locator(".summary-box strong").first()).toHaveText("12");
-  await expect(page.locator(".summary-box")).toContainText("Incomplete");
-  await expect(page.getByRole("button", { name: "Publish distribution" })).toBeEnabled();
+  await page.getByLabel(/Small Books/).fill("12");
+  await expect(page.locator("p[aria-live=polite]")).toContainText("Total books distributed");
 });
 
 test("temple editor shows approval to admins", async ({ page }) => {
@@ -70,14 +67,14 @@ test("submission history shows totals and filters by date", async ({ page }) => 
   await signIn(page);
   await page.goto("/portal?tab=history");
   const summary = page.getByRole("region", { name: "Totals for these submissions" });
-  await expect(summary.getByText("Books distributed")).toBeVisible();
+  await expect(summary).toContainText("matching weekly reports");
   await expect(page.getByRole("form", { name: "History filters" })).toBeVisible();
   await page.screenshot({ path: "test-results/history-desktop.png" });
 
   await page.goto("/portal?tab=history&start=2026-01-01&end=2026-12-31");
   await expect(summary.getByText(/1 Jan 2026/)).toBeVisible();
   const dates = await page
-    .locator(".history-board > .history-table tbody tr td:first-child")
+    .locator("table tbody tr td:nth-child(2)")
     .allTextContents();
   for (const d of dates)
     if (/^\d{4}-/.test(d)) expect(d >= "2026-01-01" && d <= "2026-12-31").toBe(true);

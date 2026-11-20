@@ -2,20 +2,23 @@ import Link from "next/link";
 import { isConfigured } from "@/lib/supabase";
 import { requireActor } from "@/lib/auth";
 import { PageIntro, Empty } from "@/components/ui";
+import { marathonDirectory } from "@/lib/marathon-data";
+import { MarathonDatesForm } from "@/components/marathon-dates-form";
 import {
-  SubmissionHistory,
-  type HistoryTotalsRow as HistoryRow,
-} from "@/components/submission-history";
-import { PeriodLocks, type PeriodLock } from "@/components/period-locks";
+  distributionPoints,
+  formatPoints,
+  weeklyCategories,
+} from "@/lib/weekly-distribution";
+import { reportingMonday } from "@/lib/weekly-distribution";
+import { dateLabel, validDate, todayIn } from "@/lib/dates";
 import { ReportForm } from "@/components/report-form";
 import { RecordForms } from "@/components/record-forms";
-import catalog from "@/data/books.json";
-import { normalizeBooks, type Book } from "@/lib/catalog";
+
 import type {
   Temple,
   Campaign,
   RecordItem,
-  Distribution,
+  WeeklyReport,
   Content,
   Target,
   MonthlyTarget,
@@ -33,6 +36,7 @@ export default async function Portal({
   searchParams: Promise<{
     tab?: string;
     edit?: string;
+    week?: string;
     page?: string;
     start?: string;
     end?: string;
@@ -43,10 +47,7 @@ export default async function Portal({
   if (!isConfigured())
     return (
       <div className="container">
-        <PageIntro
-          eyebrow="Temple portal"
-          title="Temple Portal"
-        >
+        <PageIntro eyebrow="Temple portal" title="Temple Portal">
           A shared space to record distributions and care for your temple’s
           service.
         </PageIntro>
@@ -71,38 +72,26 @@ export default async function Portal({
   );
   const historyFrom = (historyPage - 1) * HISTORY_PAGE;
   const historyTo = historyFrom + HISTORY_PAGE - 1;
-  const isDate = (v?: string) =>
-    v && /^\d{4}-\d{2}-\d{2}$/.test(v) ? v : "";
-  const isId = (v?: string) =>
-    v && /^[0-9a-f-]{36}$/i.test(v) ? v : "";
-  const historyFilter = {
-    start: isDate(query.start),
-    end: isDate(query.end),
-    campaign: isId(query.campaign),
-    temple: profile.role === "admin" ? isId(query.temple) : "",
-  };
-  type Filterable = {
-    eq(column: string, value: string): Filterable;
-    gte(column: string, value: string): Filterable;
-    lte(column: string, value: string): Filterable;
-  };
-  const scoped = <Q,>(query: Q): Q => {
-    let q = query as unknown as Filterable;
-    if (profile.role !== "admin")
-      q = q.eq("temple_id", profile.temple_id || "");
-    if (historyFilter.temple) q = q.eq("temple_id", historyFilter.temple);
-    if (historyFilter.campaign) q = q.eq("campaign_id", historyFilter.campaign);
-    if (historyFilter.start) q = q.gte("distributed_on", historyFilter.start);
-    if (historyFilter.end) q = q.lte("distributed_on", historyFilter.end);
-    return q as unknown as Q;
-  };
-  const reportsQuery = scoped(
-    client
-      .from("distributions")
-      .select("*", { count: "exact" })
-      .order("distributed_on", { ascending: false })
-      .order("updated_at", { ascending: false }),
-  );
+  let reportsQuery = client
+    .from("weekly_reports")
+    .select("*", { count: "exact" })
+    .order("week_start", { ascending: false })
+    .order("temple_id");
+  if (query.start && validDate(query.start))
+    reportsQuery = reportsQuery.gte("week_start", query.start);
+  if (query.end && validDate(query.end))
+    reportsQuery = reportsQuery.lte("week_start", query.end);
+  if (query.temple && profile.role === "admin")
+    reportsQuery = reportsQuery.eq("temple_id", query.temple);
+  const historyHref = (page: number) =>
+    "/portal?" +
+    new URLSearchParams({
+      tab: "history",
+      page: String(page),
+      start: query.start || "",
+      end: query.end || "",
+      temple: query.temple || "",
+    });
   const [
     templesR,
     campaignsR,
@@ -110,7 +99,6 @@ export default async function Portal({
     individualsR,
     teamsR,
     reportsR,
-    booksR,
     contentR,
     targetsR,
     monthlyTargetsR,
@@ -126,7 +114,6 @@ export default async function Portal({
     client.from("individuals").select("*"),
     client.from("teams").select("*, team_members(individual_id)"),
     reportsQuery.range(historyFrom, historyTo),
-    client.from("books").select("*").order("name"),
     client
       .from("content")
       .select("*")
@@ -162,79 +149,60 @@ export default async function Portal({
     centres = own(centresR.data as RecordItem[]),
     individuals = own(individualsR.data as RecordItem[]),
     teams = own(
-      ((teamsLoaded.data || []) as (RecordItem & {
-        team_members?: { individual_id: string }[];
-      })[]).map((team) => ({
+      (
+        (teamsLoaded.data || []) as (RecordItem & {
+          team_members?: { individual_id: string }[];
+        })[]
+      ).map((team) => ({
         ...team,
         member_ids: (team.team_members || []).map((m) => m.individual_id),
       })),
     ),
-    reports = own((reportsR.data || []) as Distribution[]),
+    reports = own((reportsR.data || []) as WeeklyReport[]),
     reportCount = reportsR.count ?? reports.length,
-    books = normalizeBooks(booksR.data, catalog as Book[]),
     content = own(contentR.data as Content[]),
     // Targets table arrives with the dashboard migration; tolerate its absence.
     targets = (targetsR.error ? [] : (targetsR.data as Target[])).filter(
       (g) => profile.role === "admin" || g.temple_id === profile.temple_id,
     ),
     monthlyTargets = (
-      monthlyTargetsR.error
-        ? []
-        : (monthlyTargetsR.data as MonthlyTarget[])
+      monthlyTargetsR.error ? [] : (monthlyTargetsR.data as MonthlyTarget[])
     ).filter(
       (g) => profile.role === "admin" || g.temple_id === profile.temple_id,
     );
-  const historyRows: HistoryRow[] = [];
-  if (query.tab === "history") {
-    const batches = await Promise.all(
-      Array.from({ length: Math.ceil(reportCount / 1000) }, (_, i) =>
-        scoped(
-          client
-            .from("distributions")
-            .select("distributed_on,book_count,set_count,points")
-            .order("id"),
-        ).range(i * 1000, i * 1000 + 999),
-      ),
-    );
-    for (const { data, error } of batches) {
-      if (error) throw new Error("Unable to load report totals");
-      historyRows.push(...((data || []) as HistoryRow[]));
-    }
-  }
-  const periodLocks: PeriodLock[] =
-    profile.role === "admin" && query.tab === "temples"
-      ? (
-          await client
-            .from("period_locks")
-            .select("temple_id,month")
-            .order("month", { ascending: false })
-        ).data || []
-      : [];
-  let existing: Distribution | undefined;
-  if (query.edit) {
-    const { data, error } = await client
-      .from("distributions")
-      .select("*")
-      .eq("id", query.edit)
-      .single();
-    if (error) throw new Error("Report is not available");
-    if (
-      profile.role !== "admin" &&
-      data.temple_id !== profile.temple_id
-    )
-      throw new Error("Report is not available");
-    existing = data;
+  const selectedTemple =
+    temples.find((t) => t.id === query.temple) || temples[0];
+  const monday = reportingMonday(todayIn(selectedTemple?.timezone));
+  const week =
+    query.week && validDate(query.week) ? reportingMonday(query.week) : monday;
+  let existing: WeeklyReport | undefined;
+  if (query.edit || selectedTemple) {
+    const lookup = client.from("weekly_reports").select("*");
+    const result = await (
+      query.edit
+        ? lookup.eq("id", query.edit)
+        : lookup.eq("temple_id", selectedTemple.id).eq("week_start", week)
+    ).maybeSingle();
+    if (result.error || (query.edit && !result.data))
+      throw new Error("Report unavailable");
+    existing = result.data || undefined;
   }
   const requested = query.tab === "stories" ? "content" : query.tab || "enter";
   const tab =
-    requested === "temples" && profile.role !== "admin"
-      ? "records"
-      : requested;
+    requested === "temples" && profile.role !== "admin" ? "records" : requested;
+  const marathonEntries =
+    tab === "marathon"
+      ? (await marathonDirectory()).filter(
+          (entry) =>
+            profile.role === "admin" || entry.temple_id === profile.temple_id,
+        )
+      : [];
   const areas = [
     ["enter", "/portal", "Enter distribution"],
     ["history", "/portal?tab=history", "Submission history"],
     ["records", "/portal?tab=records", "Individuals & teams"],
     ["campaigns", "/portal?tab=campaigns", "Campaigns"],
+    ["marathon", "/portal?tab=marathon", "Marathon dates"],
     ["targets", "/portal?tab=targets", "Targets"],
     ["content", "/portal?tab=content", "Content"],
     ...(profile.role === "admin"
@@ -274,54 +242,126 @@ export default async function Portal({
           </Link>
         ))}
       </nav>
-      {query.tab === "history" ? (
-        <SubmissionHistory
-          admin={profile.role === "admin"}
-          reports={reports}
-          totalsRows={historyRows}
-          reportCount={reportCount}
-          page={historyPage}
-          pageSize={HISTORY_PAGE}
-          filter={historyFilter}
-          temples={temples}
-          campaigns={campaigns}
-          centres={centres}
-          individuals={individuals}
-          teams={teams}
-        />
+      {tab === "marathon" ? (
+        <section className="panel">
+          <h2>Book Distribution Marathon 2026 dates</h2>
+          {marathonEntries.map((entry) => (
+            <MarathonDatesForm key={entry.temple_id} entry={entry} />
+          ))}{" "}
+        </section>
+      ) : query.tab === "history" ? (
+        <div className="panel">
+          <h2>Weekly submission history</h2>
+          <form aria-label="History filters" className="filter-bar">
+            <input type="hidden" name="tab" value="history" />
+            <label>
+              Week beginning from
+              <input type="date" name="start" defaultValue={query.start} />
+            </label>
+            <label>
+              Through
+              <input type="date" name="end" defaultValue={query.end} />
+            </label>
+            {profile.role === "admin" && (
+              <label>
+                Temple
+                <select name="temple" defaultValue={query.temple}>
+                  <option value="">All temples</option>
+                  {temples.map((t) => (
+                    <option value={t.id} key={t.id}>
+                      {t.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
+            <button>Apply filters</button>
+            <Link href="/portal?tab=history">Clear filters</Link>
+          </form>
+          <section aria-label="Totals for these submissions">
+            <p>
+              {reportCount} matching weekly reports{" "}
+              {query.start &&
+                validDate(query.start) &&
+                "from " + dateLabel(query.start)}
+            </p>
+          </section>
+          <div style={{ overflowX: "auto" }}>
+            <table>
+              <thead>
+                <tr>
+                  {[
+                    "Temple",
+                    "Reporting week",
+                    ...weeklyCategories.map((c) => c[1]),
+                    "Total books distributed",
+                    "Total sets distributed",
+                    "Points",
+                    "Category breakdown pending",
+                  ].map((h) => (
+                    <th key={h}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {reports.map((r) => (
+                  <tr key={r.id}>
+                    <td>{temples.find((t) => t.id === r.temple_id)?.name}</td>
+                    <td>
+                      <Link href={"/portal?edit=" + r.id}>{r.week_start}</Link>
+                    </td>
+                    {weeklyCategories.map(([k]) => (
+                      <td key={k}>{r[k]}</td>
+                    ))}
+                    <td>{r.books}</td>
+                    <td>{r.sets}</td>
+                    <td>{formatPoints(distributionPoints(r))}</td>
+                    <td>{r.pending}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {historyPage > 1 && (
+            <Link href={historyHref(historyPage - 1)}>Previous </Link>
+          )}
+          {historyFrom + HISTORY_PAGE < reportCount && (
+            <Link href={historyHref(historyPage + 1)}>Next</Link>
+          )}
+        </div>
       ) : ["records", "campaigns", "content", "temples", "targets"].includes(
           tab,
         ) ? (
         <>
-        <RecordForms
-          key={tab}
-          tab={tab}
-          admin={profile.role === "admin"}
-          temples={temples}
-          individuals={individuals}
-          teams={teams}
-          centres={centres}
-          targets={targets}
-          monthlyTargets={monthlyTargets}
-          campaigns={campaigns.filter(
-            (c) =>
-              !c.fallback_year &&
-              (profile.role === "admin" || c.temple_id === profile.temple_id),
-          )}
-          content={content.filter(
-            (c) =>
-              profile.role === "admin" || c.temple_id === profile.temple_id,
-          )}
-        />
-        {tab === "temples" && profile.role === "admin" && (
-          <PeriodLocks temples={temples} locks={periodLocks} />
-        )}
+          <RecordForms
+            key={tab}
+            tab={tab}
+            admin={profile.role === "admin"}
+            temples={temples}
+            individuals={individuals}
+            teams={teams}
+            centres={centres}
+            targets={targets}
+            monthlyTargets={monthlyTargets}
+            campaigns={campaigns.filter(
+              (c) =>
+                !c.fallback_year &&
+                (profile.role === "admin" || c.temple_id === profile.temple_id),
+            )}
+            content={content.filter(
+              (c) =>
+                profile.role === "admin" || c.temple_id === profile.temple_id,
+            )}
+          />
         </>
       ) : (
         <ReportForm
-          key={existing?.id || "new"}
+          key={[existing?.id, existing?.version, week, selectedTemple?.id].join(
+            "-",
+          )}
           existing={existing}
-          books={books}
+          initialWeek={existing?.week_start || week}
+          templeId={existing?.temple_id || selectedTemple?.id}
           temples={temples}
           campaigns={campaigns}
           centres={centres}

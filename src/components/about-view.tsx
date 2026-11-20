@@ -132,7 +132,7 @@ export function AboutView({ temples }: { temples: Temple[] }) {
             <li>
               <h3>One movement</h3>
               <p>
-                The platform is cared for as one movement: temples, scoring,
+                The platform is cared for as one movement: temples, reporting,
                 shared content and corrections wherever they are needed.
               </p>
             </li>

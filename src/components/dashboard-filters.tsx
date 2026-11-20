@@ -8,7 +8,7 @@ import { shiftDate, todayIn } from "@/lib/dates";
 import { Select } from "@/components/select";
 import { DateField } from "@/components/date-field";
 import { CampaignSelect } from "@/components/campaign-select";
-import { categoryLabels } from "@/lib/catalog";
+import { weeklyCategoryLabels } from "@/lib/weekly-distribution";
 
 export function DashboardFilterForm({
   filters,
@@ -17,7 +17,6 @@ export function DashboardFilterForm({
   temples,
   centres,
   countries,
-  languages,
   active,
 }: {
   filters: DashboardFilters;
@@ -26,7 +25,6 @@ export function DashboardFilterForm({
   temples: Temple[];
   centres: RecordItem[];
   countries: string[];
-  languages: string[];
   active: number;
 }) {
   const [open, setOpen] = useState(false);
@@ -205,21 +203,10 @@ export function DashboardFilterForm({
             />
           </label>
           <label>
-            Language
-            <Select name="language" defaultValue={filters.language || ""}>
-              <option value="">All languages</option>
-              {languages.map((l) => (
-                <option key={l} value={l}>
-                  {l}
-                </option>
-              ))}
-            </Select>
-          </label>
-          <label>
             Book type
             <Select name="category" defaultValue={filters.category || ""}>
               <option value="">All book types</option>
-              {Object.entries(categoryLabels).map(([k, v]) => (
+              {Object.entries(weeklyCategoryLabels).map(([k, v]) => (
                 <option key={k} value={k}>
                   {v}
                 </option>

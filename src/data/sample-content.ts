@@ -110,7 +110,7 @@ export const sampleResources: Content[] = [
     "resource",
     "Reporting checklist for temples",
     "English",
-    "Before publishing a distribution: confirm the date at the temple, choose the campaign, add book lines where possible, and use a correction on the same report if you later add details. This keeps books, sets and points aligned on the public dashboard.",
+    "Select the reporting week and enter the quantities for each category. Update the same weekly report to correct a quantity.",
   ),
 ];
 
