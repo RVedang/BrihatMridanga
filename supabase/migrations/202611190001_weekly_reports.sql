@@ -105,7 +105,22 @@ begin
 end $$;
 revoke all on function public.save_weekly_report(jsonb) from public,anon;
 grant execute on function public.save_weekly_report(jsonb) to authenticated;
-revoke execute on function public.public_scores(integer),public.public_scores_range(date,date,uuid,uuid),public.public_daily_scores(date,date,uuid,text,uuid,uuid) from public,anon,authenticated;
+-- Older production databases still have the three-argument score function.
+-- Revoke whichever historical signatures are present during the cutover.
+do $$
+declare signature text;
+begin
+  foreach signature in array array[
+    'public.public_scores(integer)',
+    'public.public_scores_range(date,date,uuid)',
+    'public.public_scores_range(date,date,uuid,uuid)',
+    'public.public_daily_scores(date,date,uuid,text,uuid,uuid)'
+  ] loop
+    if to_regprocedure(signature) is not null then
+      execute 'revoke execute on function ' || signature || ' from public,anon,authenticated';
+    end if;
+  end loop;
+end $$;
 alter table public.centres add column if not exists logo_url text check(logo_url ~ '^https://' and length(logo_url)<=2000);
 alter table public.individuals add column if not exists logo_url text check(logo_url ~ '^https://' and length(logo_url)<=2000);
 alter table public.teams add column if not exists logo_url text check(logo_url ~ '^https://' and length(logo_url)<=2000);

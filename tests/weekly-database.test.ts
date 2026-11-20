@@ -63,6 +63,8 @@ test("weekly cutover, replay, weekly reporting and database authorization", asyn
         "select sum((l->>'quantity')::int)::int sets from distributions d cross join lateral jsonb_array_elements(d.lines) l join books b on b.id=l->>'bookId' where b.volumes>1 and b.id not in ('298','legacy-lilamrita-mr')",
       )
     ).rows[0];
+    // Production retained the older three-argument overload after the legacy migrations.
+    await db.exec("drop function public.public_scores_range(date,date,uuid,uuid); create function public.public_scores_range(date,date,uuid) returns integer language sql as $$ select 1 $$; grant execute on function public.public_scores_range(date,date,uuid) to anon,authenticated;");
     const migrations = files.filter((f) => f.startsWith("20261119"));
     await apply(migrations[0]);
     await db.exec(
@@ -71,6 +73,10 @@ test("weekly cutover, replay, weekly reporting and database authorization", asyn
     await assert.rejects(apply(migrations[1]), /Unclassified historical title/);
     await db.exec("rollback");
     for (const f of migrations) await apply(f);
+    assert.equal(
+      (await db.query<{ allowed: boolean }>("select has_function_privilege('anon','public.public_scores_range(date,date,uuid)','EXECUTE') as allowed")).rows[0].allowed,
+      false,
+    );
     const summary = async () =>
       (
         await db.query<Record<string, number>>(
