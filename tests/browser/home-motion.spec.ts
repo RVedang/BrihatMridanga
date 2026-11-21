@@ -60,12 +60,12 @@ test("hero slides rotate, pause on hover, and omit dashboard and submission acti
     name: "Book distribution marathon carousel",
   });
   await expect(
-    hero.getByRole("heading", { name: "60 Days of Bliss" }),
+    hero.getByRole("heading", { name: "Welcome to the Srila Prabhupada Book Marathon" }),
   ).toBeVisible();
-  await hero.getByRole("heading", { name: "60 Days of Bliss" }).hover();
+  await hero.getByRole("heading", { name: "Welcome to the Srila Prabhupada Book Marathon" }).hover();
   await page.clock.runFor(6000);
   await expect(
-    hero.getByRole("heading", { name: "60 Days of Bliss" }),
+    hero.getByRole("heading", { name: "Welcome to the Srila Prabhupada Book Marathon" }),
   ).toBeVisible();
   await page.mouse.move(0, 0);
   await page.clock.runFor(5100);
@@ -87,6 +87,6 @@ test("hero slides rotate, pause on hover, and omit dashboard and submission acti
   ).toHaveCount(0);
   await hero.getByRole("button", { name: "Marathon Announcement" }).click();
   await expect(
-    hero.getByRole("heading", { name: "60 Days of Bliss" }),
+    hero.getByRole("heading", { name: "Welcome to the Srila Prabhupada Book Marathon" }),
   ).toBeVisible();
 });

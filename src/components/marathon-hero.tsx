@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { createClient } from "@supabase/supabase-js";
 import {
   nearestTemple,
@@ -17,9 +17,6 @@ const titles = [
   "Live Weekly Standings",
   "Śrīla Prabhupāda Quote",
 ];
-const quote =
-  "Be assured that there is no more direct way to preach than to distribute Krsna conscious books. Whoever gets a book is benefitted. If he reads the book he is benefitted still more, or if he gives the book to someone else for reading, both he and the other person is benefitted. Even if one does not read the book but simply holds if and sees it, he is benefitted. If he simply gives small donation towards the work of Krsna consciousness he is benefitted. And anyone who distributes these transcendental literatures, he is also benefitted.";
-
 export function MarathonHero({
   initial,
   temples,
@@ -148,6 +145,7 @@ export function MarathonHero({
       <div
         className={styles.stage}
         data-announcement={active === 0 || undefined}
+        data-quote={active === 2 || undefined}
         onTouchStart={(e) => {
           const p = e.touches[0];
           touch.current = { x: p.clientX, y: p.clientY };
@@ -166,21 +164,26 @@ export function MarathonHero({
           {active === 0 ? (
             <div className={styles.announcement}>
               <div className={styles.announcementCopy}>
-                <p className={styles.kicker}>Welcome to the Marathon</p>
                 <h1>
-                  60 Days <em>of Bliss</em>
+                  <span className={styles.welcomeLine}>Welcome to the</span>
+                  <span className={styles.nameLine}>Srila Prabhupada</span>
+                  <span className={styles.marathonLine}>Book Marathon</span>
                 </h1>
-                <p>60-day book distribution marathon</p>
+                <p className={styles.tagline}>60 Days of Bliss</p>
                 <div className={styles.ctas}>
-                  <Link className="button" href="/participating-temples">
+                  <Link
+                    className={styles.templeAction}
+                    href="/participating-temples"
+                  >
                     Participating Temples
                   </Link>
                   <button
-                    className="button secondary"
+                    className={styles.contactAction}
                     type="button"
                     onClick={locate}
                   >
                     Contact Nearest Centre
+                    <ArrowUpRight size={15} aria-hidden="true" />
                   </button>
                 </div>
               </div>
@@ -234,17 +237,34 @@ export function MarathonHero({
             </div>
           ) : (
             <div className={styles.quote}>
-              <p>Books are the Basis</p>
-              <figure>
-                <span className={styles.quoteMark} aria-hidden="true">
-                  “
-                </span>
-                <blockquote>{quote}</blockquote>
-                <figcaption>
-                  <strong>Śrīla Prabhupāda</strong>
-                  <span>Letter to German Disciples — Bombay, May 06, 1977</span>
-                </figcaption>
-              </figure>
+              <div className={styles.quotePhoto}>
+                <img
+                  src="/home/prabhupada-reading-quote.jpg"
+                  alt="Śrīla Prabhupāda reading a book at his desk"
+                />
+              </div>
+              <div className={styles.quoteCopy}>
+                <p>Books are the Basis</p>
+                <figure>
+                  <span className={styles.quoteMark} aria-hidden="true">
+                    “
+                  </span>
+                  <blockquote>
+                    Whoever gets a book is benefitted. If he <strong>reads the
+                    book</strong> he is benefitted still more, or if he <strong>
+                    gives the book</strong> to someone else for reading, both he
+                    and the other person is benefitted. Even if one does not read
+                    the book but <strong>simply holds</strong> if and sees it, he
+                    is benefitted. If he <strong>simply gives small donation
+                    </strong> towards the work of Krsna consciousness <strong>he
+                    is benefitted</strong>.
+                  </blockquote>
+                  <figcaption>
+                    <strong>Śrīla Prabhupāda</strong>
+                    <span>Letter to German Disciples — Bombay, May 06, 1977</span>
+                  </figcaption>
+                </figure>
+              </div>
             </div>
           )}
         </div>
