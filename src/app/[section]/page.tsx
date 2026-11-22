@@ -269,7 +269,9 @@ export default async function Section({
                 placeholder="Temple, city or country"
               />
             </label>
-            <button className="button">Search</button>
+            <button className="button" type="submit">
+              Search
+            </button>
           </form>
           <div className="place-grid">
             {data.temples

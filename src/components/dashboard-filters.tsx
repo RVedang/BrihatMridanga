@@ -217,7 +217,7 @@ export function DashboardFilterForm({
             <button className="button" type="submit">
               Apply filters
             </button>
-            <Link href="/dashboard" className="text-link">
+            <Link href="/dashboard" className="button secondary">
               Reset
             </Link>
           </div>

@@ -731,6 +731,32 @@ form.nav-login .button,
   font-size: 11px;
   margin: 0 0 4px;
 }
+:is(.filter-bar, .filters-form) .button {
+  min-height: 50px;
+  border-radius: 12px;
+  padding: 0 18px;
+  font-size: 14px;
+}
+:is(.filter-bar, .filters-form) .button[type="submit"] {
+  background: var(--brand-accent);
+  border-color: var(--brand-accent);
+}
+:is(.filter-bar, .filters-form) .button[type="submit"]:hover {
+  background: #94192d;
+  border-color: #94192d;
+}
+:is(.filter-bar, .filters-form) .button.secondary {
+  background: white;
+  border-color: var(--line);
+}
+:is(.filter-bar, .filters-form) .button.secondary:hover {
+  background: var(--wash);
+  border-color: #b8b7b6;
+}
+:is(.filter-bar, .filters-form) .button:focus-visible {
+  outline: 2px solid var(--brand-accent);
+  outline-offset: 3px;
+}
 .date-range {
   display: flex;
   flex-direction: column;
@@ -1885,7 +1911,8 @@ table small {
 .history-filter-actions {
   display: flex;
   align-items: center;
-  gap: 18px;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 .history-summary {
   margin-bottom: 20px;
@@ -1912,6 +1939,12 @@ table small {
   }
   .history-dates .date-range-fields .date-field {
     min-width: 0;
+    flex: 1;
+  }
+  .history-filter-actions {
+    flex: 1 1 100%;
+  }
+  .history-filter-actions .button {
     flex: 1;
   }
 }

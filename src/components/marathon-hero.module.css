@@ -364,10 +364,8 @@
   color: #a7593d;
 }
 .quote blockquote strong {
-  color: #4d2c21;
+  color: #851338;
   font-weight: 700;
-  background: linear-gradient(transparent 66%, #eecb94 66%);
-  box-decoration-break: clone;
 }
 .quote figcaption {
   display: grid;

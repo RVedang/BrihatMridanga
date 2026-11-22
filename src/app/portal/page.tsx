@@ -280,8 +280,14 @@ export default async function Portal({
                 </Select>
               </div>
             )}
-            <button>Apply filters</button>
-            <Link href="/portal?tab=history">Clear filters</Link>
+            <div className="history-filter-actions">
+              <button className="button" type="submit">
+                Apply filters
+              </button>
+              <Link href="/portal?tab=history" className="button secondary">
+                Clear filters
+              </Link>
+            </div>
           </form>
           <section aria-label="Totals for these submissions">
             <p>

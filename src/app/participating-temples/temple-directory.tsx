@@ -10,6 +10,7 @@ export function TempleDirectory({ temples }: { temples: MarathonTemple[] }) {
   const [search, setSearch] = useState("");
   const [country, setCountry] = useState("");
   const [selectedName, setSelectedName] = useState("");
+  const [expandedName, setExpandedName] = useState("");
   const countries = [
     ...new Set(temples.map((temple) => temple.country)),
   ].sort();
@@ -113,6 +114,7 @@ export function TempleDirectory({ temples }: { temples: MarathonTemple[] }) {
               {visible.map((temple) => (
                 <li key={temple.name}>
                   <button
+                    className={styles.desktopToggle}
                     type="button"
                     aria-pressed={selected === temple}
                     onClick={() => setSelectedName(temple.name)}
@@ -120,8 +122,35 @@ export function TempleDirectory({ temples }: { temples: MarathonTemple[] }) {
                     {temple.name}
                     <ChevronRight size={16} aria-hidden="true" />
                   </button>
-                  {selected === temple && (
-                    <div className={styles.mobileProfile}>{profile}</div>
+                  <button
+                    className={styles.mobileToggle}
+                    type="button"
+                    aria-expanded={expandedName === temple.name}
+                    onClick={() => setExpandedName((name) => name === temple.name ? "" : temple.name)}
+                  >
+                    {temple.name}
+                    <ChevronRight size={16} aria-hidden="true" />
+                  </button>
+                  {expandedName === temple.name && (
+                    <div className={styles.mobileProfile}>
+                      {temple.spoc && (
+                        <div>
+                          <small className={styles.contactPersonLabel}>Contact person</small>
+                          <strong>{contactName(temple.spoc)}</strong>
+                        </div>
+                      )}
+                      {temple.email && (
+                        <a href={`mailto:${temple.email}`}>
+                          <Mail size={15} aria-hidden="true" />{temple.email}
+                        </a>
+                      )}
+                      {temple.phone && (
+                        <a href={phoneLink(temple)}>
+                          <Phone size={15} aria-hidden="true" />Call {temple.phone}
+                        </a>
+                      )}
+                      {!temple.email && !temple.phone && "Contact details pending"}
+                    </div>
                   )}
                 </li>
               ))}

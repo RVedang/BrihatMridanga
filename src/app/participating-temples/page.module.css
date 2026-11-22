@@ -181,6 +181,7 @@
   outline: 2px solid #89314b;
   outline-offset: -3px;
 }
+.index .mobileToggle,
 .mobileProfile {
   display: none;
 }
@@ -288,17 +289,45 @@
   .browser {
     display: block;
   }
-  .mobileProfile .profile {
-    margin: 0.35rem 0 0.75rem;
+  .navigator {
+    max-height: none;
+    overflow: visible;
+    scrollbar-gutter: auto;
   }
+  .index .desktopToggle,
   .desktopProfile {
     display: none;
   }
-  .mobileProfile {
-    display: block;
-    background: #fffcf7;
+  .index .mobileToggle {
+    display: flex;
   }
-  .index button[aria-pressed="true"] svg {
+  .mobileProfile {
+    display: grid;
+    gap: 0.15rem;
+    padding: 0.1rem 1rem 0.65rem;
+    font-size: 0.92rem;
+    overflow-wrap: anywhere;
+  }
+  .contactPersonLabel {
+    display: block;
+    color: #71584f;
+    font-size: 0.8rem;
+  }
+  .mobileProfile a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2rem;
+    color: #74273d;
+  }
+  .mobileProfile svg {
+    flex: none;
+  }
+  .mobileToggle[aria-expanded="true"] {
+    color: #78263a;
+    font-weight: 700;
+  }
+  .index button[aria-expanded="true"] svg {
     transform: rotate(90deg);
   }
 }
