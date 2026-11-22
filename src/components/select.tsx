@@ -61,8 +61,8 @@ function chosenLabel(
   const labels = ids
     .map((id) => options.find((option) => option.value === id)?.label)
     .filter(Boolean) as string[];
-  if (labels.length <= 2) return labels.join(", ");
-  return `${labels.length} members selected`;
+  if (labels.length <= 2) return labels.join(", ") || placeholder;
+  return `${labels.length} selected`;
 }
 
 type Props = Omit<
@@ -105,6 +105,7 @@ export function Select({
   const listId = `${generated}-list`;
   const searchId = `${generated}-search`;
   const wrap = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -126,7 +127,7 @@ export function Select({
   const triggerText = multiple
     ? chosenLabel(selectedValues, listed, placeholder || "Select")
     : current?.label || placeholder || "Select";
-  const isPlaceholder = multiple ? selectedValues.length === 0 : !selected;
+  const isPlaceholder = multiple ? selectedValues.length === 0 : !current;
 
   useEffect(() => {
     if (value !== undefined) setInner(String(value));
@@ -145,11 +146,15 @@ export function Select({
       if (!wrap.current?.contains(e.target as Node)) setOpen(false);
     };
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        if (wrap.current?.contains(document.activeElement))
+          triggerRef.current?.focus({ preventScroll: true });
+        setOpen(false);
+      }
     };
     document.addEventListener("mousedown", onDoc);
     document.addEventListener("keydown", onKey);
-    if (searchable) setTimeout(() => searchRef.current?.focus(), 0);
+    if (searchable) searchRef.current?.focus({ preventScroll: true });
     return () => {
       document.removeEventListener("mousedown", onDoc);
       document.removeEventListener("keydown", onKey);
@@ -167,6 +172,7 @@ export function Select({
     }
     setInner(next);
     setOpen(false);
+    triggerRef.current?.focus({ preventScroll: true });
     onChange?.({
       target: { value: next, name: name || "" },
     } as unknown as Parameters<NonNullable<typeof onChange>>[0]);
@@ -216,6 +222,7 @@ export function Select({
         ))}
       </select>
       <button
+        ref={triggerRef}
         type="button"
         className="nice-select-trigger"
         id={`${triggerId}-trigger`}
@@ -224,14 +231,13 @@ export function Select({
         aria-expanded={open}
         aria-controls={listId}
         aria-label={ariaLabel}
-        aria-multiselectable={multiple || undefined}
         onClick={() => !disabled && setOpen((v) => !v)}
       >
         <span className={isPlaceholder ? "placeholder" : ""}>{triggerText}</span>
         <ChevronDown size={16} strokeWidth={1.8} />
       </button>
       {open && (
-        <div className="nice-select-panel" id={listId} role="listbox">
+        <div className="nice-select-panel">
           {searchable && (
             <div className="nice-select-search">
               <Search size={14} />
@@ -250,14 +256,19 @@ export function Select({
               />
             </div>
           )}
-          <ul>
+          <ul
+            id={listId}
+            role="listbox"
+            aria-labelledby={`${triggerId}-trigger`}
+            aria-multiselectable={multiple || undefined}
+          >
             {shown.length ? (
               shown.map((option) => {
                 const active = multiple
                   ? selectedValues.includes(option.value)
                   : option.value === selected;
                 return (
-                  <li key={option.value || "empty"}>
+                  <li key={option.value || "empty"} role="presentation">
                     <button
                       type="button"
                       role="option"

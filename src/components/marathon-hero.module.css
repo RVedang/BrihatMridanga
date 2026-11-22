@@ -454,7 +454,9 @@
     gap: 0.1rem 0.85rem;
   }
   .artworkFrame {
-    inset: 16rem 0 0;
+    /* Keep the books at the same scale and let the slide crop the extra rock. */
+    --artwork-drop: 1.25rem;
+    inset: calc(16rem + var(--artwork-drop)) 0 calc(-1 * var(--artwork-drop));
     width: 100%;
   }
   .artwork {

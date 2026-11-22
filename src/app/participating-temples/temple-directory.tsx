@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronRight, Mail, MapPin, Phone, Search } from "lucide-react";
 import { useState } from "react";
 import { Select } from "@/components/select";
 import { contactName, phoneLink, type MarathonTemple } from "@/lib/marathon";
@@ -8,6 +9,7 @@ import styles from "./page.module.css";
 export function TempleDirectory({ temples }: { temples: MarathonTemple[] }) {
   const [search, setSearch] = useState("");
   const [country, setCountry] = useState("");
+  const [selectedName, setSelectedName] = useState("");
   const countries = [
     ...new Set(temples.map((temple) => temple.country)),
   ].sort();
@@ -23,17 +25,61 @@ export function TempleDirectory({ temples }: { temples: MarathonTemple[] }) {
     )
     .sort((a, b) => a.name.localeCompare(b.name));
 
+  const selected =
+    visible.find((temple) => temple.name === selectedName) ?? visible[0];
+  const profile = selected && (
+    <section className={styles.profile} aria-label={selected.name}>
+      <header>
+        <p>
+          <MapPin size={16} aria-hidden="true" />
+          {[selected.city, selected.country].filter(Boolean).join(", ")}
+        </p>
+        <h2>{selected.name}</h2>
+      </header>
+      <div className={styles.contact}>
+        {selected.spoc && (
+          <p>
+            <span>Contact person</span>
+            <strong>{contactName(selected.spoc)}</strong>
+          </p>
+        )}
+        {selected.email && (
+          <a href={`mailto:${selected.email}`}>
+            <Mail size={18} aria-hidden="true" />
+            <span>
+              <small>Email</small>
+              {selected.email}
+            </span>
+          </a>
+        )}
+        {selected.phone && (
+          <a href={phoneLink(selected)}>
+            <Phone size={18} aria-hidden="true" />
+            <span>
+              <small>Call</small>
+              {selected.phone}
+            </span>
+          </a>
+        )}
+        {!selected.email && !selected.phone && "Contact details pending"}
+      </div>
+    </section>
+  );
+
   return (
     <div className={styles.directory}>
       <div className={styles.filters}>
         <label>
           <span>Search temples</span>
-          <input
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            placeholder="Temple, city or contact"
-            type="search"
-          />
+          <span className={styles.searchBox}>
+            <Search size={18} aria-hidden="true" />
+            <input
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Temple, city or contact"
+              type="search"
+            />
+          </span>
         </label>
         <fieldset className={styles.countryFilter}>
           <legend>Country</legend>
@@ -55,41 +101,37 @@ export function TempleDirectory({ temples }: { temples: MarathonTemple[] }) {
         </p>
       </div>
 
-      <div className={styles.tableWrap}>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th scope="col">Temple</th>
-              <th scope="col">Location</th>
-              <th scope="col">Contact</th>
-              <th scope="col">Reach out</th>
-            </tr>
-          </thead>
-          <tbody>
-            {visible.map((temple) => (
-              <tr key={temple.name}>
-                <th scope="row">{temple.name}</th>
-                <td>
-                  {temple.city}, {temple.country}
-                </td>
-                <td>{temple.spoc ? contactName(temple.spoc) : "—"}</td>
-                <td className={styles.links}>
-                  {temple.email && (
-                    <a href={`mailto:${temple.email}`}>{temple.email}</a>
+      {selected ? (
+        <div className={styles.browser}>
+          <div
+            className={styles.navigator}
+            role="region"
+            aria-label="Temple list"
+            tabIndex={0}
+          >
+            <ul className={styles.index} aria-label="Temples">
+              {visible.map((temple) => (
+                <li key={temple.name}>
+                  <button
+                    type="button"
+                    aria-pressed={selected === temple}
+                    onClick={() => setSelectedName(temple.name)}
+                  >
+                    {temple.name}
+                    <ChevronRight size={16} aria-hidden="true" />
+                  </button>
+                  {selected === temple && (
+                    <div className={styles.mobileProfile}>{profile}</div>
                   )}
-                  {temple.phone && (
-                    <a href={phoneLink(temple)}>{temple.phone}</a>
-                  )}
-                  {!temple.email && !temple.phone && "Contact details pending"}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {visible.length === 0 && (
-          <p className={styles.noResults}>No temples match your search.</p>
-        )}
-      </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className={styles.desktopProfile}>{profile}</div>
+        </div>
+      ) : (
+        <p className={styles.noResults}>No temples match your search.</p>
+      )}
     </div>
   );
 }

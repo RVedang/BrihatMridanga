@@ -13,6 +13,7 @@ import { reportingMonday } from "@/lib/weekly-distribution";
 import { dateLabel, validDate, todayIn } from "@/lib/dates";
 import { ReportForm } from "@/components/report-form";
 import { RecordForms } from "@/components/record-forms";
+import { Select } from "@/components/select";
 
 import type {
   Temple,
@@ -252,7 +253,7 @@ export default async function Portal({
       ) : query.tab === "history" ? (
         <div className="panel">
           <h2>Weekly submission history</h2>
-          <form aria-label="History filters" className="filter-bar">
+          <form aria-label="History filters" className="filter-bar history-filters">
             <input type="hidden" name="tab" value="history" />
             <label>
               Week beginning from
@@ -263,17 +264,21 @@ export default async function Portal({
               <input type="date" name="end" defaultValue={query.end} />
             </label>
             {profile.role === "admin" && (
-              <label>
-                Temple
-                <select name="temple" defaultValue={query.temple}>
+              <div className="weekly-report-select">
+                <label htmlFor="history-temple-trigger">Temple</label>
+                <Select
+                  id="history-temple"
+                  name="temple"
+                  defaultValue={query.temple}
+                >
                   <option value="">All temples</option>
                   {temples.map((t) => (
                     <option value={t.id} key={t.id}>
                       {t.name}
                     </option>
                   ))}
-                </select>
-              </label>
+                </Select>
+              </div>
             )}
             <button>Apply filters</button>
             <Link href="/portal?tab=history">Clear filters</Link>

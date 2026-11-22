@@ -1,6 +1,9 @@
 import "server-only";
 import { isConfigured, supabase } from "./supabase";
-import { plannedMarathonTemples } from "./marathon-planned-temples";
+import {
+  hkmMumbaiContact,
+  plannedMarathonTemples,
+} from "./marathon-planned-temples";
 import type { MarathonTemple, Standing } from "./marathon";
 export type MarathonEntry = MarathonTemple & {
   temple_id: string;
@@ -15,7 +18,17 @@ export async function marathonDirectory(): Promise<MarathonEntry[]> {
     .select("*")
     .order("name");
   if (error && error.code !== "PGRST205") throw error;
-  return data || [];
+  // Serve the corrected contact while the data migration is pending.
+  return (data || []).map((temple: MarathonEntry) =>
+    temple.name === "HKM Mumbai" &&
+    temple.city === "Mumbai" &&
+    temple.country === "India" &&
+    temple.spoc === "Gaurmandal Prabhu" &&
+    temple.email === "gmnd@hkmmumbai.org" &&
+    temple.phone === "9784592103"
+      ? { ...temple, ...hkmMumbaiContact }
+      : temple,
+  );
 }
 export async function marathonPublicDirectory(): Promise<MarathonTemple[]> {
   const saved = await marathonDirectory();

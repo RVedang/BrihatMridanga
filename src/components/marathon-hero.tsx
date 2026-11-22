@@ -32,13 +32,17 @@ export function MarathonHero({
   const [contact, setContact] = useState<MarathonTemple>();
   const dialog = useRef<HTMLDialogElement>(null);
   const touch = useRef<{ x: number; y: number } | null>(null);
+  const resumeAfterHover = useRef(false);
   const router = useRouter();
   const refresh = useRef<() => void>(() => {});
   useEffect(() => {
     if (hover || focused) return;
     const timer = window.setTimeout(
-      () => setActive((n) => (n + 1) % 3),
-      active === 2 ? 15000 : 5000,
+      () => {
+        resumeAfterHover.current = false;
+        setActive((n) => (n + 1) % 3);
+      },
+      resumeAfterHover.current ? 2500 : 5000,
     );
     return () => window.clearTimeout(timer);
   }, [active, restart, hover, focused]);
@@ -101,6 +105,7 @@ export function MarathonHero({
   }, [standings.refreshAt]);
 
   function go(index: number) {
+    resumeAfterHover.current = false;
     setActive((index + 3) % 3);
     setRestart((n) => n + 1);
   }
@@ -136,8 +141,13 @@ export function MarathonHero({
       onPointerEnter={(e) => {
         if (e.pointerType === "mouse") setHover(true);
       }}
-      onPointerLeave={() => setHover(false)}
-      onFocus={() => setFocused(true)}
+      onPointerLeave={(e) => {
+        if (e.pointerType !== "mouse") return;
+        resumeAfterHover.current = true;
+        setFocused(false);
+        setHover(false);
+      }}
+      onFocus={(e) => setFocused(e.target.matches(":focus-visible"))}
       onBlur={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget)) setFocused(false);
       }}

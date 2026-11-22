@@ -1680,6 +1680,29 @@ table small {
 .workspace-form .nice-select {
   margin-top: 10px;
 }
+.weekly-report-select {
+  min-width: 0;
+}
+.workspace .weekly-report-select > .nice-select {
+  margin-top: 10px;
+}
+.history-filters .weekly-report-select {
+  flex: 1 1 13rem;
+}
+.weekly-report-fields {
+  display: grid;
+  gap: 20px;
+  min-inline-size: 0;
+  margin: 24px 0 0;
+  padding: 0;
+  border: 0;
+}
+.weekly-report-fields > p {
+  margin: 0;
+}
+.weekly-report-fields > .button {
+  justify-self: start;
+}
 .workspace .nice-select-trigger,
 .workspace .history-filters .nice-select-trigger,
 .workspace .history-filters .date-field-trigger,
@@ -1712,6 +1735,24 @@ table small {
 .workspace-form .date-field-trigger[aria-expanded="true"] {
   background: white;
   border-color: #ddc3c8;
+}
+.weekly-report-select .nice-select-trigger:focus-visible {
+  outline-offset: 2px;
+}
+.weekly-report-select .nice-select-trigger[aria-expanded="true"] {
+  box-shadow: 0 0 0 3px #ae1e3518;
+}
+.weekly-report-select .nice-select-panel {
+  border-color: #e7dcd8;
+  border-radius: 12px;
+  box-shadow: 0 12px 28px #482d231a;
+}
+.weekly-report-select .nice-select-panel button:focus-visible {
+  outline-offset: -2px;
+}
+.weekly-report-select .nice-select-search:focus-within {
+  background: var(--paper);
+  border-bottom-color: #ddc3c8;
 }
 .workspace .segmented,
 .workspace-form .segmented {
@@ -1865,6 +1906,7 @@ table small {
 }
 @media (max-width: 700px) {
   .history-filters label,
+  .history-filters .weekly-report-select,
   .history-dates {
     flex: 1 1 100%;
   }

@@ -1,5 +1,11 @@
 import type { MarathonTemple } from "./marathon";
 
+export const hkmMumbaiContact = {
+  spoc: "Shreesha Govind Dasa",
+  email: "srgd@hkmmumbai.org",
+  phone: "9967800542",
+};
+
 // The supplied 2026 roster also appears in the marathon database migration.
 export const plannedMarathonTemples: MarathonTemple[] = [
   {
@@ -88,9 +94,7 @@ export const plannedMarathonTemples: MarathonTemple[] = [
     "country": "India",
     "lat": 19.07283,
     "lon": 72.88261,
-    "spoc": "Gaurmandal Prabhu",
-    "email": "gmnd@hkmmumbai.org",
-    "phone": "9784592103"
+    ...hkmMumbaiContact
   },
   {
     "name": "HKM Vijayawada",

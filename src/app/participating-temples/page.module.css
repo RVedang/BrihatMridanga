@@ -108,55 +108,160 @@
   text-align: right;
 }
 
-.tableWrap {
-  border: 1px solid #e5ddd3;
-  border-radius: 0.75rem;
-  overflow: hidden;
-  background: white;
+.searchBox {
+  position: relative;
+  display: block;
 }
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
+.searchBox svg {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #856d62;
 }
-
-.table thead {
-  background: #f6f1e9;
-  color: #67584f;
-  font-size: 0.8rem;
+.searchBox input {
+  padding-left: 2.75rem;
 }
-
-.table th,
-.table td {
-  padding: 0.9rem 1rem;
-  border-bottom: 1px solid #eee7de;
-  vertical-align: top;
-}
-
-.table tbody tr:last-child th,
-.table tbody tr:last-child td {
-  border-bottom: 0;
-}
-
-.table tbody th {
-  color: #392921;
-  font-weight: 700;
-  background: transparent;
-}
-
-.table td.links {
+.browser {
   display: grid;
-  gap: 0.35rem;
+  grid-template-columns: minmax(15rem, 1fr) minmax(0, 1.85fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+.navigator,
+.profile {
+  border: 1px solid #dfd4c9;
+  border-radius: 1rem;
+  background: white;
+  overflow: hidden;
+}
+.navigator {
+  max-height: min(36rem, 65dvh);
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  scrollbar-color: #936875 #f5eee8;
+}
+.navigator:focus-visible {
+  outline: 2px solid #89314b;
+  outline-offset: 2px;
+}
+.index {
+  list-style: none;
+  margin: 0;
+  padding: 0.5rem;
+}
+.index button {
+  width: 100%;
+  min-height: 3.35rem;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  text-align: left;
+  font: inherit;
+  border: 0;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: #49352f;
+  cursor: pointer;
+}
+.index button:hover {
+  background: #faf4ee;
+}
+.index button[aria-pressed="true"] {
+  background: #f5e8e7;
+  color: #78263a;
+  box-shadow: inset 3px 0 #832e44;
+  font-weight: 700;
+}
+.browser button:focus-visible,
+.contact a:focus-visible {
+  outline: 2px solid #89314b;
+  outline-offset: -3px;
+}
+.mobileProfile {
+  display: none;
+}
+.profile {
   overflow-wrap: anywhere;
 }
-
-.links a {
-  color: #85253b;
-  text-decoration: underline;
-  text-underline-offset: 3px;
+.profile header {
+  position: relative;
+  isolation: isolate;
+  padding: clamp(1.4rem, 3vw, 3rem);
+  background: #642338;
+  color: #fff5ed;
 }
-
+.profile header::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: url("/home/world-community.svg") right center / auto 110%
+    no-repeat;
+  opacity: 0.36;
+  mask-image: linear-gradient(90deg, transparent 12%, black 100%);
+}
+.profile header p {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0;
+  color: #ffebde;
+}
+.profile h2 {
+  margin: 0.65rem 0 0;
+  font-size: clamp(1.9rem, 3.6vw, 3.35rem);
+  line-height: 1.08;
+  color: white;
+}
+.contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: clamp(1.25rem, 2.5vw, 2.25rem);
+}
+.contact p {
+  width: 100%;
+  margin: 0 0 0.45rem;
+}
+.contact p span,
+.contact small {
+  display: block;
+  font-size: 0.8rem;
+  color: #71584f;
+}
+.contact strong {
+  display: block;
+  margin-top: 0.25rem;
+  color: #392921;
+  font-size: 1.25rem;
+}
+.contact a {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  flex: 1 1 12rem;
+  min-width: 0;
+  padding: 0.8rem;
+  border: 1px solid #e9ddd2;
+  border-radius: 0.65rem;
+  background: #fcf8f3;
+  color: #74273d;
+  text-decoration: none;
+}
+.contact a:hover {
+  border-color: #a86775;
+  text-decoration: underline;
+}
+.contact a svg {
+  flex: none;
+}
+.contact a span {
+  min-width: 0;
+}
 .noResults {
   padding: 1.5rem;
   margin: 0;
@@ -177,30 +282,23 @@
   .countryFilter {
     width: min(100%, 15rem);
   }
+}
 
-  .table thead {
+@media (max-width: 700px) {
+  .browser {
+    display: block;
+  }
+  .mobileProfile .profile {
+    margin: 0.35rem 0 0.75rem;
+  }
+  .desktopProfile {
     display: none;
   }
-
-  .table tbody tr {
-    display: grid;
-    gap: 0.4rem;
-    padding: 1rem;
-    border-bottom: 1px solid #eee7de;
-  }
-
-  .table th,
-  .table td {
+  .mobileProfile {
     display: block;
-    padding: 0;
-    border: 0;
+    background: #fffcf7;
   }
-
-  .table tbody th {
-    font-size: 1.1rem;
-  }
-
-  .table td:nth-child(2) {
-    color: #85253b;
+  .index button[aria-pressed="true"] svg {
+    transform: rotate(90deg);
   }
 }

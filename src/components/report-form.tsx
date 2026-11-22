@@ -3,6 +3,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Select } from "@/components/select";
 import { submitDistribution } from "@/app/portal/actions";
 import {
   weeklyTotals,
@@ -109,10 +110,13 @@ export function ReportForm({
       }}
     >
       <div className="form-grid">
-        <label>
-          Temple Name
+        <div className="weekly-report-select">
+          <label htmlFor={admin ? "report-temple-trigger" : "report-temple"}>
+            Temple Name
+          </label>
           {admin ? (
-            <select
+            <Select
+              id="report-temple"
               value={templeId}
               disabled={loading}
               onChange={(e) => select(e.target.value, week)}
@@ -122,11 +126,15 @@ export function ReportForm({
                   {t.name}
                 </option>
               ))}
-            </select>
+            </Select>
           ) : (
-            <input value={temple?.name || "Preview temple"} readOnly />
+            <input
+              id="report-temple"
+              value={temple?.name || "Preview temple"}
+              readOnly
+            />
           )}
-        </label>
+        </div>
         <label>
           Reporting year
           <input
@@ -137,23 +145,22 @@ export function ReportForm({
             onChange={(e) => setYear(Math.trunc(Number(e.target.value)))}
           />
         </label>
-        <label>
-          Reporting Week
-          <select
+        <div className="weekly-report-select">
+          <label htmlFor="report-week-trigger">Reporting Week</label>
+          <Select
+            id="report-week"
+            placeholder="Select week"
             disabled={loading}
             value={weeks.includes(week) ? week : ""}
             onChange={(e) => select(templeId || "", e.target.value)}
           >
-            <option disabled value="">
-              Select week
-            </option>
             {[...weeks].reverse().map((w) => (
               <option key={w} value={w}>
                 {dateLabel(w)} – {dateLabel(shiftDate(w, 0, 6))}
               </option>
             ))}
-          </select>
-        </label>
+          </Select>
+        </div>
       </div>
       {existing && (
         <p className="notice">
@@ -162,7 +169,10 @@ export function ReportForm({
             : "Editing the existing weekly report."}
         </p>
       )}
-      <fieldset disabled={!!locked || busy || loading || !weeks.includes(week)}>
+      <fieldset
+        className="weekly-report-fields"
+        disabled={!!locked || busy || loading || !weeks.includes(week)}
+      >
         <div className="form-grid">
           {weeklyCategories.map(([key, label, help]) => (
             <label key={key}>
@@ -214,19 +224,15 @@ export function ReportForm({
             );
             return (
               !!options.length && (
-                <label key={k}>
-                  Participating {k}
-                  <select
+                <div className="weekly-report-select" key={k}>
+                  <label htmlFor={`report-${k}-trigger`}>Participating {k}</label>
+                  <Select
+                    id={`report-${k}`}
                     multiple
-                    value={tags[k] || []}
-                    onChange={(e) =>
-                      setTags({
-                        ...tags,
-                        [k]: Array.from(
-                          e.target.selectedOptions,
-                          (o) => o.value,
-                        ),
-                      })
+                    placeholder={`Select ${k}`}
+                    values={tags[k] || []}
+                    onValuesChange={(values) =>
+                      setTags((previous) => ({ ...previous, [k]: values }))
                     }
                   >
                     {options.map((i) => (
@@ -234,7 +240,7 @@ export function ReportForm({
                         {i.name}
                       </option>
                     ))}
-                  </select>
+                  </Select>
                   {options
                     .filter((i) => i.logo_url && tags[k]?.includes(i.id))
                     .map((i) => (
@@ -246,7 +252,7 @@ export function ReportForm({
                         height={48}
                       />
                     ))}
-                </label>
+                </div>
               )
             );
           },
