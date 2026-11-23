@@ -43,12 +43,10 @@ export default async function Home() {
     (acc, r) => acc + Number(r.books || 0),
     0,
   );
-  const templeCount = data.temples.length || allTimeScores.length;
+  const participatingTemples = data.temples.filter((temple) => temple.approved === true);
+  const templeCount = participatingTemples.length;
   const countryCount = new Set(
-    [
-      ...data.temples.map((t) => t.country),
-      ...allTimeScores.map((r) => r.country),
-    ].filter(Boolean),
+    participatingTemples.map((temple) => temple.country.trim().toLowerCase()).filter(Boolean),
   ).size;
 
   const topMonthTemple =

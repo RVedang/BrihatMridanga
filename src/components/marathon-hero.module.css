@@ -366,6 +366,13 @@
 .quote blockquote strong {
   color: #851338;
   font-weight: 700;
+  background: transparent;
+}
+/* Link-to-text highlights can persist without an active text selection. */
+.quote blockquote::target-text,
+.quote blockquote strong::target-text {
+  background-color: transparent;
+  color: inherit;
 }
 .quote figcaption {
   display: grid;
