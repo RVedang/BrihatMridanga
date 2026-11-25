@@ -215,9 +215,16 @@ export function MarathonHero({
                   aria-label="Weekly standings table"
                 >
                   <table>
+                    <colgroup>
+                      <col className={styles.rankColumn} />
+                      <col className={styles.templeColumn} />
+                      <col className={styles.numberColumn} />
+                      <col className={styles.numberColumn} />
+                      <col className={styles.pointsColumn} />
+                    </colgroup>
                     <thead>
                       <tr>
-                        {["Rank", "Temple", "Points", "Books", "Sets"].map(
+                        {["Rank", "Temple", "Books", "Sets", "Points"].map(
                           (label) => (
                             <th scope="col" key={label}>
                               {label}
@@ -228,12 +235,20 @@ export function MarathonHero({
                     </thead>
                     <tbody>
                       {standings.rows.map((row) => (
-                        <tr key={row.name}>
-                          <td>{row.rank}</td>
+                        <tr key={row.name} data-rank={row.rank}>
+                          <td className={styles.rankCell}>
+                            {String(row.rank).padStart(2, "0")}
+                          </td>
                           <th scope="row">{row.name}</th>
-                          <td>{Number(row.points).toFixed(2)}</td>
-                          <td>{row.books}</td>
-                          <td>{row.sets}</td>
+                          <td className={styles.numberCell}>
+                            {row.books.toLocaleString("en-IN")}
+                          </td>
+                          <td className={styles.numberCell}>
+                            {row.sets.toLocaleString("en-IN")}
+                          </td>
+                          <td className={styles.pointsCell}>
+                            {Number(row.points).toFixed(2)}
+                          </td>
                         </tr>
                       ))}
                     </tbody>

@@ -245,27 +245,31 @@
   background: #992c43;
 }
 .standings {
-  max-height: calc(var(--stage-height) - 11rem);
-  max-width: 100%;
+  max-height: calc(var(--stage-height) - 8.75rem);
+  width: 100%;
   overflow: auto;
-  margin-top: 0.75rem;
+  border: 1px solid #d8c6aa;
+  border-radius: 0.75rem;
+  background: #fffaf1;
+  box-shadow: 0 1rem 2.5rem #5b321314;
 }
 .weeklySlide {
   position: absolute;
-  inset: clamp(1.5rem, 4vw, 2.5rem) clamp(3.5rem, 6vw, 5rem) auto;
+  inset: clamp(1.5rem, 3.5vw, 2.25rem) clamp(4rem, 8vw, 7.5rem) auto;
   display: grid;
-  justify-items: start;
-  gap: 1.25rem;
-  width: auto;
-  max-width: 52rem;
+  justify-items: stretch;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  width: min(68rem, calc(100% - clamp(8rem, 16vw, 15rem)));
+  max-width: none;
   margin-inline: auto;
   text-align: left;
 }
 .weeklySlide h2 {
   margin: 0;
   color: #4b231a;
+  text-align: center;
   font:
-    500 clamp(2.25rem, 5vw, 3.75rem)/1.1 var(--font-display),
+    500 clamp(2.2rem, 4.3vw, 3.55rem)/1.05 var(--font-display),
     Georgia,
     serif;
 }
@@ -284,17 +288,80 @@
 .standings table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
   text-align: left;
+}
+.rankColumn {
+  width: 10%;
+}
+.templeColumn {
+  width: 46%;
+}
+.numberColumn {
+  width: 13%;
+}
+.pointsColumn {
+  width: 18%;
 }
 .standings th,
 .standings td {
-  padding: 0.3rem 0.45rem;
-  border-bottom: 1px solid #34221933;
+  padding: clamp(0.65rem, 1.35vw, 0.95rem) clamp(0.55rem, 1.4vw, 1.05rem);
+  border-bottom: 1px solid #dfd2bf;
+  color: #402d25;
+  font-size: clamp(0.82rem, 1.2vw, 1rem);
+  line-height: 1.25;
+  vertical-align: middle;
 }
 .standings thead {
   position: sticky;
   top: 0;
-  background: #f8efdd;
+  z-index: 1;
+  background: #4b291f;
+}
+.standings thead th {
+  border-bottom: 0;
+  background: #4b291f;
+  color: #fff8ec;
+  font-size: clamp(0.66rem, 0.9vw, 0.76rem);
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.standings thead th:nth-child(n + 3),
+.numberCell,
+.pointsCell {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.standings tbody tr:last-child > * {
+  border-bottom: 0;
+}
+.standings tbody td {
+  background: #fffdf9;
+}
+.standings tbody th {
+  background: #fbf7ef;
+}
+.standings tbody tr[data-rank="1"] > * {
+  background: #f4e8d2;
+}
+.standings tbody tr[data-rank="1"] > :first-child {
+  box-shadow: inset 3px 0 #9e2742;
+}
+.standings tbody th {
+  overflow-wrap: anywhere;
+  font-weight: 650;
+}
+.rankCell {
+  color: #8d694b !important;
+  font-size: 0.82rem !important;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+}
+.pointsCell {
+  color: #7f1833 !important;
+  font-weight: 750;
 }
 .stage[data-quote] {
   padding: 0;
@@ -410,11 +477,6 @@
   .stage {
     border-radius: 22px;
   }
-  .standings th,
-  .standings td {
-    padding: 0.25rem;
-    font-size: 0.78rem;
-  }
 }
 
 @media (min-width: 641px) and (max-width: 1000px) {
@@ -438,7 +500,42 @@
     padding-inline: 2.75rem;
   }
   .weeklySlide {
-    inset-inline: 2.75rem;
+    inset-block-start: 1.5rem;
+    inset-inline: 2.35rem;
+    width: calc(100% - 4.7rem);
+    gap: 1rem;
+  }
+  .weeklySlide h2 {
+    font-size: clamp(1.85rem, 9vw, 2.5rem);
+  }
+  .standings {
+    border-radius: 0.55rem;
+    box-shadow: 0 0.7rem 1.8rem #5b321312;
+  }
+  .rankColumn {
+    width: 12%;
+  }
+  .templeColumn {
+    width: 42%;
+  }
+  .numberColumn {
+    width: 13%;
+  }
+  .pointsColumn {
+    width: 20%;
+  }
+  .standings th,
+  .standings td {
+    padding: 0.68rem 0.32rem;
+    font-size: 0.74rem;
+  }
+  .standings thead th {
+    font-size: 0.58rem;
+    letter-spacing: 0.055em;
+  }
+  .rankCell {
+    font-size: 0.66rem !important;
+    letter-spacing: 0.03em;
   }
   .arrow {
     inset-block-start: 17rem;
