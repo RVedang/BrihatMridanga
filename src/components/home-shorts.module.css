@@ -40,6 +40,7 @@
   overflow: hidden;
   border: 2px solid #fff8f2;
   border-radius: 0.9rem;
+  clip-path: inset(0 round 0.78rem);
   background: #201a22;
   box-shadow: 0 8px 18px #21172236;
 }
@@ -65,6 +66,7 @@
   height: 100%;
   border: 0;
 }
+.card iframe { border-radius: 0.78rem; }
 .card img { object-fit: cover; }
 .card button {
   position: relative;
@@ -96,7 +98,7 @@
   margin: 0.35rem auto 0;
   text-align: center;
 }
-.controls button, .stop {
+.controls button {
   display: grid;
   place-items: center;
   min-height: 44px;
@@ -107,7 +109,7 @@
   color: var(--brand-accent);
   cursor: pointer;
 }
-.controls button:hover, .stop:hover { background: #f6e8e4; }
+.controls button:hover { background: #f6e8e4; }
 .caption a {
   display: inline;
   color: inherit;
@@ -129,14 +131,7 @@
   font-size: 0.8rem;
   font-variant-numeric: tabular-nums;
 }
-.stop {
-  display: flex;
-  gap: 0.4rem;
-  align-items: center;
-  margin: 0.5rem auto 0;
-  padding-inline: 0.8rem;
-}
-.controls :focus-visible, .stop:focus-visible, .card button:focus-visible {
+.controls :focus-visible, .card button:focus-visible {
   outline: 2px solid var(--brand-accent);
   outline-offset: -3px;
 }

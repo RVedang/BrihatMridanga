@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { ArrowUpRight, ChevronLeft, ChevronRight, Play, Square } from "lucide-react";
+import { ArrowUpRight, ChevronLeft, ChevronRight, Play } from "lucide-react";
 import styles from "./home-shorts.module.css";
 
 const shorts = [
@@ -117,11 +117,6 @@ export function HomeShorts() {
             <ChevronRight size={23} aria-hidden="true" />
           </button>
         </div>
-        {playerOpen && (
-          <button type="button" className={styles.stop} aria-label="Stop Short" onClick={() => setPlayerOpen(false)}>
-            <Square size={13} aria-hidden="true" /> Stop
-          </button>
-        )}
       </div>
     </section>
   );
