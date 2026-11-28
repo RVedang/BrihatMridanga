@@ -1,16 +1,15 @@
 import { MarathonHero } from "@/components/marathon-hero";
 import { marathonPublicDirectory, marathonStandings } from "@/lib/marathon-data";
 import Link from "next/link";
-import Image from "next/image";
+import { HomeShorts } from "@/components/home-shorts";
 import { ArrowUpRight, CalendarDays, Flag } from "lucide-react";
 import {
   publicData,
-  scores,
   type Campaign,
   type Content,
   type Temple,
 } from "@/lib/data";
-import { Empty, SectionTitle, HomeStats } from "@/components/ui";
+import { Empty, SectionTitle } from "@/components/ui";
 import { TestimonialCard } from "@/components/testimonial-card";
 import { HomeStories } from "@/components/story-sections";
 import { AgendaCard } from "@/components/agenda-card";
@@ -27,32 +26,7 @@ export default async function Home() {
     marathonPublicDirectory(),
     marathonStandings(),
   ]);
-  const today = todayIn(),
-    year = Number(today.slice(0, 4)),
-    month = Number(today.slice(5, 7)) - 1,
-    monthStart = `${year}-${String(month + 1).padStart(2, "0")}-01`,
-    lastDay = new Date(Date.UTC(year, month + 1, 0)).getUTCDate(),
-    monthEnd = `${year}-${String(month + 1).padStart(2, "0")}-${String(lastDay).padStart(2, "0")}`;
-
-  const [allTimeScores, monthScores] = await Promise.all([
-    scores("1970-01-01", "2099-12-31"),
-    scores(monthStart, monthEnd),
-  ]);
-
-  const globalBooks = allTimeScores.reduce(
-    (acc, r) => acc + Number(r.books || 0),
-    0,
-  );
-  const participatingTemples = data.temples.filter((temple) => temple.approved === true);
-  const templeCount = participatingTemples.length;
-  const countryCount = new Set(
-    participatingTemples.map((temple) => temple.country.trim().toLowerCase()).filter(Boolean),
-  ).size;
-
-  const topMonthTemple =
-    monthScores.length > 0
-      ? [...monthScores].sort((a, b) => Number(b.books) - Number(a.books))[0]
-      : null;
+  const today = todayIn();
 
   const testimonials = data.content.filter(isDistributorTestimonial),
     upcomingEvents = data.content
@@ -102,44 +76,7 @@ export default async function Home() {
       />
       <MarathonHero initial={standings} temples={marathonTemples} />
       <div className={styles.content}>
-        <section className={styles.offering} id="collective-offering">
-          <div className={styles.worldMap} aria-hidden="true">
-            <svg className={styles.mapMotion} viewBox="0 0 900 342" fill="none">
-              <path d="M160 140 Q350 10 490 165 T750 160" pathLength="1" />
-              <circle cx="160" cy="140" r="5" />
-              <circle cx="490" cy="165" r="5" />
-              <circle cx="750" cy="160" r="5" />
-            </svg>
-            <Image
-              src="/home/world-community.svg"
-              alt=""
-              width={900}
-              height={342}
-              sizes="100vw"
-            />
-          </div>
-          <div className="container">
-            <SectionTitle
-              title="Our collective offering"
-              href="/dashboard"
-              link="View dashboard"
-            />
-            <HomeStats
-              globalBooks={globalBooks}
-              templeCount={templeCount}
-              countryCount={countryCount}
-              leadingTemple={
-                topMonthTemple
-                  ? {
-                      name: topMonthTemple.temple_name,
-                      books: Number(topMonthTemple.books),
-                    }
-                  : null
-              }
-              connected={data.connected}
-            />
-          </div>
-        </section>
+        <HomeShorts />
         <section className={styles.community}>
           <div className="container home-testimonials">
             <SectionTitle title="Recent testimonials" />

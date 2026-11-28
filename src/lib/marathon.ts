@@ -9,12 +9,19 @@ export type MarathonTemple = {
   phone: string;
   country: string;
 };
+export const marathonCategories = ["Maha Big", "Big", "Medium", "Small", "Maha Small"] as const;
+export type MarathonCategory = (typeof marathonCategories)[number];
 export type Standing = {
   rank: number;
   name: string;
-  books: number;
-  sets: number;
+  category: MarathonCategory;
   points: number;
+};
+export type MarathonStandings = {
+  rows: Standing[];
+  asOf: string | null;
+  startedCount: number;
+  refreshAt: string | null;
 };
 export function contactName(name: string): string {
   if (name === "Srinivasan M Srikant Govinda Das Cong Vrn") {

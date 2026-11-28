@@ -4,7 +4,7 @@ import {
   hkmMumbaiContact,
   plannedMarathonTemples,
 } from "./marathon-planned-temples";
-import type { MarathonTemple, Standing } from "./marathon";
+import type { MarathonStandings, MarathonTemple } from "./marathon";
 export type MarathonEntry = MarathonTemple & {
   temple_id: string;
   starts_on: string | null;
@@ -34,13 +34,11 @@ export async function marathonPublicDirectory(): Promise<MarathonTemple[]> {
   const saved = await marathonDirectory();
   return saved.length ? saved : plannedMarathonTemples;
 }
-export async function marathonStandings(): Promise<{
-  rows: Standing[];
-  refreshAt: string | null;
-}> {
-  if (!isConfigured()) return { rows: [], refreshAt: null };
+export async function marathonStandings(): Promise<MarathonStandings> {
+  const empty = { rows: [], asOf: null, startedCount: 0, refreshAt: null };
+  if (!isConfigured()) return empty;
   const client = await supabase();
-  const { data, error } = await client.rpc("marathon_standings");
+  const { data, error } = await client.rpc("marathon_cumulative_standings");
   if (error && error.code !== "PGRST202") throw error;
-  return data || { rows: [], refreshAt: null };
+  return data || empty;
 }

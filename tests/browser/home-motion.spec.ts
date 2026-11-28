@@ -85,25 +85,31 @@ test("hero slides rotate, pause on hover, and omit dashboard and submission acti
     name: "Book distribution marathon carousel",
   });
   await expect(
-    hero.getByRole("heading", { name: "Welcome to the Srila Prabhupada Book Marathon" }),
+    hero.getByRole("heading", { name: "Śrīla Prabhupāda's Book Marathon" }),
   ).toBeVisible();
-  await hero.getByRole("heading", { name: "Welcome to the Srila Prabhupada Book Marathon" }).hover();
+  await hero.getByRole("heading", { name: "Śrīla Prabhupāda's Book Marathon" }).hover();
   await page.clock.runFor(6000);
   await expect(
-    hero.getByRole("heading", { name: "Welcome to the Srila Prabhupada Book Marathon" }),
+    hero.getByRole("heading", { name: "Śrīla Prabhupāda's Book Marathon" }),
   ).toBeVisible();
   await page.mouse.move(0, 0);
   await page.clock.runFor(5100);
-  await expect(
-    hero.getByRole("heading", { name: "Live Weekly Standings" }),
-  ).toBeVisible();
-  await hero.getByRole("button", { name: "Next slide" }).click();
   await expect(hero.locator("blockquote")).toContainText(
     "simply holds if and sees it",
   );
   await expect(hero.locator("figcaption")).toContainText(
     "Letter to German Disciples — Bombay, May 06, 1977",
   );
+  await hero.getByRole("button", { name: "Next slide" }).click();
+  await expect(
+    hero.getByRole("heading", { name: "Temple Standings" }),
+  ).toBeVisible();
+  const categories = hero.getByRole("group", { name: "Temple category" });
+  await expect(categories.getByRole("button")).toHaveText([
+    "Maha Big", "Big", "Medium", "Small", "Maha Small",
+  ]);
+  await categories.getByRole("button", { name: "Maha Small", exact: true }).click();
+  await expect(categories.getByRole("button", { name: "Maha Small", pressed: true })).toBeVisible();
   await expect(hero.getByRole("link", { name: "View Dashboard" })).toHaveCount(
     0,
   );
@@ -112,6 +118,29 @@ test("hero slides rotate, pause on hover, and omit dashboard and submission acti
   ).toHaveCount(0);
   await hero.getByRole("button", { name: "Marathon Announcement" }).click();
   await expect(
-    hero.getByRole("heading", { name: "Welcome to the Srila Prabhupada Book Marathon" }),
+    hero.getByRole("heading", { name: "Śrīla Prabhupāda's Book Marathon" }),
   ).toBeVisible();
+});
+
+test("cumulative standings fit phones and desktop with scores", async ({ page }) => {
+  await page.route("**/api/marathon", (route) => route.fulfill({ json: {
+    rows: [{ rank: 1, name: "IHF New York/New Jersey", category: "Maha Small", points: 12500 }],
+    asOf: "2026-11-28", startedCount: 1, refreshAt: null,
+  } }));
+  for (const width of [320, 390, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/");
+    const hero = page.getByRole("region", { name: "Book distribution marathon carousel" });
+    await hero.getByRole("button", { name: "Temple Standings" }).click();
+    await hero.getByRole("button", { name: "Maha Small", exact: true }).click();
+    await expect(async () => {
+      await page.evaluate(() => document.dispatchEvent(new Event("visibilitychange")));
+      await expect(hero.getByText("Scores as of 28 November")).toBeVisible({ timeout: 750 });
+    }).toPass();
+    await expect(hero.getByText("1 of 36 temples have started the marathon")).toBeVisible();
+    await expect(hero.getByRole("columnheader")).toHaveText(["Rank", "Temple", "Points"]);
+    const table = hero.getByRole("table");
+    await expect(table.getByRole("rowheader")).toHaveText("IHF New York/New Jersey");
+    expect(await table.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true);
+  }
 });

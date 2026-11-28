@@ -6,29 +6,37 @@ import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { createClient } from "@supabase/supabase-js";
 import {
   nearestTemple,
+  marathonCategories,
+  type MarathonCategory,
+  type MarathonStandings,
   type MarathonTemple,
-  type Standing,
 } from "@/lib/marathon";
 import { MarathonContact } from "./marathon-contact";
 import styles from "./marathon-hero.module.css";
 
 const titles = [
   "Marathon Announcement",
-  "Live Weekly Standings",
   "Śrīla Prabhupāda Quote",
+  "Temple Standings",
 ];
 export function MarathonHero({
   initial,
   temples,
 }: {
-  initial: { rows: Standing[]; refreshAt: string | null };
+  initial: MarathonStandings;
   temples: MarathonTemple[];
 }) {
   const [active, setActive] = useState(0);
   const [restart, setRestart] = useState(0);
   const [hover, setHover] = useState(false);
   const [focused, setFocused] = useState(false);
+  const [readingQuote, setReadingQuote] = useState(false);
   const [standings, setStandings] = useState(initial);
+  const [category, setCategory] = useState<MarathonCategory>(marathonCategories[0]);
+  const categoryRows = standings.rows.filter((row) => row.category === category);
+  const reportingDate = standings.asOf && new Intl.DateTimeFormat("en-GB", {
+    day: "numeric", month: "long", timeZone: "UTC",
+  }).format(new Date(standings.asOf));
   const [contact, setContact] = useState<MarathonTemple>();
   const dialog = useRef<HTMLDialogElement>(null);
   const touch = useRef<{ x: number; y: number } | null>(null);
@@ -36,7 +44,7 @@ export function MarathonHero({
   const router = useRouter();
   const refresh = useRef<() => void>(() => {});
   useEffect(() => {
-    if (hover || focused) return;
+    if (hover || focused || readingQuote) return;
     const timer = window.setTimeout(
       () => {
         resumeAfterHover.current = false;
@@ -45,7 +53,7 @@ export function MarathonHero({
       resumeAfterHover.current ? 2500 : 5000,
     );
     return () => window.clearTimeout(timer);
-  }, [active, restart, hover, focused]);
+  }, [active, restart, hover, focused, readingQuote]);
 
   useEffect(() => {
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim().replace(
@@ -106,6 +114,7 @@ export function MarathonHero({
 
   function go(index: number) {
     resumeAfterHover.current = false;
+    setReadingQuote(false);
     setActive((index + 3) % 3);
     setRestart((n) => n + 1);
   }
@@ -155,7 +164,8 @@ export function MarathonHero({
       <div
         className={styles.stage}
         data-announcement={active === 0 || undefined}
-        data-quote={active === 2 || undefined}
+        data-quote={active === 1 || undefined}
+        data-standings={active === 2 || undefined}
         onTouchStart={(e) => {
           const p = e.touches[0];
           touch.current = { x: p.clientX, y: p.clientY };
@@ -174,12 +184,26 @@ export function MarathonHero({
           {active === 0 ? (
             <div className={styles.announcement}>
               <div className={styles.announcementCopy}>
-                <h1>
-                  <span className={styles.welcomeLine}>Welcome to the</span>
-                  <span className={styles.nameLine}>Srila Prabhupada</span>
+                <p className={styles.announcementEyebrow}>
+                  Book Distribution Marathon 2026
+                </p>
+                <h1 aria-label="Śrīla Prabhupāda's Book Marathon">
+                  <span className={styles.nameLine}>Śrīla Prabhupāda&apos;s</span>
                   <span className={styles.marathonLine}>Book Marathon</span>
                 </h1>
-                <p className={styles.tagline}>60 Days of Bliss</p>
+                <div className={styles.marathonDetails}>
+                  <div>
+                    <strong>36</strong>
+                    <span>Participating temples</span>
+                  </div>
+                  <div>
+                    <strong>63</strong>
+                    <span>Day marathon window</span>
+                  </div>
+                  <p className={styles.scheduleNote}>
+                    Each temple follows its own marathon schedule within this window.
+                  </p>
+                </div>
                 <div className={styles.ctas}>
                   <Link
                     className={styles.templeAction}
@@ -205,26 +229,32 @@ export function MarathonHero({
                 />
               </div>
             </div>
-          ) : active === 1 ? (
+          ) : active === 2 ? (
             <div className={styles.weeklySlide}>
-              <h2>Live Weekly Standings</h2>
-              {standings.rows.length ? (
+              <h2>Temple Standings</h2>
+              <div className={styles.categories} role="group" aria-label="Temple category">
+                {marathonCategories.map((item) => (
+                  <button key={item} type="button" aria-pressed={item === category}
+                    onClick={() => setCategory(item)}>
+                    {item}
+                  </button>
+                ))}
+              </div>
+              {categoryRows.length ? (
                 <div
                   tabIndex={0}
                   className={styles.standings}
-                  aria-label="Weekly standings table"
+                  aria-label={`${category} standings`}
                 >
                   <table>
                     <colgroup>
                       <col className={styles.rankColumn} />
                       <col className={styles.templeColumn} />
-                      <col className={styles.numberColumn} />
-                      <col className={styles.numberColumn} />
                       <col className={styles.pointsColumn} />
                     </colgroup>
                     <thead>
                       <tr>
-                        {["Rank", "Temple", "Books", "Sets", "Points"].map(
+                        {["Rank", "Temple", "Points"].map(
                           (label) => (
                             <th scope="col" key={label}>
                               {label}
@@ -234,18 +264,12 @@ export function MarathonHero({
                       </tr>
                     </thead>
                     <tbody>
-                      {standings.rows.map((row) => (
+                      {categoryRows.map((row) => (
                         <tr key={row.name} data-rank={row.rank}>
                           <td className={styles.rankCell}>
                             {String(row.rank).padStart(2, "0")}
                           </td>
                           <th scope="row">{row.name}</th>
-                          <td className={styles.numberCell}>
-                            {row.books.toLocaleString("en-IN")}
-                          </td>
-                          <td className={styles.numberCell}>
-                            {row.sets.toLocaleString("en-IN")}
-                          </td>
                           <td className={styles.pointsCell}>
                             {Number(row.points).toFixed(2)}
                           </td>
@@ -256,12 +280,22 @@ export function MarathonHero({
                 </div>
               ) : (
                 <div className={styles.weeklyEmpty}>
-                  <p>Waiting for the first weekly marathon report.</p>
+                  <p>No {category.toLowerCase()} temple has reported marathon scores yet.</p>
                 </div>
               )}
+              <p className={styles.standingsSummary}>
+                <span><strong>{standings.startedCount} of 36</strong> temples have started the marathon</span>
+                {reportingDate && <span>Scores as of {reportingDate}</span>}
+              </p>
             </div>
           ) : (
-            <div className={styles.quote}>
+            <div
+              className={styles.quote}
+              role="region"
+              aria-label="Read Śrīla Prabhupāda’s quote"
+              tabIndex={0}
+              onTouchStart={() => setReadingQuote(true)}
+            >
               <div className={styles.quotePhoto}>
                 <img
                   src="/home/prabhupada-reading-quote.jpg"
