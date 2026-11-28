@@ -30,7 +30,6 @@ export function MarathonHero({
   const [restart, setRestart] = useState(0);
   const [hover, setHover] = useState(false);
   const [focused, setFocused] = useState(false);
-  const [readingQuote, setReadingQuote] = useState(false);
   const [standings, setStandings] = useState(initial);
   const [category, setCategory] = useState<MarathonCategory>(marathonCategories[0]);
   const categoryRows = standings.rows.filter((row) => row.category === category);
@@ -44,7 +43,7 @@ export function MarathonHero({
   const router = useRouter();
   const refresh = useRef<() => void>(() => {});
   useEffect(() => {
-    if (hover || focused || readingQuote) return;
+    if (hover || focused) return;
     const timer = window.setTimeout(
       () => {
         resumeAfterHover.current = false;
@@ -53,7 +52,7 @@ export function MarathonHero({
       resumeAfterHover.current ? 2500 : 5000,
     );
     return () => window.clearTimeout(timer);
-  }, [active, restart, hover, focused, readingQuote]);
+  }, [active, restart, hover, focused]);
 
   useEffect(() => {
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim().replace(
@@ -114,7 +113,6 @@ export function MarathonHero({
 
   function go(index: number) {
     resumeAfterHover.current = false;
-    setReadingQuote(false);
     setActive((index + 3) % 3);
     setRestart((n) => n + 1);
   }
@@ -294,7 +292,6 @@ export function MarathonHero({
               role="region"
               aria-label="Read Śrīla Prabhupāda’s quote"
               tabIndex={0}
-              onTouchStart={() => setReadingQuote(true)}
             >
               <div className={styles.quotePhoto}>
                 <img

@@ -26,7 +26,6 @@
   min-width: 0;
   height: calc(var(--card-width) * 16 / 9 + 2rem);
   margin: 0.5rem auto 0;
-  overflow: clip;
   isolation: isolate;
   perspective: 1000px;
   touch-action: pan-y pinch-zoom;
@@ -50,15 +49,15 @@
 }
 .card[data-slot="1"] {
   z-index: 2;
-  transform: translate3d(-1%, 5%, -75px) rotateY(-22deg) rotateZ(10deg) scale(0.9);
+  transform: translate3d(-21%, 5%, -75px) rotateY(-22deg) rotateZ(10deg) scale(0.9);
 }
 .card[data-slot="2"] {
   z-index: 1;
-  transform: translate3d(28%, 6%, -145px) rotateY(-34deg) rotateZ(17deg) scale(0.79);
+  transform: translate3d(-10%, 6%, -145px) rotateY(-34deg) rotateZ(17deg) scale(0.79);
 }
 .card[data-slot="3"] {
   z-index: 3;
-  transform: translate3d(-99%, 5%, -75px) rotateY(22deg) rotateZ(-10deg) scale(0.9);
+  transform: translate3d(-79%, 5%, -75px) rotateY(22deg) rotateZ(-10deg) scale(0.9);
 }
 .card iframe, .card button, .card img {
   display: block;
